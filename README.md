@@ -1,9 +1,9 @@
 # arci
-interactive stage performances
+interactive stage performances via smartphone
 
 arci is in active developement and is _not_ yet recommended for productive use. Feel free to experiment with it though :)
 
-Developement by [bleeptrack](https://www.bleeptrack.de) and [Leo](https://www.instagram.com/henrikeiglesiasinsta).
+Developement by [bleeptrack](https://www.bleeptrack.de) and [Henrike Iglesias](https://www.instagram.com/henrikeiglesiasinsta).
 
 # Requirements
 
@@ -40,8 +40,19 @@ In case people on stage need to be assigned a certain participant ID, then guide
 
 You can create your own Interaction Types by adding a file to the ```public/InteractionTypes/``` folder on your server. A template with description of available methods can be found in ```interaction-template.js```.
 
+# Examples
+
+  - ["Flames to Dust" Performance by Henrike Iglesias](https://vimeo.com/783255056)
+  - [Behind the Scenes of "Flames to Dust"](https://youtu.be/FHuoa7xH7Dw)
+
+# License 
+
+arci uses the [Blue Oak Model 1.0 License](https://blueoakcouncil.org/license/1.0.0)
+
+We also kindly ask you to mention archi(bleeptrack, Henrike Iglesias) in your performance credits :)
+
 # Thank you!
 
 This project is supported by Prototype Fund and BMBF.
 
-Big thank you to Lasse and [exMachina](https://machinaex.org/) for your inspiration!
+Big thank you to Lasse Marburg and [machina ex](https://machinaex.org/) for your inspiration!
