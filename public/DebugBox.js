@@ -30,6 +30,7 @@ class DebugBox extends HTMLElement {
 			<div id="box-content">
 				<button id="start">Start Session</button>
 				<button id="stopsound">STOP Sounds</button>
+				<input type="text" placeholder="second server adress" id="secondserver"></input><button id="secondserverconnect">connect</button>
 			</div>
 		
 		`;
@@ -58,12 +59,25 @@ class DebugBox extends HTMLElement {
 
 	// fires after the element has been attached to the DOM
 	connectedCallback() {
+		
+		socket.on("secondserver:info", (data) => { 
+			console.log(data) 
+			this.shadow.getElementById("secondserver").value = data
+			this.shadow.getElementById("secondserverconnect").innerHTML = "disconnect"
+			sessionStorage.setItem("secondServer", data);
+		});
+		
 		this.shadow.getElementById("start").addEventListener("click", () => {
 			if(this.session){
 				socket.emit("session:end")
 			}else{
 				socket.emit("session:start")
 			}
+		})
+		
+		this.shadow.getElementById("secondserverconnect").addEventListener("click", () => {
+			let addr = this.shadow.getElementById("secondserver").value
+			socket.emit("secondserver:info", {adress: addr})
 		})
 		
 		this.shadow.getElementById("stopsound").addEventListener("click", () => {

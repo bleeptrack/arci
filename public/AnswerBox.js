@@ -1,11 +1,13 @@
 'use strict';
 import { socket } from './socket.js';
+import OtherSideConnector from './OtherSideConnector.js';
 
 class AnswerBox extends HTMLElement {
 	constructor() {
 		super();
 		this.shadow = this.attachShadow({ mode: 'open' });
 		this.cueTypes = {}
+		this.osc = new OtherSideConnector("")
 		
 		socket.on("cue:load", (data) => { 
 			
@@ -18,6 +20,10 @@ class AnswerBox extends HTMLElement {
 			
 		});
 
+		socket.on("secondserver:info", msg => {
+			console.log("new osc:", msg)
+			this.osc = new OtherSideConnector(msg)
+		})
 
 		socket.on("interaction:answer", msg => {
 			console.log(msg)
@@ -66,6 +72,12 @@ class AnswerBox extends HTMLElement {
 
 		// appending the container to the shadow DOM
 		this.shadow.appendChild(boxcontainer.content.cloneNode(true));
+		
+		
+		this.shadow.getElementById("answers").addEventListener("interaction:update-other-side", (event) => {
+			console.log("other side event:", event.detail)
+			this.osc.sendData(event.detail)
+		})
 		
 		this.shadow.getElementById("answers").addEventListener("interaction:show-answer", (event) => {
 			socket.emit("interaction:show-answer", event.detail)

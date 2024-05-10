@@ -32,6 +32,9 @@ export default class InteractionImageShare extends HTMLElement {
 					max-width: 90%;
 					max-height: 50%;
 				}
+				button{
+					margin-bottom: 20%;
+				}
 			</style>
 			<div id="content">
 				<h1>${msg.text}</h1>
@@ -107,7 +110,9 @@ export default class InteractionImageShare extends HTMLElement {
 	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id)){
+		console.log("msg.otherSide", msg.otherSide)
+		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.otherSide){
+			console.log("CLEAR4")
 			header.innerHTML = ""
 			container.innerHTML = ""
 		}
@@ -119,11 +124,27 @@ export default class InteractionImageShare extends HTMLElement {
 			imgCollection.id = "collection"
 			container.appendChild(imgCollection)
 			
+			let otherImgCollection = document.createElement("div")
+			otherImgCollection.style.display = "flex"
+			otherImgCollection.id = "other-collection"
+			container.appendChild(otherImgCollection)
+			
+			let btnOther = document.createElement("button")
+			btnOther.innerHTML = "Send Images to other Side"
+			btnOther.addEventListener("click", () => {
+				let paths = []
+				for(let img of imgCollection.childNodes){
+					paths.push(img.name)
+				}
+				container.dispatchEvent(new CustomEvent("interaction:update-other-side", {detail: {paths: paths, info: msg.info, otherSide: true} }));
+			})
+			container.appendChild(btnOther)
+			
 			let btn = document.createElement("button")
 			btn.innerHTML = "Share Images"
 			btn.addEventListener("click", () => {
 				let paths = []
-				for(let img of imgCollection.childNodes){
+				for(let img of otherImgCollection.childNodes){
 					paths.push(img.name)
 				}
 				console.log(paths)
@@ -132,16 +153,35 @@ export default class InteractionImageShare extends HTMLElement {
 			})
 			container.appendChild(btn)
 		}
-		let div = document.createElement("div")
-		div.style.backgroundImage = `url('/media/${msg.name}')`
-		div.style.backgroundSize = "contain"
-		div.style.backgroundPosition = "center"
-		div.style.backgroundRepeat = "no-repeat"
-		div.id = msg.playerID
-		div.name = msg.name
-		div.style.width = "4em" 
-		div.style.height = "4em" 
-		container.querySelector("#collection").appendChild(div)
+		
+		if(msg.name){
+			let div = document.createElement("div")
+			div.style.backgroundImage = `url('/media/${msg.name}')`
+			div.style.backgroundSize = "contain"
+			div.style.backgroundPosition = "center"
+			div.style.backgroundRepeat = "no-repeat"
+			div.id = msg.playerID
+			div.name = msg.name
+			div.style.width = "4em" 
+			div.style.height = "4em" 
+			container.querySelector("#collection").appendChild(div)
+		}
+		
+		if(msg.paths){
+			for(let p of msg.paths){
+				let div = document.createElement("div")
+				div.style.backgroundImage = `url('http://${sessionStorage.getItem("secondServer")}/media/${p}')`
+				div.style.backgroundSize = "contain"
+				div.style.backgroundPosition = "center"
+				div.style.backgroundRepeat = "no-repeat"
+				//div.id = msg.playerID
+				div.name = `http://${sessionStorage.getItem("secondServer")}/media/${p}`
+				div.style.width = "4em" 
+				div.style.height = "4em" 
+				container.querySelector("#other-collection").appendChild(div)
+			}
+		}
+		
 	}
 	
 	handleAdditionalInfo(){

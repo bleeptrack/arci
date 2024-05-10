@@ -9,7 +9,11 @@ export default class InteractionImage extends HTMLElement {
 	constructor(msg, callback) {
 		super();
 		
-		this.mediaPath = "./media/" + msg.filename
+		if(msg.filename.includes("http")){
+			this.mediaPath = msg.filename
+		}else{
+			this.mediaPath = "./media/" + msg.filename
+		}
 		this.shadow = this.attachShadow({ mode: 'open' });
 		
 
