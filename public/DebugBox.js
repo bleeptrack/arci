@@ -31,6 +31,13 @@ class DebugBox extends HTMLElement {
 				<button id="start">Start Session</button>
 				<button id="stopsound">STOP Sounds</button>
 				<input type="text" placeholder="second server adress" id="secondserver"></input><button id="secondserverconnect">connect</button>
+				<button id="save">Save Project</button>
+				<form action="/uploadproject" enctype="multipart/form-data" method="post">
+					<div class="form-group">
+						<input type="file"  name="export">
+						<input type="submit" value="Upload Project">
+					</div>
+				</form>
 			</div>
 		
 		`;
@@ -82,6 +89,11 @@ class DebugBox extends HTMLElement {
 		
 		this.shadow.getElementById("stopsound").addEventListener("click", () => {
 			socket.emit("session:stopsound")
+			
+		})
+		
+		this.shadow.getElementById("save").addEventListener("click", () => {
+			socket.emit("session:save")
 			
 		})
 		

@@ -9,6 +9,10 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createServer } from 'node:http'
 import fs from 'node:fs'
+import archiver from 'archiver'
+import multer from 'multer'
+const upload = multer({ dest: config['absolute-static-file-path']+'/uploads/' })
+import extract from 'extract-zip'
 
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
@@ -28,6 +32,10 @@ app.use('/media', express.static(config['absolute-static-file-path']))
 
 if (!fs.existsSync(config['absolute-static-file-path']+"/playeruploads/")) {
     fs.mkdirSync(config['absolute-static-file-path']+"/playeruploads/")
+}
+
+if (!fs.existsSync(config['absolute-static-file-path']+"/exports/")) {
+    fs.mkdirSync(config['absolute-static-file-path']+"/exports/")
 }
 
 // db.json file path
@@ -350,6 +358,59 @@ app.get('/seat/', (req, res) => {
 
 app.get('/seat/:userId', (req, res) => {
   res.redirect(`/?id=${req.params.userId}&sessionToken=${sessionToken}`)
+})
+
+app.get('/saveproject', (req, res) => {
+  const exportFilename = 'export-'+Math.round(Math.random()*100000)+'.zip'
+  const output = fs.createWriteStream(config['absolute-static-file-path'] + '/exports/' + exportFilename);
+  const archive = archiver('zip', {
+    zlib: { level: 9 } // Sets the compression level.
+  });
+  
+  output.on('close', function() {
+    console.log(archive.pointer() + ' total bytes');
+    console.log('archiver has been finalized and the output file descriptor has closed.');
+    res.sendFile(config['absolute-static-file-path'] + '/exports/' + exportFilename)
+  });
+  
+  archive.pipe(output)
+  fs.readdirSync(config['absolute-static-file-path'], {withFileTypes: true}).forEach(file => {
+      if(!file.isDirectory()){
+        console.log(file)
+        console.log(config['absolute-static-file-path']+file.name)
+        archive.file(config['absolute-static-file-path']+file.name, { name: "/static/"+file.name } );
+      }
+  })
+  
+  archive.file("./db.json", { name: 'db.json' });
+  
+  archive.finalize();
+})
+
+app.post('/uploadproject', upload.single('export'), function (req, res, next) {
+  console.log(req.file)
+  const staticPath = config['absolute-static-file-path']
+  const unpackingPath = config['absolute-static-file-path']+"/unpacking/"
+  let path = req.file.path
+  extract(req.file.path, { dir: unpackingPath }).then( e => {
+    console.log("extraction finished. Moving files.")
+    fs.renameSync(unpackingPath + "db.json", "./db.json")
+    
+    fs.readdirSync(unpackingPath + "/static/", {withFileTypes: true}).forEach(file => {
+      if(!file.isDirectory()){
+        console.log("moving", file.name)
+        fs.renameSync(unpackingPath + "/static/" + file.name, staticPath + file.name)
+      }
+    })
+    
+    fs.readdirSync(config['absolute-static-file-path'] + "/uploads/").forEach(file => {
+      fs.unlinkSync(config['absolute-static-file-path'] + "/uploads/" + file)
+    })
+    
+  })
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+  res.sendStatus(200)
 })
 
 app.get('/', (req, res) => {
