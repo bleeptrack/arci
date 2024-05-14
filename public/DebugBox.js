@@ -83,6 +83,7 @@ class DebugBox extends HTMLElement {
 		})
 		
 		this.shadow.getElementById("secondserverconnect").addEventListener("click", () => {
+			console.log("click connect")
 			let addr = this.shadow.getElementById("secondserver").value
 			socket.emit("secondserver:info", {adress: addr})
 		})

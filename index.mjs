@@ -28,6 +28,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 app.use('/static',express.static(join(__dirname, 'public')))
 app.use('/media', express.static(config['absolute-static-file-path']))
+app.use(express.json());
 
 
 if (!fs.existsSync(config['absolute-static-file-path']+"/playeruploads/")) {
@@ -52,6 +53,7 @@ const defaultData = { cues: [], squences: [] }
 const db = new LowWithLodash(adapter, defaultData)
 let player = []
 let sessionToken = ""
+let secondServer = ""
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
@@ -78,6 +80,12 @@ io.of("/control").on('connection', (socket) => {
     sendSequenceInfo()
     sendPlayerInfo()
     sendSessionInfo()
+    
+    socket.on("secondserver:info", (msg) => {
+        console.log("attempt to connect to second server:", msg)
+        secondServer = msg.adress
+        sendSecondServerInfo()
+    })
     
     socket.on("save cue sequence", (msg) => {
         console.log("save cue list", msg)
@@ -293,6 +301,10 @@ function sendPlayerInfo(){
    io.of("/control").emit("player:info", player);
 }
 
+function sendSecondServerInfo(){
+   io.of("/control").emit("secondserver:info", secondServer);
+}
+
 function clearRecipientStatus(){
   player.forEach(p => {if(p){p.recipient = false}})
 }
@@ -415,6 +427,14 @@ app.post('/uploadproject', upload.single('export'), function (req, res, next) {
 
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'player.html'))
+})
+
+app.post('/connection', (req, res) => {
+//app.post('/connection', upload.any(), function (req, res, next) {
+  console.log("body", req.body)
+  req.body.otherSide = true
+  io.of("/control").emit("interaction:answer", req.body)
+  res.status(200).send()
 })
 
 app.get('/control', (req, res) => {
