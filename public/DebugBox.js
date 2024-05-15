@@ -28,16 +28,24 @@ class DebugBox extends HTMLElement {
 				}
 			</style>
 			<div id="box-content">
-				<button id="start">Start Session</button>
-				<button id="stopsound">STOP Sounds</button>
-				<input type="text" placeholder="second server adress" id="secondserver"></input><button id="secondserverconnect">connect</button>
-				<button id="save">Save Project</button>
-				<form action="/uploadproject" enctype="multipart/form-data" method="post">
-					<div class="form-group">
-						<input type="file"  name="export">
-						<input type="submit" value="Upload Project">
-					</div>
-				</form>
+				<fieldset>
+					<button id="start">Start Session</button>
+				</fieldset>
+				<fieldset>
+					<button id="stopsound">STOP Sounds</button>
+				</fieldset>
+				<fieldset>
+					<input type="text" placeholder="second server adress" id="secondserver"></input><button id="secondserverconnect">connect</button>
+				</fieldset>
+				<fieldset>
+					<button id="save">Save Project</button>
+					<form action="/uploadproject" enctype="multipart/form-data" method="post">
+						<div class="form-group">
+							<input type="file"  name="export">
+							<input type="submit" value="Upload Project">
+						</div>
+					</form>
+				</fieldset>
 			</div>
 		
 		`;
@@ -70,7 +78,7 @@ class DebugBox extends HTMLElement {
 		socket.on("secondserver:info", (data) => { 
 			console.log(data) 
 			this.shadow.getElementById("secondserver").value = data
-			this.shadow.getElementById("secondserverconnect").innerHTML = "disconnect"
+			this.shadow.getElementById("secondserverconnect").innerHTML = data=="" ? "connect" : "disconnect"
 			sessionStorage.setItem("secondServer", data);
 		});
 		
@@ -85,6 +93,9 @@ class DebugBox extends HTMLElement {
 		this.shadow.getElementById("secondserverconnect").addEventListener("click", () => {
 			console.log("click connect")
 			let addr = this.shadow.getElementById("secondserver").value
+			if(this.shadow.getElementById("secondserverconnect").innerHTML == "disconnect"){
+				addr = ""
+			}
 			socket.emit("secondserver:info", {adress: addr})
 		})
 		

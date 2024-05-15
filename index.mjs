@@ -80,6 +80,7 @@ io.of("/control").on('connection', (socket) => {
     sendSequenceInfo()
     sendPlayerInfo()
     sendSessionInfo()
+    sendSecondServerInfo()
     
     socket.on("secondserver:info", (msg) => {
         console.log("attempt to connect to second server:", msg)
