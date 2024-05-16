@@ -105,7 +105,21 @@ class DebugBox extends HTMLElement {
 		})
 		
 		this.shadow.getElementById("save").addEventListener("click", () => {
-			socket.emit("session:save")
+			console.log("saving...")
+
+			var req = new XMLHttpRequest();
+			req.open("GET", '/saveproject', true);
+			req.responseType = "blob";
+			req.onload = function (event) {
+				var blob = req.response;
+				var fileName = "export.zip" 
+				var link=document.createElement('a');
+				link.href=window.URL.createObjectURL(blob);
+				link.download=fileName;
+				link.click();
+			};
+
+			req.send();
 			
 		})
 		
