@@ -4,6 +4,7 @@ console.log(config)
 import express from 'express';
 const app = express()
 const port = config['port']
+import cors from 'cors';
 
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -26,6 +27,7 @@ const io = new Server(server,{
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+app.use(cors())
 app.use('/static',express.static(join(__dirname, 'public')))
 app.use('/media', express.static(config['absolute-static-file-path']))
 app.use(express.json());
