@@ -30,7 +30,8 @@ export class Cue extends HTMLElement {
 				div{
 					height: 3vh;
 					width: 100%;
-					background-color: teal;
+					background-color: var(--main-color);
+					color: white;
 				}
 				
 				.activated{
@@ -47,7 +48,8 @@ export class Cue extends HTMLElement {
 				div{
 					height: 12vh;
 					width: 12vh;
-					background-color: teal;
+					background-color: var(--main-color);
+					color: white;
 				}
 				
 		`

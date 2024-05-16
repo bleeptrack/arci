@@ -1,6 +1,6 @@
 :root {
   --gap-size: 1vh;
-  --main-color: teal;
+  --main-color: teal;   /* slateblue, MediumSeaGreen*/
   --action-color: firebrick;
   --hover-darken: 50%;
 }
@@ -21,6 +21,7 @@ body{
 	column-gap: var(--gap-size);
 	row-gap: var(--gap-size);
 	justify-items: stretch;
+	background-color: var(--main-color);
 }
 
 cue-box{
