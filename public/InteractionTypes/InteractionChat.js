@@ -114,7 +114,7 @@ export default class InteractionChat extends HTMLElement {
 		
 		if(msg.otherSide){
 			//container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: msg}));
-			//container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {answer: msg.answer, id: msg.info.id, toPlayer: msg.toPlayer} }));
+			container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {answer: msg.answer, id: msg.info.id, toPlayer: msg.toPlayer} }));
 			console.log("other side received")
 		}else{
 			console.log("updating other side")
