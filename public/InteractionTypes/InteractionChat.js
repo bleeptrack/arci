@@ -114,7 +114,8 @@ export default class InteractionChat extends HTMLElement {
 		
 		if(msg.otherSide){
 			//container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: msg}));
-			container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {answer: msg.answer, id: msg.info.id, toPlayer: msg.toPlayer} }));
+			//container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {answer: msg.answer, id: msg.info.id, toPlayer: msg.toPlayer} }));
+			console.log("other side received")
 		}else{
 			console.log("updating other side")
 			container.dispatchEvent(new CustomEvent("interaction:update-other-side", {detail: {answer: msg.answer, info: msg.info, otherSide: true, toPlayer: msg.playerID} }));
@@ -141,7 +142,7 @@ export default class InteractionChat extends HTMLElement {
 	}
 	
 	updateInformation(data){
-		console.log("update info", data)
+		console.log("update info2", data)
 		if(data.toPlayer == this.info.ownPlayerID){
 			this.addSpeechBubble(data.answer, false)
 		}
