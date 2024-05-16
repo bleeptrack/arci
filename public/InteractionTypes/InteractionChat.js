@@ -37,11 +37,12 @@ export default class InteractionChat extends HTMLElement {
 				}
 				#chat{
 					width: 100%;
-					height: 100%;
+					/* height: 100%; */
 					flex-shrink: 1;
 					overflow: scroll;
 					display: flex;
 					flex-direction: column;
+					
 				}
 				#content{
 					display: flex;
@@ -91,6 +92,28 @@ export default class InteractionChat extends HTMLElement {
 			this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: this.shadow.getElementById("text").value, info: this.info }}));
 			this.shadow.getElementById("text").value = ""
 		})
+		
+		
+		this.shadow.getElementById("text").addEventListener("focus", e => {
+			console.log("focused", e.target)
+			if(document.fullscreenElement){
+				this.shadow.getElementById("content").style.paddingBottom = "50vh"
+			}
+			
+		})
+		
+		
+		this.shadow.getElementById("text").addEventListener("focusout", e => {
+			console.log("focused", e.target)
+			this.shadow.getElementById("content").style.paddingBottom = "0px"
+		})
+		
+		
+		this.shadow.getElementById("text").addEventListener("keyup", event => {
+			if (event.keyCode === 13) {
+				this.shadow.getElementById("sendBtn").click()
+			}
+		});
 		
 		
 	}
