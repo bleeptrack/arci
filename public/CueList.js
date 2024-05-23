@@ -113,21 +113,17 @@ class CueList extends HTMLElement {
 			event.preventDefault();
 			let data = JSON.parse(event.dataTransfer.getData("data"))
 			this.addCue( data )
-			console.log("drop", event, data)
-			this.actionbutton.setVisible(false)
+			console.log("drop list")
 		})
-		
-		this.addEventListener('dragstart', (event) => {
-			console.log("drag start list")
-			this.actionbutton.setVisible(true)
-		})
-		
-		
+
 		
 		this.addEventListener("dragover", (event) => {
 		// prevent default to allow drop
 			event.preventDefault();
+			//console.log(event.target)
 		});
+		
+		
 	}
 	
 	findCurrentActiveScene(){
@@ -178,17 +174,37 @@ class CueList extends HTMLElement {
 		this.saveCueSequence()
 	}
 	
+	deleteCueInstance(instanceID){
+		let cue = this.shadow.querySelector(`[instance="${instanceID}"]`)
+		if(cue){
+			cue.remove()
+		}
+		this.saveCueSequence()
+	}
+	
+	addCueAfter(target, data){
+		target.after(this.buildCue(data))
+	}
+	
+	addCueBefore(target, data){
+		console.log("add before")
+		target.before(this.buildCue(data))
+	}
+	
 	addCue(data, saveSequence=true){
-		
+		this.content.appendChild(this.buildCue(data))
+		if(saveSequence){
+			this.saveCueSequence()
+		}
+	}
+	
+	buildCue(data){
 		let c1 = new Cue(data)
-		this.content.appendChild(c1)
 		c1.addEventListener("click cue", (event) => {
 			console.log("cue event received", event.target)
 			this.handleCueClick(event.target.getAttribute("instance"))
 		})
-		if(saveSequence){
-			this.saveCueSequence()
-		}
+		return c1
 	}
 	
 	handleCueClick(instanceID){

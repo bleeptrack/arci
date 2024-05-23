@@ -174,6 +174,7 @@ io.of("/control").on('connection', (socket) => {
         
         db.write()
         sendCueInfo()
+        sendSequenceInfo()
     });
     
     socket.on("cue:info", (data, callback) => {

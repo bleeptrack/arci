@@ -104,7 +104,6 @@ class CueBox extends HTMLElement {
 		
 		this.addEventListener('dragstart', (event) => {
 			console.log("drag start box")
-			this.actionbutton.setVisible(true)
 		})
 		
 		this.addEventListener("drop", (event) => {
