@@ -5,17 +5,11 @@ export class Cue extends HTMLElement {
 	constructor(data) {
 		super();
 		
-		console.log("cue", data['cue-name'])
 		this.id = data.id
 		this.icon = data.icon ?? ""
 		this.instanceID = Math.floor(Math.random()*10000)
 		this.name = data['cue-name']
 		this.data = data
-		console.log(data)
-		
-			
-
-		
 		
 		this.shadow = this.attachShadow({ mode: 'open' });
 
@@ -150,7 +144,6 @@ export class Cue extends HTMLElement {
 			socket.emit("cue:delete", this.id)
 		}else{
 			let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
-			console.log("parent", this.parentNode, idx)
 			socket.emit("cue:deleteListIdx", this.parentNode.id, idx)
 		}
 	}
@@ -164,6 +157,7 @@ export class Cue extends HTMLElement {
 		console.log("click")
 		socket.emit("cue activate", this.id)
 		this.shadow.getElementById("cuebox").classList.add("activated")
+		this.shadow.getElementById("cuebox").scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest"})
 	}
 	
 	deactivate(){

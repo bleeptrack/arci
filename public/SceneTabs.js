@@ -56,8 +56,15 @@ class SceneTabs extends HTMLElement {
 			document.querySelector("cue-list").changeSequence(name)
 		})
 		tabs.appendChild(sceneTab)
-		
-		
+	}
+	
+	activateScene(name){
+		let scenetabs = this.shadow.querySelectorAll("scene-tab")
+		for(let st of scenetabs){
+			if(st.name == name){
+				st.activate()
+			}
+		}
 	}
 	
 	disableOtherScenes(name){

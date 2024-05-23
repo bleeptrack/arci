@@ -10,9 +10,15 @@ class CueList extends HTMLElement {
 		this.activeCue = undefined
 		
 		socket.on("load sequence", (data) => { 
+			//get active scene
+			let activeScene = this.findCurrentActiveScene()
+			console.log("ACTIVE", activeScene)
+			
+			
 			this.clearCueLists()
 			document.querySelector("scene-tabs").clearScenes()
 			console.log("seq", data) 
+			
 			for(let scene of data){
 				//this.addSequence(scene.name)
 				document.querySelector("scene-tabs").addScene(scene.name)
@@ -20,6 +26,10 @@ class CueList extends HTMLElement {
 					this.addCue(cue, false)
 				}
 				//this.changeSequence(scene.name)
+			}
+			
+			if(activeScene){
+				document.querySelector("scene-tabs").activateScene(activeScene)
 			}
 		});
 
@@ -118,6 +128,17 @@ class CueList extends HTMLElement {
 		// prevent default to allow drop
 			event.preventDefault();
 		});
+	}
+	
+	findCurrentActiveScene(){
+		console.log(this.shadow.querySelectorAll(".list-content"))
+		for(let sq of this.shadow.querySelectorAll(".list-content")){
+			console.log("checking", sq)
+			if( sq.style.display != "none"  ){
+				return sq.id
+			}
+		}
+		return null
 	}
 	
 	clearCueLists(){
