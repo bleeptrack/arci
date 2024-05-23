@@ -7,9 +7,16 @@ export class Cue extends HTMLElement {
 		
 		console.log("cue", data['cue-name'])
 		this.id = data.id
+		this.icon = data.icon ?? ""
 		this.instanceID = Math.floor(Math.random()*10000)
 		this.name = data['cue-name']
 		this.data = data
+		console.log(data)
+		
+			
+
+		
+		
 		this.shadow = this.attachShadow({ mode: 'open' });
 
 
@@ -18,7 +25,10 @@ export class Cue extends HTMLElement {
 
 		// creating the inner HTML of the editable list element
 		cuecontainer.innerHTML = `
+			<link href="${window.location.origin}/static/control.css" rel="stylesheet" />
+			<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 			<div draggable="true" id="cuebox">
+				<span class="material-symbols-outlined">${this.icon}</span>
 				<slot>${this.name}</slot>
 				<button id="delete"> X </button>
 				<button id="edit"> E </button>
@@ -29,17 +39,44 @@ export class Cue extends HTMLElement {
 		this.listStyle.innerHTML = `
 				div{
 					height: 3vh;
-					width: 100%;
 					background-color: var(--main-color);
 					color: white;
+					display: flex;
+					align-items: center;
+					padding: var(--small-gap);
+					font-family: sans-serif;
+					border: 2px solid black;
+					border-radius: var(--radius);
+				}
+				
+				div:hover{
+					opacity: 0.8;
 				}
 				
 				.activated{
-					border: 1px solid red;
+					
+					background-color: color-mix(in srgb, var(--action-color) 70%, black);
+				}
+				
+				#delete{
+					margin-left: auto;
+					background-color: color-mix(in srgb, var(--main-color) 70%, white);
+					border: none;
+					border-radius: var(--radius);
+					padding: var(--small-gap);
+					font-family: sans-serif;
+				}
+				
+				#delete:hover{
+					background-color: color-mix(in srgb, var(--main-color) 40%, white);
 				}
 				
 				#edit{
 					display: none;
+				}
+				
+				span{
+					margin-right:  var(--small-gap);
 				}
 		`
 		

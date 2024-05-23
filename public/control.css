@@ -1,8 +1,10 @@
 :root {
   --gap-size: 1vh;
+  --small-gap: calc(var(--gap-size) / 2);
   --main-color: teal;   /* slateblue, MediumSeaGreen*/
   --action-color: firebrick;
   --hover-darken: 50%;
+  --radius: 5px;
 }
 
 
@@ -43,7 +45,8 @@ debug-box{
 }
 
 cue-list{
-	background-color: lightgrey;
+	background-color: rgba(255,255,255,0.65);
+	border-radius: var(--radius);
 	grid-area: 1 / 8 / 2 / 11;
 }
 

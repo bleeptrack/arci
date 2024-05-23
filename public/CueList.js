@@ -29,28 +29,60 @@ class CueList extends HTMLElement {
 		// creating the inner HTML of the editable list element
 		listcontainer.innerHTML = `
 			<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+			<link href="${window.location.origin}/static/control.css" rel="stylesheet" />
 			<style>
+				#container{
+					display: flex;
+					flex-direction: column;
+					overflow: hidden;
+					height: 100%;
+				}
+			
 				.list-content{
-					
-					height: 95%;
-					
-					overflow: scroll;
+					flex: 1;
+					display: flex;
+					flex-direction: column;
+					gap: var(--small-gap);
+					padding: var(--small-gap);
+					overflow-y: scroll;
+					scrollbar-width: thin;
+					scrollbar-gutter: stable;
 				}
 				
 				cue-item{
-					width: 100%;
-					height: 5vh;
+					
 				}
 				
-				nav{
-					height: 5%;
+				#nav{
+					display: flex;
+				}
+				
+				#nav>button{
+					flex: 1;
+					background-color: color-mix(in srgb, var(--main-color) 40%, black);
+					color: white;
+					height: 4vh;
+					padding: var(--small-gap);
+					margin: var(--small-gap);
+					border: 2px solid black;
+					border-radius: var(--radius);
+				}
+				
+				#nav>button:hover{
+					background-color: color-mix(in srgb, var(--action-color) 40%, black);
+				}
+				
+				#nav>button:active{
+					background-color: color-mix(in srgb, var(--action-color) 70%, black);
 				}
 				
 			</style>
 			
-			<div id="nav">
-				<button id="prev">back</button>
-				<button id="next">next</button>
+			<div id="container">
+				<div id="nav">
+					<button id="prev" class="material-symbols-outlined">arrow_back_ios</button>
+					<button id="next" class="material-symbols-outlined">arrow_forward_ios</button>
+				</div>
 			</div>
 		
 		`;
@@ -98,7 +130,7 @@ class CueList extends HTMLElement {
 		let list = document.createElement("div")
 		list.classList.add("list-content")
 		list.id = name
-		this.shadow.appendChild(list)
+		this.shadow.getElementById("container").appendChild(list)
 		this.content = list
 	}
 	
@@ -113,7 +145,8 @@ class CueList extends HTMLElement {
 			sq.style.display = "none"
 			sq.disabled = true
 		}
-		seq.style.display = "block"
+		//seq.style.display = "inherit"
+		seq.style.removeProperty('display');
 		seq.disabled = false
 		this.content = seq
 	}
@@ -125,6 +158,7 @@ class CueList extends HTMLElement {
 	}
 	
 	addCue(data, saveSequence=true){
+		
 		let c1 = new Cue(data)
 		this.content.appendChild(c1)
 		c1.addEventListener("click cue", (event) => {

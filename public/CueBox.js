@@ -257,7 +257,10 @@ class CueBox extends HTMLElement {
 		saveBtn.type = "button"
 		saveBtn.addEventListener("click", (event) => {
 			event.preventDefault()
-			let data = {type: type}
+			let data = {
+				type: type,
+				icon: typemodule.icon
+			}
 			
 			for( let c of Array.from(this.shadow.getElementById("cue-form").children)){
 				if(c.name || c.getAttribute("name")){
