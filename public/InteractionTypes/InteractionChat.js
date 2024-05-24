@@ -24,7 +24,7 @@ export default class InteractionChat extends HTMLElement {
 					max-width: 90%;
 					max-height: 50%;
 				}
-				button{
+				button{<link href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
 					width: 20%;
 				}
 				#text{
@@ -89,7 +89,7 @@ export default class InteractionChat extends HTMLElement {
 		this.shadow.getElementById("sendBtn").addEventListener("click", btn => {
 			//console.log(this.shadow)
 			this.addSpeechBubble(this.shadow.getElementById("text").value, true)
-			this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: this.shadow.getElementById("text").value, info: this.info }}));
+			this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.shadow.getElementById("text").value, info: this.info, toPlayer: this.info.ownPlayerID }}));
 			this.shadow.getElementById("text").value = ""
 		})
 		
@@ -135,27 +135,63 @@ export default class InteractionChat extends HTMLElement {
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
 		console.log("msg.otherSide", msg.otherSide)
 		
-		if(msg.otherSide){
-			//container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: msg}));
-			container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {answer: msg.answer, id: msg.info.id, toPlayer: msg.toPlayer} }));
+		const controlContent = document.createElement('template');
+		controlContent.innerHTML = `
+			<link href="${window.location.origin}/static/control.css" rel="stylesheet" />
+			<style>
+				#boxes{
+					display: flex;
+					flex-wrap: wrap;
+				}
+				
+				.messagebox{
+					width: 3vh;
+					height: 3vh;
+					display: flex;
+					justify-content: center;
+					background-color: var(--action-color);
+					align-items: center;
+					color: white;
+					font-family: sans-serif;
+					border: 2px solid black;
+					border-radius: var(--radius);
+				}
+				
+				.animate{
+					background-color: var(--main-color);
+					transition: background-color 0.5s linear;
+				}
+			</style>
+			<div id="boxes"></div>
+		`
+		
+		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.receivedFromOtherSide){
+			console.log("CLEAR4")
+			header.innerHTML = `${msg.info.text}`
+			container.innerHTML = ""
+			container.appendChild(controlContent.content.cloneNode(true));
+		}
+		
+		let boxcontainer = container.querySelector("#boxes")
+		let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
+		if(!box){
+			box = document.createElement(`div`)
+			box.innerHTML = msg.playerID
+			box.id = `player-${msg.playerID}`
+			box.classList.add("messagebox")
+			boxcontainer.appendChild(box)
+		}
+		
+		boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
+		boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
+		boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
+		
+		if(msg.receivedFromOtherSide){
 			console.log("other side received")
 		}else{
 			console.log("updating other side")
-			container.dispatchEvent(new CustomEvent("interaction:update-other-side", {detail: {answer: msg.answer, info: msg.info, otherSide: true, toPlayer: msg.playerID} }));
-		}
-		
-		
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.otherSide){
-			console.log("CLEAR4")
-			header.innerHTML = ""
-			container.innerHTML = ""
-		}
-		if(header.innerHTML == ""){
 			
 		}
-		
-		
-		
 	}
 	
 	handleAdditionalInfo(){

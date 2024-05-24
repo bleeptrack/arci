@@ -122,6 +122,9 @@ export class PlayerContent extends HTMLElement {
 			this.mod.addEventListener("interaction:answer", (event) => {
 				this.playerConnector.socket.emit("interaction:answer", event.detail)
 			})
+			this.mod.addEventListener("interaction:answer:otherside", (event) => {
+				this.playerConnector.socket.emit("interaction:answer:otherside", event.detail)
+			})
 			this.mod.addEventListener("interaction:fileupload", (event) => {
 				this.uploadFile(event.detail)
 			})

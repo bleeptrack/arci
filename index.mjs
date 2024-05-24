@@ -14,6 +14,7 @@ import archiver from 'archiver'
 import multer from 'multer'
 const upload = multer({ dest: config['absolute-static-file-path']+'/uploads/' })
 import extract from 'extract-zip'
+import axios from 'axios';
 
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
@@ -212,6 +213,26 @@ io.on('connection', (socket) => {
       console.log("player answered", msg, foundPlayer)
       msg.playerID = foundPlayer.id
       io.of("/control").emit("interaction:answer", msg)
+    })
+    
+    socket.on("interaction:answer:otherside", (msg) => {
+        let foundPlayer = player.find( x => x?.socketID == socket.id)
+        console.log("player sent to other side", msg, foundPlayer)
+        msg.playerID = foundPlayer.id
+        msg.otherSide = true
+        io.of("/control").emit("interaction:answer", msg)
+        axios.post(`https://${secondServer}/connection`, msg, {
+        headers: {
+          'Content-Type': "application/json; charset=UTF-8"
+        }})
+        /*
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+        */
     })
     
     socket.on("interaction:fileupload", (data, callback) => {
@@ -437,7 +458,9 @@ app.post('/connection', (req, res) => {
 //app.post('/connection', upload.any(), function (req, res, next) {
   console.log("body", req.body)
   req.body.otherSide = true
+  req.body.receivedFromOtherSide = true
   io.of("/control").emit("interaction:answer", req.body)
+  io.emit("player:cue-update", req.body)
   res.status(200).send()
 })
 
