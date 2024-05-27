@@ -8,7 +8,7 @@ class PlayerBox extends HTMLElement {
 		
 
 		socket.on("player:info", (data) => { 
-			console.log(data) 
+			//console.log(data) 
 			this.drawPlayerInfo(data)
 		});
 

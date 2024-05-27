@@ -86,6 +86,8 @@ export default class InteractionImageShare extends HTMLElement {
 				this.shadow.getElementById("content").innerHTML = ""
 				console.log("dispatch reenter fullscreen")
 				this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
+				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { name: filename, info: this.info, toPlayer: this.info.ownPlayerID }}));
+				
 			}, 'image/jpeg');
 			
 			/*
@@ -111,11 +113,77 @@ export default class InteractionImageShare extends HTMLElement {
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
 		console.log("msg.otherSide", msg.otherSide)
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.otherSide){
+		
+		const controlContent = document.createElement('template');
+		controlContent.innerHTML = `
+			<link href="${window.location.origin}/static/control.css" rel="stylesheet" />
+			<style>
+				.img-collection{
+					display: flex;
+					flex-wrap: wrap;
+					border: 1px solid black;
+					padding: 1vh;
+				}
+				.img{
+					width: 4vh;
+					height: 4vh;
+					background-size: cover;
+				}
+			</style>
+			<button id="rnd-share">Share own random</button>
+			<button id="id-share">Share 1:1</button>
+			<div id="ownImgs" class="img-collection"></div>
+			<div id="otherImgs" class="img-collection"></div>
+		`
+		
+		
+		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.receivedFromOtherSide){
 			console.log("CLEAR4")
 			header.innerHTML = ""
 			container.innerHTML = ""
+			container.appendChild(controlContent.content.cloneNode(true));
+			header.innerHTML = `${msg.info.text}`
+			header.setAttribute("cueID", msg.info.id)
 		}
+		
+		let imgDiv = document.createElement("div")
+		imgDiv.classList.add("img")
+		
+		
+		
+		container.querySelector("#rnd-share").addEventListener("click", () => {
+			container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
+		})
+		
+		container.querySelector("#id-share").addEventListener("click", () => {
+			container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
+		})
+		
+		if(msg.receivedFromOtherSide){
+			console.log("received from other Side")
+			imgDiv.style.backgroundImage = `url('http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}')`
+			imgDiv.id = msg.toPlayer
+			imgDiv.name = `http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}`
+			container.querySelector("#otherImgs").appendChild(imgDiv)
+		}else if(!msg.toPlayer){
+			console.log("received own answer") //ignoring answer that comes other side noticiation 
+			imgDiv.style.backgroundImage = `url('/media/${msg.name}')`
+			imgDiv.id = msg.playerID
+			imgDiv.name = `${msg.name}`
+			container.querySelector("#ownImgs").appendChild(imgDiv)
+		}
+		
+		function getPaths(div){
+			let paths = {}
+			for(let img of div.childNodes){
+					paths[img.id] = img.name
+				}
+			console.log("PATHS", paths)
+			return paths
+		}
+		
+		
+		/*
 		if(header.innerHTML == ""){
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
@@ -181,17 +249,35 @@ export default class InteractionImageShare extends HTMLElement {
 				container.querySelector("#other-collection").appendChild(div)
 			}
 		}
-		
+		*/
+	}
+	
+	updateInformation(data){
+		//console.log("update info", data)
+		//update is fired when other side uploads image
 	}
 	
 	handleAdditionalInfo(){
 		console.log("additional Info")
 		console.log(this.info)
 		let newMsg = {
-			type: "image",
-			filename: this.info.additionalInfo.paths[ Number(this.info.ownPlayerID)-1 ]
+			type: "image"
 		}
+		switch(this.info.additionalInfo.mode){
+			case "own-random":
+				
+				let keys = Object.keys(this.info.additionalInfo.paths)
+				let rndKeyID = Math.floor(Math.random() * keys.length)
+				console.log("OWN-RND", rndKeyID)
+				newMsg.filename = this.info.additionalInfo.paths[ keys[rndKeyID]  ]
+				break;
+			case "other-id":
+				newMsg.filename = this.info.additionalInfo.paths[ this.info.ownPlayerID ]
+				break;
+		}
+		
 		this.dispatchEvent(new CustomEvent("interaction:forward", {detail: newMsg}))
+		
 	}
 
 	// fires after the element has been attached to the DOM

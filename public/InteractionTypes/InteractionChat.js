@@ -143,7 +143,7 @@ export default class InteractionChat extends HTMLElement {
 					display: flex;
 					flex-wrap: wrap;
 				}
-				
+				answer: this.shadow.getElementById("text").value
 				.messagebox{
 					width: 3vh;
 					height: 3vh;
@@ -170,7 +170,9 @@ export default class InteractionChat extends HTMLElement {
 			header.innerHTML = `${msg.info.text}`
 			container.innerHTML = ""
 			container.appendChild(controlContent.content.cloneNode(true));
+			header.setAttribute("cueID", msg.info.id)
 		}
+		
 		
 		let boxcontainer = container.querySelector("#boxes")
 		let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
