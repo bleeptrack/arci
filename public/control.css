@@ -1,7 +1,6 @@
 :root {
   --gap-size: 1vh;
   --small-gap: calc(var(--gap-size) / 2);
-  --main-color: teal;   /* slateblue, MediumSeaGreen*/
   --action-color: firebrick;
   --hover-darken: 50%;
   --radius: 5px;

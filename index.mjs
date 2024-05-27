@@ -42,6 +42,14 @@ if (!fs.existsSync(config['absolute-static-file-path']+"/exports/")) {
     fs.mkdirSync(config['absolute-static-file-path']+"/exports/")
 }
 
+  let cssContent = `
+    :root {
+        --main-color: ${config['main-color']};
+    }
+  ` 
+  console.log("writing to:", join(__dirname, 'public', "variables.css"))
+  fs.writeFileSync(join(__dirname, 'public', "variables.css"), cssContent, { flag: 'w' }, (err) => {console.log(err)});
+
 // db.json file path
 
 const file = join(__dirname, 'db.json')

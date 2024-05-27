@@ -1,7 +1,7 @@
 :root {
-  --primary: rgba(77,4,77,1);
+  --primary: var(--main-color);
   --secondary: black;
-  --accent: #c60ac6;
+  --accent: color-mix(in hsl longer hue, var(--main-color) 20%, white);
   --font: sans-serif;
   --font-color: white;
   --main-background: linear-gradient(0deg, var(--secondary) 0%, var(--primary) 100%);
