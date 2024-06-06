@@ -64,7 +64,7 @@ const defaultData = { cues: [], squences: [] }
 const db = new LowWithLodash(adapter, defaultData)
 let player = []
 let sessionToken = ""
-let secondServer = ""
+let secondServer = config['other-side'] || ""
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
