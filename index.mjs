@@ -356,7 +356,7 @@ async function cueActivate(id, additionalInfo=null){
         case "all":
           for(let p of player){
             if(p){
-              console.log("sending to", p.id)
+              console.log("sending to", p.id, "from all case")
               p.loading = true
               p.recipient = true
               const sockets = await io.in(p.socketID).fetchSockets();
@@ -376,34 +376,38 @@ async function cueActivate(id, additionalInfo=null){
           break
         default:
           console.log("default player id case")
-          let ids = []
-          for(let part of cue['player-ids'].split(',')){
-              if(part.includes("-")){
-                  let range = part.split("-")
-                  for(let i = Number(range[0]); i<=Number(range[1]); i++){
-                      ids.push(i)
-                  }
-              }else{
-                  ids.push( Number(part) )
-              }
-          }
-          console.log("ranges", ids)
-          
-          for(let p of player){
-            if(p && ids.includes( Number(p.id))){
-              console.log("sending to", p.id)
-              p.loading = true
-              p.recipient = true
-              const sockets = await io.in(p.socketID).fetchSockets();
-              if(!sockets[0]){
-                console.log("SOCKET with ID was NOT FOUND")
-              }
-              sockets[0].emit("player:interaction", cue, (response) => {
-                console.log("ack", response)
-                player.find(x => x?.socketID == sockets[0].id).loading = false
-                sendPlayerInfo()
-              })
+          if(cue['player-ids']){
+            let ids = []
+            for(let part of cue['player-ids'].split(',')){
+                if(part.includes("-")){
+                    let range = part.split("-")
+                    for(let i = Number(range[0]); i<=Number(range[1]); i++){
+                        ids.push(i)
+                    }
+                }else{
+                    ids.push( Number(part) )
+                }
             }
+            console.log("ranges", ids)
+            
+            for(let p of player){
+              if(p && ids.includes( Number(p.id))){
+                console.log("sending to", p.id, "from default player case")
+                p.loading = true
+                p.recipient = true
+                const sockets = await io.in(p.socketID).fetchSockets();
+                if(!sockets[0]){
+                  console.log("SOCKET with ID was NOT FOUND")
+                }
+                sockets[0].emit("player:interaction", cue, (response) => {
+                  console.log("ack", response)
+                  player.find(x => x?.socketID == sockets[0].id).loading = false
+                  sendPlayerInfo()
+                })
+              }
+            }
+          }else{
+            console.log("default activated without player ids")
           }
           
     }

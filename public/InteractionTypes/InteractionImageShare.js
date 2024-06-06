@@ -144,6 +144,15 @@ export default class InteractionImageShare extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
+			
+			container.querySelector("#rnd-share").addEventListener("click", () => {
+				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
+			})
+			
+			container.querySelector("#id-share").addEventListener("click", () => {
+				console.log()
+				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
+			})
 		}
 		
 		let imgDiv = document.createElement("div")
@@ -151,13 +160,7 @@ export default class InteractionImageShare extends HTMLElement {
 		
 		
 		
-		container.querySelector("#rnd-share").addEventListener("click", () => {
-			container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
-		})
 		
-		container.querySelector("#id-share").addEventListener("click", () => {
-			container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
-		})
 		
 		if(msg.receivedFromOtherSide){
 			console.log("received from other Side")
@@ -176,80 +179,11 @@ export default class InteractionImageShare extends HTMLElement {
 		function getPaths(div){
 			let paths = {}
 			for(let img of div.childNodes){
-					paths[img.id] = img.name
-				}
+				paths[img.id] = img.name
+			}
 			console.log("PATHS", paths)
 			return paths
 		}
-		
-		
-		/*
-		if(header.innerHTML == ""){
-			header.innerHTML = `${msg.info.text}`
-			header.setAttribute("cueID", msg.info.id)
-			let imgCollection = document.createElement("div")
-			imgCollection.style.display = "flex"
-			imgCollection.id = "collection"
-			container.appendChild(imgCollection)
-			
-			let otherImgCollection = document.createElement("div")
-			otherImgCollection.style.display = "flex"
-			otherImgCollection.id = "other-collection"
-			container.appendChild(otherImgCollection)
-			
-			let btnOther = document.createElement("button")
-			btnOther.innerHTML = "Send Images to other Side"
-			btnOther.addEventListener("click", () => {
-				let paths = []
-				for(let img of imgCollection.childNodes){
-					paths.push(img.name)
-				}
-				container.dispatchEvent(new CustomEvent("interaction:update-other-side", {detail: {paths: paths, info: msg.info, otherSide: true} }));
-			})
-			container.appendChild(btnOther)
-			
-			let btn = document.createElement("button")
-			btn.innerHTML = "Share Images"
-			btn.addEventListener("click", () => {
-				let paths = []
-				for(let img of otherImgCollection.childNodes){
-					paths.push(img.name)
-				}
-				console.log(paths)
-				InteractionImageShare.shuffleArray(paths)
-				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: paths, id: msg.info.id} }));
-			})
-			container.appendChild(btn)
-		}
-		
-		if(msg.name){
-			let div = document.createElement("div")
-			div.style.backgroundImage = `url('/media/${msg.name}')`
-			div.style.backgroundSize = "contain"
-			div.style.backgroundPosition = "center"
-			div.style.backgroundRepeat = "no-repeat"
-			div.id = msg.playerID
-			div.name = msg.name
-			div.style.width = "4em" 
-			div.style.height = "4em" 
-			container.querySelector("#collection").appendChild(div)
-		}
-		
-		if(msg.paths){
-			for(let p of msg.paths){
-				let div = document.createElement("div")
-				div.style.backgroundImage = `url('http://${sessionStorage.getItem("secondServer")}/media/${p}')`
-				div.style.backgroundSize = "contain"
-				div.style.backgroundPosition = "center"
-				div.style.backgroundRepeat = "no-repeat"
-				//div.id = msg.playerID
-				div.name = `http://${sessionStorage.getItem("secondServer")}/media/${p}`
-				div.style.width = "4em" 
-				div.style.height = "4em" 
-				container.querySelector("#other-collection").appendChild(div)
-			}
-		}
-		*/
 	}
 	
 	updateInformation(data){
