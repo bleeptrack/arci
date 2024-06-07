@@ -165,34 +165,34 @@ export default class InteractionChat extends HTMLElement {
 			<div id="boxes"></div>
 		`
 		
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.receivedFromOtherSide){
+		if(msg.startup){
 			console.log("CLEAR4")
 			header.innerHTML = `${msg.info.text}`
 			container.innerHTML = ""
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
-		}
-		
-		
-		let boxcontainer = container.querySelector("#boxes")
-		let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
-		if(!box){
-			box = document.createElement(`div`)
-			box.innerHTML = msg.playerID
-			box.id = `player-${msg.playerID}`
-			box.classList.add("messagebox")
-			boxcontainer.appendChild(box)
-		}
-		
-		boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
-		boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
-		boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
-		
-		if(msg.receivedFromOtherSide){
-			console.log("other side received")
 		}else{
-			console.log("updating other side")
+		
+			let boxcontainer = container.querySelector("#boxes")
+			let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
+			if(!box){
+				box = document.createElement(`div`)
+				box.innerHTML = msg.playerID
+				box.id = `player-${msg.playerID}`
+				box.classList.add("messagebox")
+				boxcontainer.appendChild(box)
+			}
 			
+			boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
+			boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
+			boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
+			
+			if(msg.receivedFromOtherSide){
+				console.log("other side received")
+			}else{
+				console.log("updating other side")
+				
+			}
 		}
 	}
 	

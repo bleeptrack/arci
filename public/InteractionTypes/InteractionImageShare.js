@@ -83,10 +83,11 @@ export default class InteractionImageShare extends HTMLElement {
 				let file = new File([blob], filename, { type: "image/jpeg" })
 				//actionCallback({answer: answer})
 				this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: filename, info: msg }}));
+				this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:msg.id , playerid:msg.ownPlayerID, data: filename }}));
 				this.shadow.getElementById("content").innerHTML = ""
 				console.log("dispatch reenter fullscreen")
 				this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
-				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { name: filename, info: this.info, toPlayer: this.info.ownPlayerID }}));
+				//this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { name: filename, info: this.info, toPlayer: this.info.ownPlayerID }}));
 				
 			}, 'image/jpeg');
 			
@@ -130,6 +131,7 @@ export default class InteractionImageShare extends HTMLElement {
 					background-size: cover;
 				}
 			</style>
+			<button id="fetch">fetch img from other side</button>
 			<button id="rnd-share">Share own random</button>
 			<button id="id-share">Share 1:1</button>
 			<div id="ownImgs" class="img-collection"></div>
@@ -137,13 +139,33 @@ export default class InteractionImageShare extends HTMLElement {
 		`
 		
 		
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id) && !msg.receivedFromOtherSide){
+		if(msg.startup){
 			console.log("CLEAR4")
 			header.innerHTML = ""
 			container.innerHTML = ""
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
+			
+			container.querySelector("#fetch").addEventListener("click", () => {
+				
+				
+				fetch(`https://${sessionStorage.getItem("secondServer")}/sessionStorage?cuename=${encodeURIComponent( msg.info['cue-name'] )}`, { 
+					method: 'GET'
+				})
+				.then(function(response) { return response.json(); })
+				.then(function(json) {
+					console.log(json)
+					for (const [key, value] of Object.entries(json)) {
+						let imgDiv = document.createElement("div")
+						imgDiv.classList.add("img")
+						imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
+						imgDiv.id = key
+						imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
+						container.querySelector("#otherImgs").appendChild(imgDiv)
+					}
+				});
+			})
 			
 			container.querySelector("#rnd-share").addEventListener("click", () => {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
@@ -153,36 +175,44 @@ export default class InteractionImageShare extends HTMLElement {
 				console.log()
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
 			})
-		}
-		
-		let imgDiv = document.createElement("div")
-		imgDiv.classList.add("img")
-		
-		
-		
-		
-		
-		if(msg.receivedFromOtherSide){
-			console.log("received from other Side")
-			imgDiv.style.backgroundImage = `url('http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}')`
-			imgDiv.id = msg.toPlayer
-			imgDiv.name = `http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}`
-			container.querySelector("#otherImgs").appendChild(imgDiv)
-		}else if(!msg.toPlayer){
-			console.log("received own answer") //ignoring answer that comes other side noticiation 
-			imgDiv.style.backgroundImage = `url('/media/${msg.name}')`
-			imgDiv.id = msg.playerID
-			imgDiv.name = `${msg.name}`
-			container.querySelector("#ownImgs").appendChild(imgDiv)
+		}else{
+			let imgDiv = document.createElement("div")
+			imgDiv.classList.add("img")
+			
+			
+			
+			
+			
+			/*if(msg.receivedFromOtherSide){
+				console.log("received from other Side")
+				imgDiv.style.backgroundImage = `url('http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}')`
+				imgDiv.id = msg.toPlayer
+				imgDiv.name = `http://${sessionStorage.getItem("secondServer")}/media/playeruploads/${msg.name}`
+				container.querySelector("#otherImgs").appendChild(imgDiv)
+			}else if(!msg.toPlayer){
+				console.log("received own answer") //ignoring answer that comes other side noticiation 
+				imgDiv.style.backgroundImage = `url('/media/${msg.name}')`
+				imgDiv.id = msg.playerID
+				imgDiv.name = `${msg.name}`
+				container.querySelector("#ownImgs").appendChild(imgDiv)
+			}*/
+			
+			if(msg.name && !msg.toPlayer){
+				console.log("received own answer") //ignoring answer that comes other side noticiation 
+				imgDiv.style.backgroundImage = `url('/media/${msg.name}')`
+				imgDiv.id = msg.playerID
+				imgDiv.name = `${msg.name}`
+				container.querySelector("#ownImgs").appendChild(imgDiv)
+			}
 		}
 		
 		function getPaths(div){
-			let paths = {}
-			for(let img of div.childNodes){
-				paths[img.id] = img.name
-			}
-			console.log("PATHS", paths)
-			return paths
+				let paths = {}
+				for(let img of div.childNodes){
+					paths[img.id] = img.name
+				}
+				console.log("PATHS", paths)
+				return paths
 		}
 	}
 	

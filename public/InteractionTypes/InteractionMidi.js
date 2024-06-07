@@ -78,44 +78,56 @@ export default class InteractionMidi extends HTMLElement {
 	static handleAnswer(header, container, msg){
 		
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id)){
+		if(msg.startup){
 			header.innerHTML = ""
 			container.innerHTML = ""
-		}
-		if(header.innerHTML == ""){
+
 			header.innerHTML = `Midi:`
 			header.setAttribute("cueID", msg.info.id)
 			let devices = document.createElement("div")
 			devices.id = "devices"
 			container.appendChild(devices)
-		}
-		let div = document.createElement("div")
-		container.appendChild(div)
-		
-		 
-		WebMidi
-			.enable()
-			.then(() => {
-				if (WebMidi.inputs.length < 1) {
-				// Display available MIDI input devices
-				div.innerHTML+= "No device detected.";
-				} else {
-					WebMidi.inputs.forEach((device, index) => {
-						container.querySelector("#devices").innerHTML = `${index}: ${device.name} <br>`;
-					});
-					
-					const note = new Note( Number(msg.playerID) );
-					for(let output of WebMidi.outputs){
-						output.playNote(note);
+			
+			WebMidi
+				.enable()
+				.then(() => {
+					if (WebMidi.inputs.length < 1) {
+					// Display available MIDI input devices
+					container.querySelector("#devices").innerHTML+= "No device detected.";
+					} else {
+						WebMidi.inputs.forEach((device, index) => {
+							container.querySelector("#devices").innerHTML = `${index}: ${device.name} <br>`;
+						});
+						
 					}
-					div.innerHTML += `${msg.playerID} activated: ${note.identifier}`
-					
-				}
 
-			})
-			.catch(err => alert(err));
+				})
+				.catch(err => alert(err));
+			
+		}else{
+			let div = document.createElement("div")
+			container.appendChild(div)
+			
+			
+			WebMidi
+				.enable()
+				.then(() => {
+					if (WebMidi.inputs.length < 1) {
+					// Display available MIDI input devices
+					} else {
+						
+						const note = new Note( Number(msg.playerID) );
+						for(let output of WebMidi.outputs){
+							output.playNote(note);
+						}
+						div.innerHTML += `${msg.playerID} activated: ${note.identifier}`
+						
+					}
+
+				})
+				.catch(err => alert(err));
 		
-		
+		}
 	}
 	
 	static createFields(form){

@@ -135,11 +135,9 @@ export default class InteractionShop extends HTMLElement {
 	static handleAnswer(header, container, msg){
 		
 		
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id)){
+		if(msg.startup){
 			header.innerHTML = ""
 			container.innerHTML = ""
-		}
-		if(header.innerHTML == ""){
 			
 			header.innerHTML = `${msg.info.question}`
 			header.setAttribute("cueID", msg.info.id)
@@ -158,28 +156,27 @@ export default class InteractionShop extends HTMLElement {
 				container.appendChild(fieldset)
 				
 			}
-		}
-		
-		let box = container.querySelector(`#item-${msg.answer}`)
-		let span = container.querySelector(`#item-${msg.answer}>span`)
-		let c = parseInt(box.getAttribute("count"))
-		span.innerHTML = c+1
-		box.setAttribute("count", c+1)
-		
-		let result = {
-			sum: 0,
-			id: msg.info.id
-		}
-		for(let [idx, item] of msg.info.items.entries()){
+		}else{
+			let box = container.querySelector(`#item-${msg.answer}`)
+			let span = container.querySelector(`#item-${msg.answer}>span`)
+			let c = parseInt(box.getAttribute("count"))
+			span.innerHTML = c+1
+			box.setAttribute("count", c+1)
 			
-			let box = container.querySelector(`#item-${idx}`)
-			result.sum += parseInt(box.getAttribute("count")) * parseFloat(box.getAttribute("price"))
+			let result = {
+				sum: 0,
+				id: msg.info.id
+			}
+			for(let [idx, item] of msg.info.items.entries()){
+				
+				let box = container.querySelector(`#item-${idx}`)
+				result.sum += parseInt(box.getAttribute("count")) * parseFloat(box.getAttribute("price"))
+				
+			}
 			
+			
+			container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: result }))
 		}
-		
-		
-		container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: result }))
-		
 	}
 	
 	static createFields(form){

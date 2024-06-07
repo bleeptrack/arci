@@ -29,6 +29,13 @@ class AnswerBox extends HTMLElement {
 			console.log(msg)
 			this.cueTypes[msg.info.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
 		})
+		
+		socket.on("cue:active", msg => {
+			console.log("answerbox cue active", msg)
+			if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
+				this.cueTypes[msg.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})
+			}
+		})
 
 		const boxcontainer = document.createElement('template');
 

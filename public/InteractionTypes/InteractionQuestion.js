@@ -60,17 +60,16 @@ export default class InteractionQuestion extends HTMLElement {
 	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id)){
+		if(msg.startup){
 			header.innerHTML = ""
 			container.innerHTML = ""
-		}
-		if(header.innerHTML == ""){
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
+		}else{
+			let div = document.createElement("div")
+			div.innerHTML = `${msg.playerID}: ${msg.answer}`
+			container.appendChild(div)
 		}
-		let div = document.createElement("div")
-		div.innerHTML = `${msg.playerID}: ${msg.answer}`
-		container.appendChild(div)
 	}
 	
 	static createFields(form){

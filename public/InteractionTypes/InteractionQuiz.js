@@ -144,11 +144,9 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
-		if(Number(header.getAttribute("cueID")) != Number(msg.info.id)){
+		if(msg.startup){
 			header.innerHTML = ""
 			container.innerHTML = ""
-		}
-		if(header.innerHTML == ""){
 			header.innerHTML = `${msg.info.question}`
 			header.setAttribute("cueID", msg.info.id)
 			for(let i = 1; i<=4; i++){
@@ -186,28 +184,29 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: result }));
 			})
 			container.appendChild(btn)
-		}
-		//console.log(container.querySelector(`#answer-${msg.answer}`))
-		let hasVoted = false;
-		container.querySelectorAll("fieldset").forEach(set => {
-			let votes = JSON.parse(set.getAttribute("votes"))
-			if(votes.includes(msg.playerID)){
-				hasVoted = true
+		}else{
+			
+			//console.log(container.querySelector(`#answer-${msg.answer}`))
+			let hasVoted = false;
+			container.querySelectorAll("fieldset").forEach(set => {
+				let votes = JSON.parse(set.getAttribute("votes"))
+				if(votes.includes(msg.playerID)){
+					hasVoted = true
+				}
+			})
+			
+			if(!hasVoted){
+				let box = container.querySelector(`#answer-${msg.answer}`)
+				box.innerHTML += ` ${msg.playerID}`
+				box.setAttribute("count", Number(box.getAttribute("count"))+1)
+				let votes = JSON.parse(box.getAttribute("votes"))
+				votes.push(msg.playerID)
+				box.setAttribute("votes", JSON.stringify(votes))
 			}
-		})
-		
-		if(!hasVoted){
-			let box = container.querySelector(`#answer-${msg.answer}`)
-			box.innerHTML += ` ${msg.playerID}`
-			box.setAttribute("count", Number(box.getAttribute("count"))+1)
-			let votes = JSON.parse(box.getAttribute("votes"))
-			votes.push(msg.playerID)
-			box.setAttribute("votes", JSON.stringify(votes))
+			
+			//let d = document.createElement("div")
+			//d.innerHTML = `${msg.answer}:${msg.playerID}`
 		}
-		
-		//let d = document.createElement("div")
-		//d.innerHTML = `${msg.answer}:${msg.playerID}`
-		
 	}
 	
 	static createFields(form){	

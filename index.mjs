@@ -65,6 +65,7 @@ const db = new LowWithLodash(adapter, defaultData)
 let player = []
 let sessionToken = ""
 let secondServer = config['other-side'] || ""
+let arciSessionStorage = { '4475': { '1': 'assembly.png' } }
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
@@ -127,6 +128,7 @@ io.of("/control").on('connection', (socket) => {
     
     socket.on("session:end", (msg) => {
         sessionToken = ""
+        arciSessionStorage = {}
         sendSessionInfo()
         //ToDo cick users from session
     })
@@ -136,6 +138,7 @@ io.of("/control").on('connection', (socket) => {
     })
     
     socket.on("cue activate", (msg) => {
+        io.of("/control").emit("cue:active", db.chain.get("cues").find({id: Number(msg) }).value() )
         cueActivate(msg)
     })
     
@@ -241,6 +244,15 @@ io.on('connection', (socket) => {
           console.log(error);
         });
         */
+    })
+    
+    socket.on("interaction:session-storage", (cueid, playerid, data) => {
+      if(!arciSessionStorage.hasOwnProperty(cueid)){
+        arciSessionStorage[cueid] = {}
+      }
+      arciSessionStorage[cueid][playerid] = data
+      console.log("storage updated", arciSessionStorage)
+      io.of("/control").emit("session:storage-update", arciSessionStorage)
     })
     
     socket.on("interaction:fileupload", (data, callback) => {
@@ -411,6 +423,7 @@ async function cueActivate(id, additionalInfo=null){
           }
           
     }
+    
     sendPlayerInfo()
 }
 
@@ -503,6 +516,19 @@ app.post('/connection', (req, res) => {
   req.body.receivedFromOtherSide = true
   io.of("/control").emit("interaction:answer", req.body)
   io.emit("player:cue-update", req.body)
+  res.status(200).send()
+})
+
+app.get('/sessionStorage', (req, res) => {
+//app.post('/connection', upload.any(), function (req, res, next) {
+  console.log("body", req.query)
+  if(req.query.cuename){
+    let cue = db.chain.get("cues").find({ "cue-name": req.query.cuename }).value()
+    if(cue){
+      res.json(arciSessionStorage[cue.id])
+    }
+  }
+  
   res.status(200).send()
 })
 
