@@ -165,7 +165,7 @@ export default class InteractionChat extends HTMLElement {
 			<div id="boxes"></div>
 		`
 		
-		if(msg.startup){
+		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			console.log("CLEAR4")
 			header.innerHTML = `${msg.info.text}`
 			container.innerHTML = ""

@@ -135,7 +135,7 @@ export default class InteractionShop extends HTMLElement {
 	static handleAnswer(header, container, msg){
 		
 		
-		if(msg.startup){
+		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			header.innerHTML = ""
 			container.innerHTML = ""
 			

@@ -144,7 +144,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
-		if(msg.startup){
+		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			header.innerHTML = ""
 			container.innerHTML = ""
 			header.innerHTML = `${msg.info.question}`

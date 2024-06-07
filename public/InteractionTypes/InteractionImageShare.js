@@ -139,7 +139,7 @@ export default class InteractionImageShare extends HTMLElement {
 		`
 		
 		
-		if(msg.startup){
+		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			console.log("CLEAR4")
 			header.innerHTML = ""
 			container.innerHTML = ""
