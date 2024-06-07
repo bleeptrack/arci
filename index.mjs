@@ -65,7 +65,7 @@ const db = new LowWithLodash(adapter, defaultData)
 let player = []
 let sessionToken = ""
 let secondServer = config['other-side'] || ""
-let arciSessionStorage = { '4475': { '1': 'assembly.png' } }
+let arciSessionStorage = { }
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
