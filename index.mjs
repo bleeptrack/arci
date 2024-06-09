@@ -267,7 +267,7 @@ io.on('connection', (socket) => {
           data.name = "playeruploads/" + data.name
           console.log("player answered", data, foundPlayer)
           data.playerID = foundPlayer.id
-          io.of("/control").emit("interaction:answer", data)
+          //io.of("/control").emit("interaction:answer", data)
         }
       });
     });
@@ -340,6 +340,7 @@ function addPlayer(id, socketID){
 
 function sendSessionInfo(){
    io.of("/control").emit("session:info", sessionToken!="");
+   io.of("/control").emit("session:storage-update", arciSessionStorage)
 }
 
 function sendPlayerInfo(){
@@ -519,21 +520,21 @@ app.post('/connection', (req, res) => {
   res.status(200).send()
 })
 
+
 app.get('/sessionStorage', (req, res) => {
 //app.post('/connection', upload.any(), function (req, res, next) {
   console.log("body", req.query)
   if(req.query.cuename){
     let cue = db.chain.get("cues").find({ "cue-name": req.query.cuename }).value()
     if(cue){
-      io.of("/control").emit("interaction:session-storage:updated", {info: cue, data: arciSessionStorage[cue.id] })
-      res.status(200).send()
+      res.json(arciSessionStorage[cue.id]).send()
       return
-      //res.json(arciSessionStorage[cue.id])
     }
   }
   
   res.status(200).send()
 })
+
 
 app.get('/control', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'control.html'))

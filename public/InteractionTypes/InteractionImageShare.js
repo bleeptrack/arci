@@ -116,13 +116,19 @@ export default class InteractionImageShare extends HTMLElement {
 	}
 	
 	static updateFromSessionStorage(header, container, msg){
-		for (const [key, value] of Object.entries(msg.data)) {
-			let imgDiv = document.createElement("div")
-			imgDiv.classList.add("img")
-			imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
-			imgDiv.id = key
-			imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
-			container.querySelector("#otherImgs").appendChild(imgDiv)
+		let cueID = header.getAttribute("cueID")
+		container.querySelector("#ownImgs").innerHTML = ""
+		
+		console.log("session storage update", msg, cueID, msg[cueID])
+		if(msg[cueID]){
+			for (const [key, value] of Object.entries(msg[cueID])) {
+				let imgDiv = document.createElement("div")
+				imgDiv.classList.add("img")
+				imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
+				imgDiv.id = key
+				imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
+				container.querySelector("#ownImgs").appendChild(imgDiv)
+			}	
 		}
 	}
 	
@@ -163,10 +169,21 @@ export default class InteractionImageShare extends HTMLElement {
 			header.setAttribute("cueID", msg.info.id)
 			
 			container.querySelector("#fetch").addEventListener("click", () => {
-				
-				
 				fetch(`https://${sessionStorage.getItem("secondServer")}/sessionStorage?cuename=${encodeURIComponent( msg.info['cue-name'] )}`, { 
 					method: 'GET'
+				})
+				.then(function(response) { return response.json(); })
+				.then(function(json) {
+					console.log("json", json)
+					container.querySelector("#otherImgs").innerHTML = ""
+					for (const [key, value] of Object.entries(json)) {
+						let imgDiv = document.createElement("div")
+						imgDiv.classList.add("img")
+						imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
+						imgDiv.id = key
+						imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
+						container.querySelector("#otherImgs").appendChild(imgDiv)
+					}	
 				})
 			})
 			
@@ -199,7 +216,7 @@ export default class InteractionImageShare extends HTMLElement {
 				imgDiv.name = `${msg.name}`
 				container.querySelector("#ownImgs").appendChild(imgDiv)
 			}*/
-			
+			/*
 			if(msg.name && !msg.toPlayer){
 				console.log("received own answer") //ignoring answer that comes other side noticiation 
 				imgDiv.style.backgroundImage = `url('/media/${msg.name}')`
@@ -207,6 +224,7 @@ export default class InteractionImageShare extends HTMLElement {
 				imgDiv.name = `${msg.name}`
 				container.querySelector("#ownImgs").appendChild(imgDiv)
 			}
+			*/
 		}
 		
 		function getPaths(div){
@@ -217,6 +235,12 @@ export default class InteractionImageShare extends HTMLElement {
 				console.log("PATHS", paths)
 				return paths
 		}
+		
+		let serverStore = JSON.parse( sessionStorage.getItem("serverStorage") )
+		console.log("serverStore", serverStore)
+		if(serverStore){
+			InteractionImageShare.updateFromSessionStorage(header, container, serverStore)
+		}
 	}
 	
 	updateInformation(data){
@@ -224,6 +248,7 @@ export default class InteractionImageShare extends HTMLElement {
 		//update is fired when other side uploads image
 	}
 	
+	///handled on smartphone
 	handleAdditionalInfo(){
 		console.log("additional Info")
 		console.log(this.info)

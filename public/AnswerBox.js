@@ -8,6 +8,7 @@ class AnswerBox extends HTMLElement {
 		this.shadow = this.attachShadow({ mode: 'open' });
 		this.cueTypes = {}
 		this.osc = new OtherSideConnector("")
+		this.activeCue = undefined
 		
 		socket.on("cue:load", (data) => { 
 			
@@ -30,13 +31,15 @@ class AnswerBox extends HTMLElement {
 			console.log(this.cueTypes[msg.info.type])
 			if (typeof this.cueTypes[msg.info.type].handleAnswer === "function") { 
 				this.cueTypes[msg.info.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+				this.activeCue = this.cueTypes[msg.type]
 			}
 		})
 		
-		socket.on("interaction:session-storage:updated", msg => {
+		socket.on("session:storage-update", msg => {
 			console.log(msg)
-			if (typeof this.cueTypes[msg.info.type].updateFromSessionStorage === "function") { 
-				this.cueTypes[msg.info.type].updateFromSessionStorage(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+			sessionStorage.setItem("serverStorage", JSON.stringify(msg))
+			if (this.activeCue && typeof this.activeCue.updateFromSessionStorage === "function") { 
+				this.activeCue.updateFromSessionStorage(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg )
 			}
 		})
 		
@@ -44,6 +47,7 @@ class AnswerBox extends HTMLElement {
 			console.log("answerbox cue active", msg)
 			if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
 				this.cueTypes[msg.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})
+				this.activeCue = this.cueTypes[msg.type]
 			}
 		})
 
