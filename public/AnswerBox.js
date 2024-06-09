@@ -26,8 +26,18 @@ class AnswerBox extends HTMLElement {
 		})
 
 		socket.on("interaction:answer", msg => {
+			console.log(msg.type, msg)
+			console.log(this.cueTypes[msg.info.type])
+			if (typeof this.cueTypes[msg.info.type].handleAnswer === "function") { 
+				this.cueTypes[msg.info.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+			}
+		})
+		
+		socket.on("interaction:session-storage:updated", msg => {
 			console.log(msg)
-			this.cueTypes[msg.info.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+			if (typeof this.cueTypes[msg.info.type].updateFromSessionStorage === "function") { 
+				this.cueTypes[msg.info.type].updateFromSessionStorage(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+			}
 		})
 		
 		socket.on("cue:active", msg => {

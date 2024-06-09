@@ -35,11 +35,14 @@ export default class InteractionImageShare extends HTMLElement {
 				button{
 					margin-bottom: 20%;
 				}
+				button:disabled{
+					opacity: 0;
+				}
 			</style>
 			<div id="content">
 				<h1>${msg.text}</h1>
 				<input type="file" id="file"></input>
-				<button id="sendBtn">send</button>
+				<button id="sendBtn" disabled>send</button>
 			</div>
 		`;
 
@@ -59,6 +62,7 @@ export default class InteractionImageShare extends HTMLElement {
 				image.name = e.target.files[0].name
 				e.target.replaceWith(image)
 				image.src = URL.createObjectURL( e.target.files[0] )
+				this.shadow.getElementById("sendBtn").disabled = false
 			}
 			
 		})
@@ -111,6 +115,17 @@ export default class InteractionImageShare extends HTMLElement {
 		}
 	}
 	
+	static updateFromSessionStorage(header, container, msg){
+		for (const [key, value] of Object.entries(msg.data)) {
+			let imgDiv = document.createElement("div")
+			imgDiv.classList.add("img")
+			imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
+			imgDiv.id = key
+			imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
+			container.querySelector("#otherImgs").appendChild(imgDiv)
+		}
+	}
+	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
 		console.log("msg.otherSide", msg.otherSide)
@@ -153,18 +168,6 @@ export default class InteractionImageShare extends HTMLElement {
 				fetch(`https://${sessionStorage.getItem("secondServer")}/sessionStorage?cuename=${encodeURIComponent( msg.info['cue-name'] )}`, { 
 					method: 'GET'
 				})
-				.then(function(response) { return response.json(); })
-				.then(function(json) {
-					console.log(json)
-					for (const [key, value] of Object.entries(json)) {
-						let imgDiv = document.createElement("div")
-						imgDiv.classList.add("img")
-						imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
-						imgDiv.id = key
-						imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
-						container.querySelector("#otherImgs").appendChild(imgDiv)
-					}
-				});
 			})
 			
 			container.querySelector("#rnd-share").addEventListener("click", () => {

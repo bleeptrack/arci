@@ -525,7 +525,10 @@ app.get('/sessionStorage', (req, res) => {
   if(req.query.cuename){
     let cue = db.chain.get("cues").find({ "cue-name": req.query.cuename }).value()
     if(cue){
-      res.json(arciSessionStorage[cue.id])
+      io.of("/control").emit("interaction:session-storage:updated", {info: cue, data: arciSessionStorage[cue.id] })
+      res.status(200).send()
+      return
+      //res.json(arciSessionStorage[cue.id])
     }
   }
   
