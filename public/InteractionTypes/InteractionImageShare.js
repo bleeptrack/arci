@@ -124,9 +124,9 @@ export default class InteractionImageShare extends HTMLElement {
 			for (const [key, value] of Object.entries(msg[cueID])) {
 				let imgDiv = document.createElement("div")
 				imgDiv.classList.add("img")
-				imgDiv.style.backgroundImage = `url('https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}')`
+				imgDiv.style.backgroundImage = `url('/media/playeruploads/${value}')`
 				imgDiv.id = key
-				imgDiv.name = `https://${sessionStorage.getItem("secondServer")}/media/playeruploads/${value}`
+				imgDiv.name = `/media/playeruploads/${value}`
 				container.querySelector("#ownImgs").appendChild(imgDiv)
 			}	
 		}
