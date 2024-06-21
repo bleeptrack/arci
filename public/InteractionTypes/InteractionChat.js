@@ -11,6 +11,9 @@ export default class InteractionChat extends HTMLElement {
 		
 		this.shadow = this.attachShadow({ mode: 'open' });
 		this.info = msg
+		this.typingindicator = "[✍️...]"
+		this.isTyping = false
+		
 
 		const container = document.createElement('template');
 
@@ -67,6 +70,9 @@ export default class InteractionChat extends HTMLElement {
 					align-self: start;
 					background-color: lightgrey;
 				}
+				.typing{
+					opacity: 0.5;
+				}
 			</style>
 			<div id="content">
 				<h1>${msg.text}</h1>
@@ -108,25 +114,57 @@ export default class InteractionChat extends HTMLElement {
 			this.shadow.getElementById("content").style.paddingBottom = "0px"
 		})
 		
+
+		
 		
 		this.shadow.getElementById("text").addEventListener("keyup", event => {
 			if (event.keyCode === 13) {
 				this.shadow.getElementById("sendBtn").click()
 			}
+			
+				clearTimeout(this.typingTimer)
+				if(!this.isTyping){
+					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.typingindicator, info: this.info, toPlayer: this.info.ownPlayerID }}));
+					this.isTyping = true
+				}
+				
+				
+				this.typingTimer = setTimeout(() => {
+					this.isTyping = false
+					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: "!"+this.typingindicator, info: this.info, toPlayer: this.info.ownPlayerID }}));
+					
+				}, 2000)
+			
 		});
 		
 		
 	}
 
 	addSpeechBubble(text, own){
-		let bubble = document.createElement("div")
-		bubble.classList.add("bubble")
-		bubble.innerHTML = text
-		this.shadow.getElementById("chat").appendChild(bubble)
-		if(own){
-			bubble.classList.add("own")
-		}else{
-			bubble.classList.add("other")
+		let foundTyping = this.shadow.getElementById("chat").querySelector(".typing")
+		
+		if(foundTyping && !own){
+			if(text != this.typingindicator){
+				foundTyping.innerHTML = text
+				foundTyping.classList.remove("typing")
+			}
+			if( text == "!"+this.typingindicator ){
+				foundTyping.remove()
+			}
+		}else if( text != "!"+this.typingindicator ){
+			
+			let bubble = document.createElement("div")
+			bubble.classList.add("bubble")
+			bubble.innerHTML = text
+			this.shadow.getElementById("chat").appendChild(bubble)
+			if(own){
+				bubble.classList.add("own")
+			}else{
+				bubble.classList.add("other")
+				if(text == this.typingindicator){
+					bubble.classList.add("typing")
+				}
+			}
 		}
 		this.shadow.getElementById("chat").scrollTop = this.shadow.getElementById("chat").scrollHeight;
 	}
@@ -143,7 +181,7 @@ export default class InteractionChat extends HTMLElement {
 					display: flex;
 					flex-wrap: wrap;
 				}
-				answer: this.shadow.getElementById("text").value
+				
 				.messagebox{
 					width: 3vh;
 					height: 3vh;
@@ -173,26 +211,29 @@ export default class InteractionChat extends HTMLElement {
 			header.setAttribute("cueID", msg.info.id)
 		}else{
 		
-			let boxcontainer = container.querySelector("#boxes")
-			let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
-			if(!box){
-				box = document.createElement(`div`)
-				box.innerHTML = msg.playerID
-				box.id = `player-${msg.playerID}`
-				box.classList.add("messagebox")
-				boxcontainer.appendChild(box)
-			}
-			
-			boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
-			boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
-			boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
-			
-			if(msg.receivedFromOtherSide){
-				console.log("other side received")
-			}else{
-				console.log("updating other side")
+			if(msg.playerID){
+				let boxcontainer = container.querySelector("#boxes")
+				let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
+				if(!box){
+					box = document.createElement(`div`)
+					box.innerHTML = msg.playerID
+					box.id = `player-${msg.playerID}`
+					box.classList.add("messagebox")
+					boxcontainer.appendChild(box)
+				}
 				
+				boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
+				boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
+				boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
+				
+				if(msg.receivedFromOtherSide){
+					console.log("other side received")
+				}else{
+					console.log("updating other side")
+					
+				}
 			}
+			
 		}
 	}
 	

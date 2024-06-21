@@ -500,6 +500,12 @@ app.post('/uploadproject', upload.single('export'), function (req, res, next) {
       fs.unlinkSync(config['absolute-static-file-path'] + "/uploads/" + file)
     })
     
+    db.read().then( () => {
+      console.log("rereading the db")
+      sendCueInfo()
+      sendSequenceInfo()
+    })
+    
   })
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
