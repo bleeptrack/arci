@@ -58,6 +58,15 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					text-align: center;
 					font-family: var(--font);
 				}
+				.answerbutton{
+					flex-grow: 1;
+					background-position: center;
+					background-size: cover;
+					font-size: 6vw;
+				}
+				#content{
+					gap: 2vh;
+				}
 			</style>
 			<div id="content">
 				<h1>${this.info.question}</h1>
@@ -121,7 +130,12 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					let btn = document.createElement("button")
 					btn.id = i
 					btn.classList.add("answerbutton")
-					btn.innerHTML = this.info[i]
+					if(this.info[`filename-${i}`]){
+						let name = `filename-${i}`
+						btn.style.backgroundImage = `url("/media/${this.info[name]}")`
+						btn.classList.add("img-btn")
+					}
+					btn.innerHTML += this.info[i]
 					content.appendChild(btn)
 				}
 			}
@@ -289,6 +303,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 		
 		for(let i = 1; i<5; i++){
 			CustomInput.textInput(form, i, `Answer ${i}:`)
+			CustomInput.filepicker(form, "filename-"+i, "Choose an optional Image:")
 			CustomInput.checkbox(form, "correct-"+i)
 			CustomInput.br(form)
 		}
