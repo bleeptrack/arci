@@ -57,10 +57,12 @@ export class PlayerContent extends HTMLElement {
 		document.addEventListener("visibilitychange", () => {
 			
 			// Modify behavior…
+			
 			if(document.hidden && !this.allowSwitch){
 				this.content.innerHTML = "you went away...please reload to join again."
 				this.playerConnector.pauseUser()
 			}
+			
 			
 		});
 		
