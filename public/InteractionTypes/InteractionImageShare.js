@@ -86,8 +86,9 @@ export default class InteractionImageShare extends HTMLElement {
 			canvas.toBlob((blob) => {
 				let file = new File([blob], filename, { type: "image/jpeg" })
 				//actionCallback({answer: answer})
-				this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: filename, info: msg }}));
-				this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:msg.id , playerid:msg.ownPlayerID, data: filename }}));
+				let name = Math.round(Math.random()*999999999999) + "-imageshare.jpg"
+				this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: name, info: msg }}));
+				this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:msg.id , playerid:msg.ownPlayerID, data: name }}));
 				this.shadow.getElementById("content").innerHTML = ""
 				console.log("dispatch reenter fullscreen")
 				this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
