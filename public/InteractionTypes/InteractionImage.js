@@ -10,9 +10,9 @@ export default class InteractionImage extends HTMLElement {
 		super();
 		
 		if(msg.filename.includes("http")){
-			this.mediaPath = msg.filename
+			this.mediaPath = encodeURIComponent(msg.filename)
 		}else{
-			this.mediaPath = "./media/" + msg.filename
+			this.mediaPath = "./media/" + encodeURIComponent(msg.filename)
 		}
 		this.shadow = this.attachShadow({ mode: 'open' });
 		
@@ -44,11 +44,12 @@ export default class InteractionImage extends HTMLElement {
 		var image = new Image();
 		
 		image.addEventListener('load', () => {
-			this.shadow.getElementById("content").style.backgroundImage = 'url(' + this.mediaPath + ')';
+			this.shadow.getElementById("content").style.backgroundImage = 'url("' + this.mediaPath + '")';
 			callback({status: "ok"})
 			console.log("OK")
 		});
 		image.src = this.mediaPath;
+		
 	}
 
 	// fires after the element has been attached to the DOM
