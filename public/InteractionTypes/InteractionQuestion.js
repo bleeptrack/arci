@@ -48,6 +48,7 @@ export default class InteractionQuestion extends HTMLElement {
 			let answer = this.shadow.getElementById("answer").value
 			//actionCallback({answer: answer})
 			this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: answer, info: msg }}));
+			this.shadow.getElementById("content").innerHTML = ""
 		})
 	}
 	
@@ -66,9 +67,11 @@ export default class InteractionQuestion extends HTMLElement {
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
 		}else{
-			let div = document.createElement("div")
-			div.innerHTML = `${msg.playerID}: ${msg.answer}`
-			container.appendChild(div)
+			if(msg.playerID){
+				let div = document.createElement("div")
+				div.innerHTML = `${msg.playerID}: ${msg.answer}`
+				container.appendChild(div)
+			}
 		}
 	}
 	

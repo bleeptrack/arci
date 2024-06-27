@@ -212,16 +212,16 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				<legend>${msg.info[4]}</legend>
 			</fieldset>
 			<button id="send">Send Answers</button>
-			<button id="fetch">Fetch Answers from other Side></button>
+			<button id="fetch">Fetch Answers from other Side</button>
 		`
 		
 		
 		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
-			console.log("CLEAR4")
+			console.log("CLEAR4", msg)
 			header.innerHTML = ""
 			container.innerHTML = ""
 			container.appendChild(controlContent.content.cloneNode(true));
-			header.innerHTML = `${msg.info.text}`
+			header.innerHTML = `${msg.info.question}`
 			header.setAttribute("cueID", msg.info.id)
 			
 			container.querySelector("#send").addEventListener("click", () => {

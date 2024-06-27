@@ -385,7 +385,7 @@ async function cueActivate(id, additionalInfo=null){
           }
           break
         case "random":
-          console.log("random player id case")
+          console.log("random player id case (not implemented yet)")
           break
         default:
           console.log("default player id case")

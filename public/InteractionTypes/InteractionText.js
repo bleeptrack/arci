@@ -9,6 +9,7 @@ export default class InteractionText extends HTMLElement {
 	constructor(msg, callback) {
 		super();
 		
+		console.log(msg)
 		this.text = msg.text
 		this.shadow = this.attachShadow({ mode: 'open' });
 
