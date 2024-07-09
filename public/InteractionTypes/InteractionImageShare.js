@@ -32,6 +32,8 @@ export default class InteractionImageShare extends HTMLElement {
 					max-width: 90%;
 					max-height: 50%;
 				}
+				
+				
 				button{
 					margin-bottom: 20%;
 				}
@@ -129,6 +131,12 @@ export default class InteractionImageShare extends HTMLElement {
 				imgDiv.id = key
 				imgDiv.name = `/media/playeruploads/${value}`
 				container.querySelector("#ownImgs").appendChild(imgDiv)
+				
+				imgDiv.addEventListener("click", () => {
+					delete msg[cueID][key]
+					container.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: msg }));
+				})
+				
 			}	
 		}
 	}
@@ -152,9 +160,14 @@ export default class InteractionImageShare extends HTMLElement {
 					height: 4vh;
 					background-size: cover;
 				}
+				
+				.img:hover{
+					opacity: 0.5;
+				}
 			</style>
 			<button id="fetch">fetch img from other side</button>
 			<button id="rnd-share">Share own random</button>
+			<button id="shuffle-share">Share own shuffled</button>
 			<button id="id-share">Share 1:1</button>
 			<div id="ownImgs" class="img-collection"></div>
 			<div id="otherImgs" class="img-collection"></div>
@@ -190,6 +203,17 @@ export default class InteractionImageShare extends HTMLElement {
 			
 			container.querySelector("#rnd-share").addEventListener("click", () => {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
+			})
+			
+			container.querySelector("#shuffle-share").addEventListener("click", () => {
+				let info = getPaths(container.querySelector("#ownImgs"))
+				console.log(info)
+				let shuffledPaths = InteractionImageShare.shuffle(Object.values(getPaths(container.querySelector("#ownImgs"))))
+				let newData = {}
+				for(let [key, value] of Object.entries(info)){
+					newData[key] = shuffledPaths[key]
+				}
+				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: info, id: msg.info.id, mode:"own-shuffle"} }));
 			})
 			
 			container.querySelector("#id-share").addEventListener("click", () => {
@@ -244,6 +268,23 @@ export default class InteractionImageShare extends HTMLElement {
 		}
 	}
 	
+	static shuffle(array) {
+		let currentIndex = array.length;
+
+		// While there remain elements to shuffle...
+		while (currentIndex != 0) {
+
+			// Pick a remaining element...
+			let randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex--;
+
+			// And swap it with the current element.
+			[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex], array[currentIndex]];
+		}
+		return array
+	}
+	
 	updateInformation(data){
 		//console.log("update info", data)
 		//update is fired when other side uploads image
@@ -263,6 +304,9 @@ export default class InteractionImageShare extends HTMLElement {
 				let rndKeyID = Math.floor(Math.random() * keys.length)
 				console.log("OWN-RND", rndKeyID)
 				newMsg.filename = this.info.additionalInfo.paths[ keys[rndKeyID]  ]
+				break;
+			case "own-shuffle":
+				newMsg.filename = this.info.additionalInfo.paths[ this.info.ownPlayerID ]
 				break;
 			case "other-id":
 				newMsg.filename = this.info.additionalInfo.paths[ this.info.ownPlayerID ]

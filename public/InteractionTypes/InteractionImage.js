@@ -12,6 +12,7 @@ export default class InteractionImage extends HTMLElement {
 		if(msg.filename.includes("http")){
 			this.mediaPath = encodeURIComponent(msg.filename)
 		}else{
+			msg.filename = msg.filename.replace("/media/", "")
 			this.mediaPath = "./media/" + encodeURIComponent(msg.filename)
 		}
 		this.shadow = this.attachShadow({ mode: 'open' });

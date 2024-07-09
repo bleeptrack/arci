@@ -111,6 +111,12 @@ io.of("/control").on('connection', (socket) => {
         cueActivate(msg.id, msg)
     })
     
+     socket.on("interaction:session-storage", (updatedStorage) => {
+      arciSessionStorage = updatedStorage
+      console.log("storage updated from control", arciSessionStorage)
+      io.of("/control").emit("session:storage-update", arciSessionStorage)
+    })
+    
     socket.on("interaction:show-update", (msg) => {
         console.log("interaction show update", msg)
         io.emit("player:cue-update", msg)

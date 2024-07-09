@@ -109,6 +109,10 @@ class AnswerBox extends HTMLElement {
 			socket.emit("interaction:show-update", event.detail)
 		})
 		
+		this.shadow.getElementById("answers").addEventListener("interaction:session-storage", (event) => {
+			socket.emit("interaction:session-storage", event.detail)
+		})
+		
 		this.shadow.getElementById("openanswers").addEventListener("click", () => {
 			window.open("/answers", '_blank').focus();
 		})
