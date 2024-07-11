@@ -43,7 +43,7 @@ export default class InteractionImageShare extends HTMLElement {
 			</style>
 			<div id="content">
 				<h1>${msg.text}</h1>
-				<input type="file" id="file"></input>
+				<input type="file" id="file" accept="image/png, image/jpeg"></input>
 				<button id="sendBtn" disabled>send</button>
 			</div>
 		`;
