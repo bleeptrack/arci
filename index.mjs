@@ -60,7 +60,7 @@ class LowWithLodash extends Low {
 }
 // Configure lowdb to write data to JSON file
 const adapter = new JSONFile(file)
-const defaultData = { cues: [], squences: [] }
+const defaultData = { cues: [], squences: [], sessionToken: "" }
 const db = new LowWithLodash(adapter, defaultData)
 let player = []
 let sessionToken = ""
@@ -70,6 +70,7 @@ let arciSessionStorage = { }
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
 await db.read()
+sessionToken = db.data.sessionToken || ""
 
 // Create and query items using plain JavaScript
 //db.data.cues.push('hello world')
@@ -129,12 +130,16 @@ io.of("/control").on('connection', (socket) => {
     
     socket.on("session:start", (msg) => {
         sessionToken = Math.random().toString(36).substr(2)
+        db.data.sessionToken = sessionToken
+        db.write()
         sendSessionInfo()
     })
     
     socket.on("session:end", (msg) => {
         sessionToken = ""
+        db.data.sessionToken = sessionToken
         arciSessionStorage = {}
+        db.write()
         sendSessionInfo()
         //ToDo cick users from session
     })
