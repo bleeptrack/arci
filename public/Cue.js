@@ -215,7 +215,12 @@ export class Cue extends HTMLElement {
 	
 	activate(){
 		console.log("click")
-		socket.emit("cue activate", this.id)
+		let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
+		let sequenceName = this.parentNode.id
+		socket.emit("cue activate", this.id, idx, sequenceName)
+	}
+	
+	visuallyActivate(){
 		this.shadow.getElementById("cuebox").classList.add("activated")
 		this.shadow.getElementById("cuebox").scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest"})
 	}

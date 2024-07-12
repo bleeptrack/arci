@@ -43,7 +43,7 @@ class AnswerBox extends HTMLElement {
 			}
 		})
 		
-		socket.on("cue:active", msg => {
+		socket.on("cue:active", (msg, idx, seq) => {
 			console.log("answerbox cue active", msg)
 			if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
 				this.cueTypes[msg.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})

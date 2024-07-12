@@ -148,8 +148,13 @@ io.of("/control").on('connection', (socket) => {
         triggerPreload(msg)
     })
     
-    socket.on("cue activate", (msg) => {
-        io.of("/control").emit("cue:active", db.chain.get("cues").find({id: Number(msg) }).value() )
+    socket.on("cue activate", (msg, idx, sequenceName) => {
+        //let dbcue = db.chain.get("cues").find({id: Number(msg) }).value()
+        //let  cue = { ...dbcue }
+        //cue["instanceID"] = instanceID
+        msg = db.chain.get("cues").find({id: Number(msg) }).value()
+        io.of("/control").emit("cue:active", msg, idx, sequenceName )
+       
         cueActivate(msg)
     })
     

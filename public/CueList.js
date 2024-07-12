@@ -32,6 +32,11 @@ class CueList extends HTMLElement {
 				document.querySelector("scene-tabs").activateScene(activeScene)
 			}
 		});
+		
+		socket.on("cue:active", (cue, idx, seq) => {
+			console.log("cue got activated", cue, idx, seq)
+			this.visualActiveCue(idx, seq)
+		})
 
 
 		const listcontainer = document.createElement('template');
@@ -202,11 +207,31 @@ class CueList extends HTMLElement {
 		let c1 = new Cue(data)
 		c1.addEventListener("click cue", (event) => {
 			console.log("cue event received", event.target)
-			this.handleCueClick(event.target.getAttribute("instance"))
+			event.target.activate()
+			this.activeCue = event.target
+			this.sendPreload(this.activeCue)
+			
+			
+			
 		})
 		return c1
 	}
 	
+	sendPreload(startNode){
+		
+		let node = startNode.nextSibling
+		let preloadIDs = []
+		for(let i = 1; i<=3; i++){
+			if(node){
+				preloadIDs.push(node.id)
+				node = node.nextSibling
+			}
+		}
+		console.log("preload:", preloadIDs)
+		socket.emit("cue:preload", preloadIDs)
+	}
+	
+	/*
 	handleCueClick(instanceID){
 		let cues = this.shadow.querySelectorAll("cue-item")
 		for(let [idx,c] of cues.entries()){
@@ -214,20 +239,26 @@ class CueList extends HTMLElement {
 				c.activate()
 				this.activeCue = c
 				
-				let preloadIDs = []
-				for(let i = 1; i<=3; i++){
-					if(cues[idx+i]){
-						preloadIDs.push(Number(cues[idx+i].id))
-					}
-				}
-				console.log("preload:", preloadIDs)
-				socket.emit("cue:preload", preloadIDs)
+				
 				
 			}else{
 				c.deactivate()
 			}
 		}
-		this.saveCueSequence()
+		//this.saveCueSequence()
+	}
+	*/
+	
+	visualActiveCue(idx, seq){
+		let cues = this.shadow.querySelectorAll("cue-item")
+		for(let c of cues){
+			c.deactivate()
+		}
+		
+		let seqNode = this.shadow.getElementById(seq)
+		let cue = seqNode.children[idx]
+		cue.visuallyActivate()
+		this.activeCue = cue
 	}
 	
 	saveCueSequence(){
@@ -253,23 +284,23 @@ class CueList extends HTMLElement {
 		})
 		
 		this.shadow.getElementById("prev").addEventListener("click", (event => {
-			let instance = this.activeCue.previousSibling.getAttribute("instance")
+			let instance = this.activeCue.previousSibling
 			if(instance){
-				this.handleCueClick(instance)
+				instance.click()
 			}
 		}))
 		
 		this.shadow.getElementById("next").addEventListener("click", (event => {
 			console.log("NEXT")
 			if(this.activeCue){
-				let instance = this.activeCue.nextSibling?.getAttribute("instance")
+				let instance = this.activeCue.nextSibling
 				if(instance){
-					this.handleCueClick(instance)
+					instance.click()
 				}
 			}else{
-				let instance =this.shadow.querySelector("cue-item").getAttribute("instance")
+				let instance =this.shadow.querySelector("cue-item")
 				if(instance){
-					this.handleCueClick(instance)
+					instance.click()
 				}
 			}
 			
