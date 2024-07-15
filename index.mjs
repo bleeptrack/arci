@@ -479,7 +479,12 @@ app.get('/saveproject', (req, res) => {
   output.on('close', function() {
     console.log(archive.pointer() + ' total bytes');
     console.log('archiver has been finalized and the output file descriptor has closed.');
+    io.of("/control").emit("save-project:file", { name: "finishing up... Download starts in a moment." } )
     res.sendFile(config['absolute-static-file-path'] + '/exports/' + exportFilename)
+  });
+  
+  archive.on('process', function(info) {
+    console.log(info)
   });
   
   archive.pipe(output)
@@ -488,6 +493,7 @@ app.get('/saveproject', (req, res) => {
         console.log(file)
         console.log(config['absolute-static-file-path']+file.name)
         archive.file(config['absolute-static-file-path']+file.name, { name: "/static/"+file.name } );
+        io.of("/control").emit("save-project:file", { name: file.name } )
       }
   })
   

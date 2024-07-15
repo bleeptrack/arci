@@ -13,6 +13,11 @@ class DebugBox extends HTMLElement {
 			this.updateSessionGUI()
 		});
 
+		socket.on("save-project:file", (data) => {
+			console.log(data)
+			let exportSpan = this.shadow.getElementById("export")
+			exportSpan.innerHTML = `Processing: ${data.name}`
+		})
 		
 
 		const boxcontainer = document.createElement('template');
@@ -43,6 +48,7 @@ class DebugBox extends HTMLElement {
 						<div class="form-group">
 							<input type="file"  name="export">
 							<input type="submit" value="Upload Project">
+							<span id="export"></span>
 						</div>
 					</form>
 				</fieldset>
@@ -110,13 +116,14 @@ class DebugBox extends HTMLElement {
 			var req = new XMLHttpRequest();
 			req.open("GET", '/saveproject', true);
 			req.responseType = "blob";
-			req.onload = function (event) {
+			req.onload = (event) => {
 				var blob = req.response;
 				var fileName = "export.zip" 
 				var link=document.createElement('a');
 				link.href=window.URL.createObjectURL(blob);
 				link.download=fileName;
 				link.click();
+				this.shadow.getElementById("export").innerHTML = ''
 			};
 
 			req.send();
