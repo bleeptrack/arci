@@ -155,7 +155,7 @@ io.of("/control").on('connection', (socket) => {
         msg = db.chain.get("cues").find({id: Number(msg) }).value()
         io.of("/control").emit("cue:active", msg, idx, sequenceName )
        
-        cueActivate(msg)
+        cueActivate(msg.id)
     })
     
     socket.on("scene:delete", (name) => {
@@ -377,7 +377,7 @@ async function cueActivate(id, additionalInfo=null){
     clearRecipientStatus()
     let dbcue = db.chain.get("cues").find({id: Number(id) }).value()
     let cue = { ...dbcue } //prevent changing info in DB
-    console.log("cue activated: ", id, cue, "to", cue['player-ids'])
+    console.log("cue activated: ", id, cue['cue-name'], "to", cue['player-ids'])
     if(additionalInfo){
       cue["additionalInfo"] = additionalInfo
     }
