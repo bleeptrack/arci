@@ -147,6 +147,9 @@ export default class InteractionChat extends HTMLElement {
 			if(text != this.typingindicator){
 				foundTyping.innerHTML = text
 				foundTyping.classList.remove("typing")
+				foundTyping.id = Math.round(Math.random()*999999)
+				this.dispatchEvent(new CustomEvent("translate", {detail: { text: text, langTo: 'en,th', bubbleID: foundTyping.id  }}));
+				
 			}
 			if( text == "!"+this.typingindicator ){
 				foundTyping.remove()
@@ -247,6 +250,10 @@ export default class InteractionChat extends HTMLElement {
 		console.log("update info2", data)
 		if(data.toPlayer == this.info.ownPlayerID){
 			this.addSpeechBubble(data.answer, false)
+		}
+		if(data.translation){
+			console.log(data.translation)
+			this.shadow.getElementById(data.bubbleID).innerHTML = `<span class="translation">${data.translation[0].text}</span></br><span class="translation">${data.translation[1].text}</span>`
 		}
 	}
 

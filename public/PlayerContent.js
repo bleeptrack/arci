@@ -121,6 +121,14 @@ export class PlayerContent extends HTMLElement {
 			
 			this.mod = new this.interactionTypes[msg.type](msg, callback)
 			this.content.innerHTML = ""
+			this.mod.addEventListener("translate", (event) => {
+				//event.detail
+				console.log("translation requested")
+				this.playerConnector.socket.emit("translate", event.detail.text, event.detail.langTo, (translatedText) => {
+					console.log("I translated a text", translatedText)
+					this.mod.updateInformation({translation: translatedText, bubbleID: event.detail.bubbleID})
+				})
+			})
 			this.mod.addEventListener("interaction:answer", (event) => {
 				this.playerConnector.socket.emit("interaction:answer", event.detail)
 			})

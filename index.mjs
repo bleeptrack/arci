@@ -19,6 +19,7 @@ import axios from 'axios';
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import lodash from 'lodash'
+import { v4 as uuidv4 } from 'uuid';
 
 import { Server } from 'socket.io';
 const server = createServer(app);
@@ -85,6 +86,7 @@ await db.write()
 
 
 let interactionTypes = fs.readdirSync('./public/InteractionTypes');
+    
 
 
 io.of("/control").on('connection', (socket) => {
@@ -310,6 +312,33 @@ io.on('connection', (socket) => {
     
     socket.on("player:left", () => {
         removePlayer(socket.id)
+    })
+    
+    socket.on("translate", (text, langTo, callback) => {
+        axios({
+            baseURL: "https://api.cognitive.microsofttranslator.com",
+            url: '/translate',
+            method: 'post',
+            headers: {
+                'Ocp-Apim-Subscription-Key': config['translator-key'],
+                'Ocp-Apim-Subscription-Region': config['translator-region'],
+                'Content-type': 'application/json',
+                'X-ClientTraceId': uuidv4().toString()
+            },
+            params: {
+                'api-version': '3.0',
+                //'from': 'en',
+                'to': 'en,th'
+            },
+            data: [{
+                'text': text
+            }],
+            responseType: 'json'
+        }).then(function(response){
+            //console.log(JSON.stringify(response.data, null, 4));
+            
+            callback(response.data[0]?.translations)
+        })
     })
     
 });
