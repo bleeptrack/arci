@@ -10,7 +10,7 @@ export default class InteractionImage extends HTMLElement {
 		super();
 		
 		if(msg.filename.includes("http")){
-			this.mediaPath = encodeURIComponent(msg.filename)
+			this.mediaPath = encodeURI(msg.filename)
 		}else{
 			msg.filename = msg.filename.replace("/media/", "")
 			this.mediaPath = "./media/" + encodeURIComponent(msg.filename)
