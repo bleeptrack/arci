@@ -328,7 +328,7 @@ io.on('connection', (socket) => {
             params: {
                 'api-version': '3.0',
                 //'from': 'en',
-                'to': 'en,th'
+                'to': 'en,de,th'
             },
             data: [{
                 'text': text

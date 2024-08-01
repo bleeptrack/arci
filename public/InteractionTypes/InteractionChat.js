@@ -148,7 +148,7 @@ export default class InteractionChat extends HTMLElement {
 				foundTyping.innerHTML = text
 				foundTyping.classList.remove("typing")
 				foundTyping.id = Math.round(Math.random()*999999)
-				this.dispatchEvent(new CustomEvent("translate", {detail: { text: text, langTo: 'en,th', bubbleID: foundTyping.id  }}));
+				this.dispatchEvent(new CustomEvent("translate", {detail: { text: text, langTo: 'en,de,th', bubbleID: foundTyping.id  }}));
 				
 			}
 			if( text == "!"+this.typingindicator ){
@@ -166,6 +166,9 @@ export default class InteractionChat extends HTMLElement {
 				bubble.classList.add("other")
 				if(text == this.typingindicator){
 					bubble.classList.add("typing")
+				}else{
+					bubble.id = Math.round(Math.random()*999999)
+					this.dispatchEvent(new CustomEvent("translate", {detail: { text: text, langTo: 'en,de,th', bubbleID: bubble.id  }}));
 				}
 			}
 		}
@@ -253,7 +256,7 @@ export default class InteractionChat extends HTMLElement {
 		}
 		if(data.translation){
 			console.log(data.translation)
-			this.shadow.getElementById(data.bubbleID).innerHTML = `<span class="translation">${data.translation[0].text}</span></br><span class="translation">${data.translation[1].text}</span>`
+			this.shadow.getElementById(data.bubbleID).innerHTML = `<span class="translation">${data.translation[0].text}</span></br><span class="translation">${data.translation[1].text}</span></br><span class="translation">${data.translation[2].text}</span>`
 		}
 	}
 
