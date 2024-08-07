@@ -64,6 +64,10 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					background-size: cover;
 					font-size: 6vw;
 				}
+				.answerbutton:active, .answerbutton:focus, .answerbutton:hover{
+					border: var(--button-border-style) !important;
+					background-color: var(--button-color) !important;
+				}
 				#content{
 					gap: 2vh;
 				}
