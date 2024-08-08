@@ -206,10 +206,14 @@ export class PlayerContent extends HTMLElement {
 		})
 		
 		this.playerConnector.socket.on("player:preload", (cues) => {
-			
+			console.log("entering preload:", cues)
 			for(let cue of cues){
 				// create cue to let it preload
-				let fullCue = new this.interactionTypes[cue.type](cue, () => {})
+				if(cue.type == "sound" || cue.type == "image"){
+					console.log("preloading", cue)
+					let fullCue = new this.interactionTypes[cue.type](cue, () => {})
+				}
+				
 			}
 		})
 		

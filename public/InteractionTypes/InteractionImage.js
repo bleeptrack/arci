@@ -42,20 +42,29 @@ export default class InteractionImage extends HTMLElement {
 		//background-image: url("${this.mediaPath}");
 		this.shadow.appendChild(container.content.cloneNode(true));
 		
-		var image = new Image();
 		
-		image.addEventListener('load', () => {
-			this.shadow.getElementById("content").style.backgroundImage = 'url("' + this.mediaPath + '")';
-			callback({status: "ok"})
-			console.log("OK")
-		});
-		image.src = this.mediaPath;
+		
+		if( document.head.querySelectorAll(`link[href="${this.mediaPath}"]`).length > 0 ){
+			console.log("image has already been preloaded")
+		}else{
+			//preload image
+			const preloadLink = document.createElement("link");
+			preloadLink.href = this.mediaPath;
+			preloadLink.rel = "preload";
+			preloadLink.as = "image";
+			document.head.appendChild(preloadLink);
+		}
+		
+		callback({status: "ok"})
+		
+		
+		
 		
 	}
 
 	// fires after the element has been attached to the DOM
 	connectedCallback() {
-		
+		this.shadow.getElementById("content").style.backgroundImage = 'url("' + this.mediaPath + '")';
 	}
 	
 	static createFields(form){

@@ -345,7 +345,8 @@ io.on('connection', (socket) => {
 
 function triggerPreload(msg){
     console.log("preload from", msg)
-    let cueInfo = db.data.cues.filter( x => msg.includes(x.id))
+    let cueInfo = db.data.cues.filter( x => msg.includes(x.id.toString()))
+    console.log("cueInfo", cueInfo)
     io.emit("player:preload", cueInfo)
 }
 

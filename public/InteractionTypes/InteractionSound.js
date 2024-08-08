@@ -44,6 +44,7 @@ export default class InteractionSound extends HTMLElement {
                     autoUnlock: true,
                     html5PoolSize: 50,
                     autoSuspend: false,
+					preload: true,
                     //autoplay: true,
                     //html5: true,  //dieser fallback macht irgendwie zeug kaputt
                     //onplayerror: (err) => {document.getElementById("content").innerHTML += 'PLAY ERROR'+err+'</br>'},
@@ -51,6 +52,8 @@ export default class InteractionSound extends HTMLElement {
                     onload: () => {
                         //document.getElementById("content").innerHTML += 'loading Sound</br>'
 						callback({status: "ok"})
+						console.log("howler loaded file")
+						
                     },
                     //onplay: () => document.getElementById("content").innerHTML += 'Playing Sound</br>',
                     //onunlock: () => document.getElementById("content").innerHTML += 'Sound unlocked</br>',
