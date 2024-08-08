@@ -162,12 +162,15 @@ export default class InteractionFakeChat extends HTMLElement {
 			header.setAttribute("cueID", msg.info.id)
 			container.querySelector("#messagecount").innerHTML = 1
 			container.querySelector("#message").innerHTML = msg.info.items[0].message
+			container.querySelector("#message").setAttribute("owner", msg.info.items[0]["own-message"])
 			container.querySelector("#sendbtn").addEventListener("click", () => {
 				let text = container.querySelector("#message").innerHTML
-				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: text }))
+				let own = container.querySelector("#message").getAttribute("owner") == 'true'
+				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {text:text, own:own}}))
 				let currentid = Number( container.querySelector("#messagecount").innerHTML )
 				if(msg.info.items[currentid]){
 					container.querySelector("#message").innerHTML = msg.info.items[currentid].message
+					container.querySelector("#message").setAttribute("owner", msg.info.items[currentid]["own-message"])
 					container.querySelector("#messagecount").innerHTML = currentid + 1
 				}else{
 					container.innerHTML = "Chat finished"
@@ -189,7 +192,7 @@ export default class InteractionFakeChat extends HTMLElement {
 	
 	updateInformation(data){
 		console.log("update info2", data)
-		this.addSpeechBubble(data, false)
+		this.addSpeechBubble(data.text, data.own)
 	}
 
 	// fires after the element has been attached to the DOM
@@ -221,6 +224,7 @@ export default class InteractionFakeChat extends HTMLElement {
 		let row = document.createElement("li")
 
 		CustomInput.textInput(row, "message", "Message:")
+		CustomInput.checkbox(row, "own-message")
 		
 		let delBtn = document.createElement("button")
 		delBtn.innerHTML = "X"
