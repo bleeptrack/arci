@@ -44,7 +44,7 @@ export default class InteractionSound extends HTMLElement {
                     autoUnlock: true,
                     html5PoolSize: 50,
                     autoSuspend: false,
-					//preload: true,
+					preload: true,
                     //autoplay: true,
                     //html5: true,  //dieser fallback macht irgendwie zeug kaputt
                     onplayerror: (err) => {document.getElementById("content").innerHTML += 'PLAY ERROR'+err+'</br>'},
