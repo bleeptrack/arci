@@ -424,8 +424,11 @@ async function cueActivate(id, additionalInfo=null){
               }
               sockets[0].emit("player:interaction", cue, (response) => {
                 console.log("ack", response)
-                player.find(x => x?.socketID == sockets[0].id).loading = false
-                sendPlayerInfo()
+                let foundPlayer = player.find(x => x?.socketID == sockets[0].id)
+                if(foundPlayer){
+                  foundPlayer.loading = false
+                  sendPlayerInfo()
+                }
               })
             }
           }

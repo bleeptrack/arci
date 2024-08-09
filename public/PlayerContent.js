@@ -92,14 +92,16 @@ export class PlayerContent extends HTMLElement {
 		
 		
 		//ToDo keep audio open
-		setInterval(this.backgroundSound, 10000) //15000
-		//this.backgroundSound()
+		setInterval(this.backgroundSound, 3000) //15000
+		this.backgroundSound()
 	}
 	
 	backgroundSound(){
             let sound = new howler.Howl({
                     src: [window.location.origin +'/static/login.mp3'],
                     autoplay: true,
+					//html5: true,
+					//onplay: () => {alert("playing")},
             });
             console.log("BG Sound")
             //setTimeout(this.backgroundSound, 1000) //15000
@@ -219,6 +221,12 @@ export class PlayerContent extends HTMLElement {
 		
 		this.shadow.getElementById("joinbutton").addEventListener("click", () => {
 			//navigator.vibrate(150);
+			let sound = new howler.Howl({
+                    src: [window.location.origin +'/static/login.mp3'],
+                    autoplay: true,
+					//html5: true,
+					//onplay: () => {alert("playing click")},
+            });
 			this.unlockFeatures()
 			this.clearContent()
 			this.playerConnector.registerUser(urlParams.get('id'), urlParams.get('sessionToken'))
