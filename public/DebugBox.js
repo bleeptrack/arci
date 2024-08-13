@@ -44,10 +44,10 @@ class DebugBox extends HTMLElement {
 				</fieldset>
 				<fieldset>
 					<button id="save">Save Project</button>
-					<form action="/uploadproject" enctype="multipart/form-data" method="post">
+					<form id="upload">
 						<div class="form-group">
-							<input type="file"  name="export">
-							<input type="submit" value="Upload Project">
+							<input type="file" id="upload-file" name="export">
+							
 							<span id="export"></span>
 						</div>
 					</form>
@@ -66,7 +66,7 @@ class DebugBox extends HTMLElement {
 		
 		
 	}
-	
+
 
 	updateSessionGUI(){
 		if(this.session){
@@ -128,6 +128,36 @@ class DebugBox extends HTMLElement {
 
 			req.send();
 			
+		})
+		
+		this.shadow.getElementById("upload-file").addEventListener("change", () => {
+			var formdata = new FormData();
+		
+			let file = this.shadow.getElementById("upload-file").files[0]
+
+			formdata.append('export', file);
+
+			var request = new XMLHttpRequest();
+
+			request.upload.addEventListener('progress', (e) => {
+				var file1Size = file.size;
+
+				if (e.loaded <= file1Size) {
+					var percent = Math.round(e.loaded / file1Size * 100);
+					//$('#progress-bar-file1').width(percent + '%').html(percent + '%');
+					console.log(percent)
+					this.shadow.getElementById("export").innerHTML = `uploading ${percent}%`
+				} 
+
+				if(e.loaded == e.total){
+					//$('#progress-bar-file1').width(100 + '%').html(100 + '%');
+					this.shadow.getElementById("export").innerHTML = `upload finished. Unpacking files. New Cues will show up in a moment :)`
+				}
+			});   
+
+			request.open('post', '/uploadproject');
+			request.timeout = 45000;
+			request.send(formdata);
 		})
 		
 	}
