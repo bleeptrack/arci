@@ -161,7 +161,8 @@ export default class InteractionFakeChat extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
 			container.querySelector("#messagecount").innerHTML = 1
-			container.querySelector("#message").innerHTML = msg.info.items[0].message
+			let msgText = `${msg.info.items[0]['message']}</br>${msg.info.items[0]['message-de']}</br>${msg.info.items[0]['message-th']}`
+			container.querySelector("#message").innerHTML = msgText
 			container.querySelector("#message").setAttribute("owner", msg.info.items[0]["own-message"])
 			container.querySelector("#sendbtn").addEventListener("click", () => {
 				let text = container.querySelector("#message").innerHTML
@@ -169,7 +170,8 @@ export default class InteractionFakeChat extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {text:text, own:own}}))
 				let currentid = Number( container.querySelector("#messagecount").innerHTML )
 				if(msg.info.items[currentid]){
-					container.querySelector("#message").innerHTML = msg.info.items[currentid].message
+					msgText = `${msg.info.items[currentid]['message']}</br>${msg.info.items[currentid]['message-de']}</br>${msg.info.items[currentid]['message-th']}`
+					container.querySelector("#message").innerHTML = msgText
 					container.querySelector("#message").setAttribute("owner", msg.info.items[currentid]["own-message"])
 					container.querySelector("#messagecount").innerHTML = currentid + 1
 				}else{
@@ -223,7 +225,9 @@ export default class InteractionFakeChat extends HTMLElement {
 		
 		let row = document.createElement("li")
 
-		CustomInput.textInput(row, "message", "Message:")
+		CustomInput.textInput(row, "message", "EN:")
+		CustomInput.textInput(row, "message-de", "DE:")
+		CustomInput.textInput(row, "message-th", "TH:")
 		CustomInput.checkbox(row, "own-message")
 		
 		let delBtn = document.createElement("button")
