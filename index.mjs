@@ -247,13 +247,15 @@ io.on('connection', (socket) => {
     socket.on("interaction:answer:otherside", (msg) => {
         let foundPlayer = player.find( x => x?.socketID == socket.id)
         console.log("player sent to other side", msg, foundPlayer)
-        msg.playerID = foundPlayer.id
-        msg.otherSide = true
-        io.of("/control").emit("interaction:answer", msg)
-        axios.post(`https://${secondServer}/connection`, msg, {
-        headers: {
-          'Content-Type': "application/json; charset=UTF-8"
-        }})
+        if(foundPlayer){
+          msg.playerID = foundPlayer.id
+          msg.otherSide = true
+          io.of("/control").emit("interaction:answer", msg)
+          axios.post(`https://${secondServer}/connection`, msg, {
+          headers: {
+            'Content-Type': "application/json; charset=UTF-8"
+          }})
+        }
         /*
         .then(function (response) {
           console.log(response);
@@ -328,7 +330,7 @@ io.on('connection', (socket) => {
             params: {
                 'api-version': '3.0',
                 //'from': 'en',
-                'to': 'en,de,th'
+                'to': "de,en,th"
             },
             data: [{
                 'text': text
