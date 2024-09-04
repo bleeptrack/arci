@@ -5,6 +5,7 @@ export default class InteractionChat extends HTMLElement {
 	
 	static name = "Chat"
 	static icon = "forum"
+	static color = "#113f67"
 	
 	constructor(msg, callback) {
 		super();

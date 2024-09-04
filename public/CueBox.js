@@ -258,7 +258,8 @@ class CueBox extends HTMLElement {
 			event.preventDefault()
 			let data = {
 				type: type,
-				icon: typemodule.icon
+				icon: typemodule.icon,
+				color: typemodule.color
 			}
 			
 			for( let c of Array.from(this.shadow.getElementById("cue-form").children)){

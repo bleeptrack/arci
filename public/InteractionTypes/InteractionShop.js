@@ -5,6 +5,7 @@ export default class InteractionShop extends HTMLElement {
 	
 	static name = "Shop"
 	static icon = "shopping_cart"
+	static color = "#a7bcb9"
 	
 	constructor(msg, callback) {
 		super();

@@ -5,6 +5,7 @@ export default class InteractionText extends HTMLElement {
 	
 	static name = "Text"
 	static icon = "article"
+	static color = "#c3195d"
 	
 	constructor(msg, callback) {
 		super();

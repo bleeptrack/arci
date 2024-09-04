@@ -5,6 +5,7 @@ export default class InteractionImage extends HTMLElement {
 	
 	static name = "Image"
 	static icon = "imagesmode"
+	static color = "#e6a86a"
 	
 	constructor(msg, callback) {
 		super();

@@ -5,6 +5,7 @@ export default class InteractionImageShare extends HTMLElement {
 	
 	static name = "Image Share"
 	static icon = "send_to_mobile"
+	static color = "#ec7263"
 	
 	constructor(msg, callback) {
 		super();

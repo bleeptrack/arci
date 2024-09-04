@@ -6,6 +6,7 @@ export default class InteractionSound extends HTMLElement {
 	
 	static name = "Sound"
 	static icon = "music_note"
+	static color = "#5c8d89"
 	
 	constructor(msg, callback) {
 		super();

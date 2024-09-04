@@ -5,6 +5,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 	
 	static name = "Quiz"
 	static icon = "quiz"
+	static color = "#680747"
 	
 	constructor(msg, callback) {
 		super();

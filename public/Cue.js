@@ -4,6 +4,7 @@ import { socket } from './socket.js';
 export class Cue extends HTMLElement {
 	constructor(data) {
 		super();
+		console.log(data)
 		
 		this.id = data.id
 		this.icon = data.icon ?? ""
@@ -17,6 +18,7 @@ export class Cue extends HTMLElement {
 		if(this.data["player-ids"] == "random"){
 			this.playerIcon = "shuffle"
 		}
+		this.color = data.color ?? "var(--main-color)"
 		
 		this.shadow = this.attachShadow({ mode: 'open' });
 
@@ -29,9 +31,9 @@ export class Cue extends HTMLElement {
 			<link href="${window.location.origin}/static/control.css" rel="stylesheet" />
 			<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 			<div draggable="true" id="cuebox">
-				<span class="material-symbols-outlined">${this.icon}</span>
-				<span class="material-symbols-outlined">${this.playerIcon}</span>
-				<slot>${this.name}</slot>
+				<span class="material-symbols-outlined" id="icon">${this.icon}</span>
+				<span class="material-symbols-outlined" id="playerIcon">${this.playerIcon}</span>
+				<p><slot>${this.name}</slot></p>
 				<button id="delete"> X </button>
 				<button id="edit"> E </button>
 			</div>
@@ -41,7 +43,7 @@ export class Cue extends HTMLElement {
 		this.listStyle.innerHTML = `
 				div{
 					height: 3vh;
-					background-color: var(--main-color);
+					background-color: ${this.color};
 					color: white;
 					display: flex;
 					align-items: center;
@@ -56,13 +58,18 @@ export class Cue extends HTMLElement {
 				}
 				
 				.activated{
-					
+					border-color: color-mix(in srgb, var(--action-color) 80%, white);
+					border-width: 4px;
 					background-color: color-mix(in srgb, var(--action-color) 70%, black);
+				}
+
+				.activated #delete{
+					display: none;
 				}
 				
 				#delete{
 					margin-left: auto;
-					background-color: color-mix(in srgb, var(--main-color) 70%, white);
+					background-color: color-mix(in srgb, ${this.color} 70%, white);
 					border: none;
 					border-radius: var(--radius);
 					padding: var(--small-gap);
@@ -70,7 +77,7 @@ export class Cue extends HTMLElement {
 				}
 				
 				#delete:hover{
-					background-color: color-mix(in srgb, var(--main-color) 40%, white);
+					background-color: color-mix(in srgb, ${this.color} 40%, white);
 				}
 				
 				#edit{
@@ -88,6 +95,14 @@ export class Cue extends HTMLElement {
 				.insertBelow{
 					box-shadow: 0 1vh 0 var(--action-color);
 				}
+
+				p{
+					display: -webkit-box;
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				}
 		`
 		
 		this.boxStyle = document.createElement('style');
@@ -95,10 +110,80 @@ export class Cue extends HTMLElement {
 				div{
 					height: 12vh;
 					width: 12vh;
-					background-color: var(--main-color);
+					background-color: ${this.color};
 					color: white;
+					border: 2px solid black;
+					border-radius: var(--radius);
+					position: relative;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					font-family: sans-serif;
+				}
+				div:hover{
+					opacity: 0.8;
+				}
+				#icon{
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					font-size: 130px !important;
+					color: color-mix(in srgb, ${this.color} 80%, white);
+					z-index: 1;
+				}
+				#playerIcon{
+					position: absolute;
+					bottom: 0;
+					z-index: 2;
+				}
+				#delete{
+					position: absolute;
+					top: 5px;
+					right: 5px;
+					z-index: 3;
+					display: none;
+				}
+
+				button{
+					background-color: color-mix(in srgb, ${this.color} 30%, white);
+					border: none;
+					border-radius: var(--radius);
+					padding: var(--small-gap);
+					font-family: sans-serif;
+				}
+					
+				button:hover{
+					background-color: color-mix(in srgb, ${this.color} 10%, white);
+				}
+
+				#edit{
+					position: absolute;
+					top: 5px;
+					right: 30px;
+					z-index: 3;
+					display: none;
+				}
+
+				div:hover #edit, div:hover #delete{
+					display: block;
 				}
 				
+				p{
+					font-weight: bold;
+					font-size: 1em;
+					z-index: 2;
+					word-break: break-word;
+					overflow-wrap: break-word;
+					text-align: center;
+					text-overflow: ellipsis;
+					max-height: 80%;
+					overflow: hidden;
+					margin-bottom: 40px;
+					display: -webkit-box;
+					-webkit-line-clamp: 5;
+					-webkit-box-orient: vertical;
+				}
 		`
 
 		// binding methods
@@ -200,8 +285,10 @@ export class Cue extends HTMLElement {
 	
 	removeCue(){
 		if(this.parentNode.id == "box-content"){
-			this.remove()
-			socket.emit("cue:delete", this.id)
+			if (confirm("Are you sure you want to delete?")) {
+				this.remove()
+				socket.emit("cue:delete", this.id)
+			}
 		}else{
 			let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
 			socket.emit("cue:deleteListIdx", this.parentNode.id, idx)

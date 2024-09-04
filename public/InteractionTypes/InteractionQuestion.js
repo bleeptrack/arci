@@ -5,6 +5,7 @@ export default class InteractionQuestion extends HTMLElement {
 	
 	static name = "Question"
 	static icon = "edit_note"
+	static color = "#42022c"
 	
 	constructor(msg, callback) {
 		super();

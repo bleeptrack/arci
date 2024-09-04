@@ -6,6 +6,7 @@ export default class InteractionMidi extends HTMLElement {
 	
 	static name = "Midi Button"
 	static icon = "radio_button_checked"
+	static color = "#74b49b"
 	
 	constructor(msg, callback) {
 		super();

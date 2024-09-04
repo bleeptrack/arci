@@ -5,6 +5,7 @@ export default class InteractionImageShareSingle extends HTMLElement {
 	
 	static name = "Image Share Single"
 	static icon = "p2p"
+	static color = "#a75265"
 	
 	constructor(msg, callback) {
 		super();

@@ -7,6 +7,7 @@ export default class Interaction3DScene extends HTMLElement {
 	
 	static name = "3D Scene"
 	static icon = "view_in_ar"
+	static color = "#d9b650"
 	
 	constructor(msg, callback) {
 		super();
