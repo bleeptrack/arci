@@ -3325,3 +3325,4 @@ update-production.sh
 public/variables.css
 public/main-variables.css
 public/backup/InteractionImageShareSingle-backup.js
+arci-dev.code-workspace

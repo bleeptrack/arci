@@ -330,7 +330,7 @@ io.on('connection', (socket) => {
             params: {
                 'api-version': '3.0',
                 //'from': 'en',
-                'to': "de,en,th"
+                'to': config['translator-order']
             },
             data: [{
                 'text': text
