@@ -39,8 +39,10 @@ class CueBox extends HTMLElement {
 					width: 100%;
 					height: 95%;
 					flex-wrap: wrap;
-					overflow: scroll;
-					
+					overflow-y: scroll;
+					scrollbar-width: thin;
+					scrollbar-gutter: stable;
+					justify-content: space-around;
 				}
 				
 				#search-filter{
