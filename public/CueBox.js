@@ -8,21 +8,47 @@ class CueBox extends HTMLElement {
 		super();
 		this.shadow = this.attachShadow({ mode: 'open' });
 		this.cueTypes = []
+		this.usedCueIDs = []
 
 		socket.on("cue:load", (data) => { 
 			this.shadow.getElementById("box-content").innerHTML = ""
+			this.shadow.getElementById("filter-buttons").innerHTML = ""
 			this.cueTypes = []
-			console.log(data) 
+			console.log("loading cues", data) 
 			for(let type of data.types){
 				console.log("importing", "./InteractionTypes/"+type)
 				import("./InteractionTypes/"+type).then( cls => {
 					this.cueTypes.push(cls.default)
+					this.createFilterButtons(cls.default)
 				})
+				
 			}
 			
 			for( let cue of data.cues){
 				this.addCue(cue)
 			}
+			
+			
+		});
+
+		socket.on("load sequence", (data) => { 
+			
+			this.usedCueIDs = []
+			let cues = this.shadow.querySelectorAll(`cue-item`)
+			cues.forEach(c => c.setAttribute("in-use", "false"))
+			
+			for(let scene of data){
+				
+				for( let cue of scene.completeCues){
+					if(!this.usedCueIDs.includes(cue.id)){
+						this.usedCueIDs.push(cue.id)
+						let matchingCues = this.shadow.querySelectorAll(`cue-item[id='${cue.id}']`)
+						matchingCues.forEach(c => c.setAttribute("in-use", "true"))
+					}
+				}
+				
+			}
+			
 			
 		});
 
@@ -49,6 +75,7 @@ class CueBox extends HTMLElement {
 					display: flex;
 					height: 5%;
 					width: 100%;
+					gap: var(--gap-size);
 				}
 				
 				#box-modal{
@@ -57,7 +84,61 @@ class CueBox extends HTMLElement {
 					z-index: 10;
 					display: none;
 				}
+
+				.filterbutton, #usageFilterButton{
+					border: none;
+					border-radius: 3px;
+					color: white;
+					opacity: 0.5;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					height: 100%;
+					border: 2px solid black;
+					border-radius: var(--radius);
+					
+				}
+
+				#filter{
+					flex-grow: 1;
+					height: calc(100% - var(--gap-size));
+					border: 2px solid black;
+					border-radius: var(--radius);
+					padding: var(--small-gap);
+				}
+
+				#usageFilterButton{
+					color: black !important;
+				}	
+
+				#addCueButton{
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					height: 100%;
+					border: 2px solid black;
+					border-radius: var(--radius);
+					background-color: color-mix(in srgb, var(--main-color) 40%, black);
+					color: white;
+				}
+				#addCueButton:hover{
+					background-color: color-mix(in srgb, var(--action-color) 40%, black);
+				}
 				
+				#addCueButton:active{
+					background-color: color-mix(in srgb, var(--action-color) 70%, black);
+				}
+
+					
+				.filterbutton:hover{
+					opacity: 0.8;
+				}
+				.active{
+					opacity: 1 !important;
+				}
+
+				
+
 				#type-selector{
 					display: grid;
 					grid-template-columns: 1fr 1fr 1fr;
@@ -80,15 +161,10 @@ class CueBox extends HTMLElement {
 			</style>
 			<div id="box-modal"></div>
 			<div id="search-filter">
-				<input type="text" id="filter"></input>
-				<button class="filterbutton" id="all">all</button>
-				<button class="filterbutton" id="image">Image</button>
-				<button class="filterbutton" id="sound">Sound</button>
-				<button class="filterbutton" id="text">Text</button>
-				<button class="filterbutton" id="question">Question</button>
-				<button class="filterbutton" id="quiz">Quiz</button>
-				<button class="filterbutton" id="midi">Midi</button>
-				<button id="addCueButton"> + </button>
+				<input type="text" id="filter" placeholder="Search..."></input>
+				<div id="filter-buttons"></div>
+				<button id="usageFilterButton"><span class="material-symbols-outlined">visibility</span></button>
+				<button id="addCueButton"><span class="material-symbols-outlined">add</span></button>
 			</div>
 			<div id="box-content"></div>
 		
@@ -118,8 +194,68 @@ class CueBox extends HTMLElement {
 		});
 		
 		this.shadow.getElementById("addCueButton").addEventListener("click", () => this.createCueSelector() )
+		this.shadow.getElementById("usageFilterButton").addEventListener("click", () => {
+			this.shadow.getElementById("usageFilterButton").classList.toggle("active")
+
+			let cues = this.shadow.querySelectorAll("cue-item")
+			cues.forEach(c => {
+				if(this.shadow.getElementById("usageFilterButton").classList.contains("active")){
+					if(c.getAttribute("in-use") == "false"){
+						c.style.display = "none"
+						c.setAttribute("in-use-disabled", "true")
+					}
+				}else{
+					if(c.getAttribute("in-use-disabled") && !c.getAttribute("type-disabled")){
+						c.style.display = "inherit"
+						c.removeAttribute("in-use-disabled")
+						
+					}
+				}
+			})
+
+		} )
 			
 		
+	}
+
+	createFilterButtons(type){
+		if(type){
+			console.log("button", type.icon, type.name)
+			let btn = document.createElement("button")
+			btn.classList.add("filterbutton")
+			btn.id = type.name.toLowerCase()
+			btn.innerHTML = `<span class="material-symbols-outlined">${type.icon}</span>`
+			btn.title = type.name
+			btn.style.backgroundColor = type.color
+			this.shadow.getElementById("filter-buttons").appendChild(btn)
+
+
+			btn.addEventListener("click", (event) => {
+				let activeFilterButton = this.shadow.querySelector(".filterbutton.active")
+				if(activeFilterButton && activeFilterButton != btn){
+					activeFilterButton.click()
+				}
+
+
+				btn.classList.toggle("active")
+
+				let cues = this.shadow.querySelectorAll("cue-item")
+				cues.forEach(c => {
+					if(btn.classList.contains("active")){
+						if(c.getAttribute("type") != btn.id){
+							c.style.display = "none"
+							c.setAttribute("type-disabled", "true")
+						}
+					}else{
+						if(!c.getAttribute("in-use-disabled") && c.getAttribute("type-disabled")){
+							c.style.display = "inherit"
+							c.removeAttribute("type-disabled")
+						}
+					}
+				})
+			})
+
+		}
 	}
 	
 	createCueSelector(){
@@ -334,6 +470,11 @@ class CueBox extends HTMLElement {
 	
 	addCue(data){
 		let c1 = new Cue(data)
+		if(this.usedCueIDs.includes(c1.id)){
+			c1.setAttribute("in-use", "true")
+		}else{
+			c1.setAttribute("in-use", "false")
+		}
 		this.content.appendChild(c1)
 		c1.addEventListener("edit cue", (event) => {
 			console.log(event.detail)
@@ -355,23 +496,6 @@ class CueBox extends HTMLElement {
 
 	// fires after the element has been attached to the DOM
 	connectedCallback() {		
-		let filterbuttons = this.shadow.querySelectorAll(".filterbutton")
-		console.log("btn", filterbuttons)
-		for(let btn of filterbuttons){
-			btn.addEventListener("click", (event) => {
-				console.log(event.target.id)
-				let cues = this.shadow.querySelectorAll("cue-item")
-				for(let c of cues){
-					if(c.getAttribute("type") == event.target.id || event.target.id == "all"){
-						c.style.visibility = "visible"
-						c.disabled = false
-					}else{
-						c.style.visibility = "collapse"
-						c.disabled = true
-					}
-				}
-			})
-		}
 		
 		let filter = this.shadow.getElementById("filter")
 		filter.addEventListener("input", (event) => {
@@ -379,14 +503,14 @@ class CueBox extends HTMLElement {
 			for(let c of cues){
 				if(!c.disabled){
 					if(!c.getAttribute("name").includes(event.target.value.toLowerCase())){
-						c.style.visibility = "collapse"
+						c.style.display = "none"
 					}else{
-						c.style.visibility = "visible"
+						c.style.display = "inherit"
 					}
 				}
 			}
 		})
-		
+		this.createFilterButtons()
 	}
 
 }
