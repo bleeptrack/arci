@@ -81,6 +81,7 @@ class CueList extends HTMLElement {
 					margin: var(--small-gap);
 					border: 2px solid black;
 					border-radius: var(--radius);
+					font-size: 2.5vh;
 				}
 
 

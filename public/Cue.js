@@ -139,7 +139,7 @@ export class Cue extends HTMLElement {
 					top: 0;
 					left: 0;
 					width: 100%;
-					font-size: 130px !important;
+					font-size: 12vh !important;
 					color: color-mix(in srgb, ${this.color} 80%, white);
 					z-index: 1;
 				}

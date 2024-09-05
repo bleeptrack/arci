@@ -59,6 +59,12 @@ class CueBox extends HTMLElement {
 			<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
 			<style>
+
+				#wrapper{
+					display: flex;
+					flex-direction: column;
+					height: 100%;
+				}
 			
 				#box-content{
 					display: flex;
@@ -73,9 +79,10 @@ class CueBox extends HTMLElement {
 				
 				#search-filter{
 					display: flex;
-					height: 5%;
-					width: 100%;
+					height: 3vh;
+					width: calc(100% - var(--small-gap)* 2);
 					gap: var(--gap-size);
+					padding: var(--small-gap);
 				}
 				
 				#box-modal{
@@ -96,7 +103,10 @@ class CueBox extends HTMLElement {
 					height: 100%;
 					border: 2px solid black;
 					border-radius: var(--radius);
-					
+				}
+
+				.filterbutton span, #usageFilterButton span, #addCueButton span{
+					font-size: 2vh !important;
 				}
 
 				#filter{
@@ -105,6 +115,8 @@ class CueBox extends HTMLElement {
 					border: 2px solid black;
 					border-radius: var(--radius);
 					padding: var(--small-gap);
+					box-sizing: border-box;
+					height: 100%;
 				}
 
 				#usageFilterButton{
@@ -159,14 +171,16 @@ class CueBox extends HTMLElement {
 					
 				}
 			</style>
-			<div id="box-modal"></div>
-			<div id="search-filter">
+			<div id="wrapper">
+				<div id="box-modal"></div>
+				<div id="search-filter">
 				<input type="text" id="filter" placeholder="Search..."></input>
 				<div id="filter-buttons"></div>
 				<button id="usageFilterButton"><span class="material-symbols-outlined">visibility</span></button>
-				<button id="addCueButton"><span class="material-symbols-outlined">add</span></button>
+					<button id="addCueButton"><span class="material-symbols-outlined">add</span></button>
+				</div>
+				<div id="box-content"></div>
 			</div>
-			<div id="box-content"></div>
 		
 		`;
 
