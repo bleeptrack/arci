@@ -82,6 +82,8 @@ class CueList extends HTMLElement {
 					border: 2px solid black;
 					border-radius: var(--radius);
 				}
+
+
 				
 				#nav>button:hover{
 					background-color: color-mix(in srgb, var(--action-color) 40%, black);
@@ -259,6 +261,20 @@ class CueList extends HTMLElement {
 		let cue = seqNode.children[idx]
 		cue.visuallyActivate()
 		this.activeCue = cue
+	}
+
+	renameSequence(oldName, newName){
+		let seq = this.shadow.getElementById(oldName)
+		seq.id = newName
+		this.saveCueSequence()
+	}
+
+	duplicateSequence(name){
+		let seq = this.shadow.getElementById(name)
+		let newSeq = seq.cloneNode(true)
+		newSeq.id = name + "-copy"
+		seq.after(newSeq)
+		this.saveCueSequence()
 	}
 	
 	saveCueSequence(){

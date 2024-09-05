@@ -34,8 +34,8 @@ export class Cue extends HTMLElement {
 				<span class="material-symbols-outlined" id="icon">${this.icon}</span>
 				<span class="material-symbols-outlined" id="playerIcon">${this.playerIcon}</span>
 				<p><slot>${this.name}</slot></p>
-				<button id="delete"> X </button>
-				<button id="edit"> E </button>
+				<button id="delete"><span class="material-symbols-outlined">delete</span></button>
+				<button id="edit"><span class="material-symbols-outlined">edit</span></button>
 			</div>
 		`;
 		
@@ -74,6 +74,11 @@ export class Cue extends HTMLElement {
 					border-radius: var(--radius);
 					padding: var(--small-gap);
 					font-family: sans-serif;
+					display: none;
+				}
+
+				div:hover #delete{
+					display: block;
 				}
 				
 				#delete:hover{
@@ -82,6 +87,12 @@ export class Cue extends HTMLElement {
 				
 				#edit{
 					display: none;
+				}
+
+				#delete span, #edit span{
+					font-size: 19px !important;
+					margin: 0 !important;
+					color: white !important;
 				}
 				
 				span{
@@ -145,6 +156,11 @@ export class Cue extends HTMLElement {
 					display: none;
 				}
 
+				#delete span, #edit span{
+					font-size: 19px !important;
+					margin: 0 !important;
+				}
+
 				button{
 					background-color: color-mix(in srgb, ${this.color} 30%, white);
 					border: none;
@@ -160,7 +176,7 @@ export class Cue extends HTMLElement {
 				#edit{
 					position: absolute;
 					top: 5px;
-					right: 30px;
+					right: 40px;
 					z-index: 3;
 					display: none;
 				}

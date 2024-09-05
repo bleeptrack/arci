@@ -16,8 +16,53 @@ export class SceneTab extends HTMLElement {
 			<style>
 				
 				div{
-					background-color: gray;
-					width: 100%;
+					height: 2vh;
+					background-color: var(--main-color);
+					color: white;
+					display: flex;
+					align-items: center;
+					padding: var(--small-gap);
+					font-family: sans-serif;
+					border: 2px solid black;
+					border-radius: var(--radius);
+				}
+
+				div:hover{
+					opacity: 0.8;
+				}
+
+				div:hover #delete, div:hover #duplicate{
+					display: block;
+				}
+
+				#delete, #duplicate{
+					background-color: color-mix(in srgb, var(--main-color) 70%, white);
+					border: none;
+					border-radius: var(--radius);
+					font-family: sans-serif;
+					display: none;
+					
+				}
+
+				#delete span, #duplicate span{
+					font-size: 19px !important;
+				}
+
+				#duplicate{
+					margin-left: auto;
+					margin-right: var(--small-gap);
+				}
+				
+				#delete:hover, #duplicate:hover{
+					background-color: color-mix(in srgb, var(--main-color) 40%, white);
+				}
+
+				#name{
+					text-overflow: ellipsis;
+					overflow: hidden;
+					display: -webkit-box;
+					-webkit-line-clamp: 1;
+					-webkit-box-orient: vertical;
 				}
 				
 				.active{
@@ -30,7 +75,11 @@ export class SceneTab extends HTMLElement {
 				
 			</style>
 			
-			<div id="${name}" >${name} <button id="delete">X</button></div>
+			<div id="${name}" >
+				<span id="name">${name}</span>
+				<button id="duplicate"><span class="material-symbols-outlined">content_copy</span></button>
+				<button id="delete"><span class="material-symbols-outlined">delete</span></button>
+			</div>
 				
 			
 		`;
@@ -40,9 +89,25 @@ export class SceneTab extends HTMLElement {
 
 		this.shadow.getElementById("delete").addEventListener("click", (e) => {
 			e.stopPropagation()
-			this.deleteScene()
+			if (confirm(`Are you sure you want to delete the scene "${this.name}"?`)) {
+				this.deleteScene();
+			}
 		})
 
+		this.shadow.getElementById("name").addEventListener("dblclick", (e) => {
+			this.shadow.getElementById("name").contentEditable = true
+			this.shadow.getElementById("name").focus()
+		})
+
+		this.shadow.getElementById("name").addEventListener("blur", (e) => {
+			this.shadow.getElementById("name").contentEditable = false
+			document.querySelector("cue-list").renameSequence(this.name, this.shadow.getElementById("name").innerText)
+		})
+
+		this.shadow.getElementById("duplicate").addEventListener("click", (e) => {
+			e.stopPropagation()
+			document.querySelector("cue-list").duplicateSequence(this.name)
+		})
 	}
 	
 	deleteScene(){

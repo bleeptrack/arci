@@ -107,6 +107,7 @@ io.of("/control").on('connection', (socket) => {
         console.log("save cue list", msg)
         db.data.sequences = msg 
         db.write()
+        sendSequenceInfo()
     })
     
     socket.on("interaction:show-answer", (msg) => {
@@ -480,7 +481,7 @@ async function cueActivate(id, additionalInfo=null){
 }
 
 function sendCueInfo(){
-  console.log("found cue types", interactionTypes)
+  //console.log("found cue types", interactionTypes)
   io.of("/control").emit("cue:load", { cues:db.data.cues, types:interactionTypes })
 }
 
@@ -492,7 +493,6 @@ function sendSequenceInfo(){
       scene["completeCues"] = scene.sequence.map( c => db.chain.get("cues").find({id: Number(c) }).value() )
       data.push(scene)
   }
-  console.log("seq from DB:", data)
   io.of("/control").emit("load sequence", data)
 }
 
