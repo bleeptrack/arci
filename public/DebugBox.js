@@ -140,23 +140,22 @@ class DebugBox extends HTMLElement {
 			var request = new XMLHttpRequest();
 
 			request.upload.addEventListener('progress', (e) => {
-				var file1Size = file.size;
-
-				if (e.loaded <= file1Size) {
-					var percent = Math.round(e.loaded / file1Size * 100);
-					//$('#progress-bar-file1').width(percent + '%').html(percent + '%');
-					console.log(percent)
-					this.shadow.getElementById("export").innerHTML = `uploading ${percent}%`
-				} 
-
-				if(e.loaded == e.total){
-					//$('#progress-bar-file1').width(100 + '%').html(100 + '%');
-					this.shadow.getElementById("export").innerHTML = `upload finished. Unpacking files. New Cues will show up in a moment :)`
+				if (e.lengthComputable) {
+					const percent = Math.round((e.loaded / e.total) * 100);
+					this.shadow.getElementById("export").innerHTML = `Uploading: ${percent}%`;
 				}
-			});   
+			});
+			
+			request.onload = () => {
+				if (request.status >= 200 && request.status < 300) {
+					this.shadow.getElementById("export").innerHTML = "Upload finished. Unpacking files. New Cues will show up in a moment :)";
+				} else {
+					this.shadow.getElementById("export").innerHTML = `Upload failed: ${request.statusText}`;
+				}
+			};
 
 			request.open('post', '/uploadproject');
-			request.timeout = 45000;
+			request.timeout = 60000 * 10;
 			request.send(formdata);
 		})
 		
