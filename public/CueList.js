@@ -188,6 +188,17 @@ class CueList extends HTMLElement {
 		}
 		this.saveCueSequence()
 	}
+
+	insertSequence(name, target, dropDir){
+		let seq = this.shadow.getElementById(target)
+		let moveSeq = this.shadow.getElementById(name)
+		if(dropDir){
+			seq.before(moveSeq)
+		}else{
+			seq.after(moveSeq)
+		}
+		this.saveCueSequence()
+	}
 	
 	addCueAfter(target, data){
 		target.after(this.buildCue(data))

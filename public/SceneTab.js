@@ -17,14 +17,16 @@ export class SceneTab extends HTMLElement {
 				
 				div{
 					height: 2vh;
-					background-color: var(--main-color);
+					background-color: color-mix(in srgb, var(--main-color) 40%, black);
 					color: white;
 					display: flex;
 					align-items: center;
 					padding: var(--small-gap);
 					font-family: sans-serif;
 					border: 2px solid black;
-					border-radius: var(--radius);
+					border-left: 0;
+					border-radius: 0 var(--radius) var(--radius) 0;
+					opacity: 0.45;
 				}
 
 				div:hover{
@@ -66,16 +68,23 @@ export class SceneTab extends HTMLElement {
 				}
 				
 				.active{
-					background-color: red;
+					background-color: var(--action-color);
+					opacity: 1;
 				}
 				
-				button{
-					
+				.insertAbove{
+					box-shadow: 0 -1vh 0 var(--action-color);
+					z-index: 100;
+				}
+				
+				.insertBelow{
+					box-shadow: 0 1vh 0 var(--action-color);
+					z-index: 100;
 				}
 				
 			</style>
 			
-			<div id="${name}" >
+			<div id="${name}" draggable="true">
 				<span id="name">${name}</span>
 				<button id="duplicate"><span class="material-symbols-outlined">content_copy</span></button>
 				<button id="delete"><span class="material-symbols-outlined">delete</span></button>
@@ -108,6 +117,58 @@ export class SceneTab extends HTMLElement {
 			e.stopPropagation()
 			document.querySelector("cue-list").duplicateSequence(this.name)
 		})
+
+		this.addEventListener("drop", (event) => {
+			event.preventDefault();
+			event.stopPropagation()
+			
+			let name = event.dataTransfer.getData("data")
+			event.target.removeDisplayInsert()
+
+			document.querySelector("cue-list").insertSequence(name, event.target.name, event.target.dropDir)
+		})
+		
+		
+		this.addEventListener("dragover", (event) => {
+		// prevent default to allow drop
+			event.preventDefault();
+			
+			let targetCenter = event.target.getBoundingClientRect().top + (event.target.getBoundingClientRect().height / 2)
+			let pos = event.clientY
+			
+			
+			event.target.displayInsert(pos < targetCenter)
+			
+			//console.log(pos < targetCenter, pos, targetCenter)
+		});
+		
+		this.addEventListener("dragleave", (event) => {
+		// prevent default to allow drop
+			event.preventDefault();
+			event.target.removeDisplayInsert()
+		});
+		
+		this.addEventListener('dragstart', (event) => {
+			console.log("drag start", this.name)
+			event.dataTransfer.setData("data", this.name);
+			event.dataTransfer.dropEffect = "move";
+		})
+	}
+
+	displayInsert(dir){
+		this.dropDir = dir
+		if(dir){
+			this.shadow.getElementById(this.name).classList.add("insertAbove")
+			this.shadow.getElementById(this.name).classList.remove("insertBelow")
+		}else{
+			this.shadow.getElementById(this.name).classList.remove("insertAbove")
+			this.shadow.getElementById(this.name).classList.add("insertBelow")
+		}
+	}
+	
+	removeDisplayInsert(){
+		this.shadow.getElementById(this.name).classList.remove("insertAbove")
+		this.shadow.getElementById(this.name).classList.remove("insertBelow")
 	}
 	
 	deleteScene(){

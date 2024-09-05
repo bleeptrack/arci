@@ -18,16 +18,43 @@ class SceneTabs extends HTMLElement {
 					width: 100%;
 				}
 				
-				button{
+				scene-tab{
+					display: block;
 					
+				}
+
+				#add-scene{
+					background-color: color-mix(in srgb, var(--main-color) 40%, black);
+					color: white;
+					padding: var(--small-gap);
+					margin: var(--small-gap);
+					border: 2px solid black;
+					border-radius: var(--radius);
+					opacity: 0.45;
+					align-self: center;
+				}
+
+				#add-scene:hover{
+					opacity: 0.8;
+				}
+
+				#container{
+					display: flex;
+					flex-direction: column;
+					height: 100%;
+					overflow-y: scroll;
+					overflow-x: visible;
+					scrollbar-color: color-mix(in srgb, var(--main-color) 40%, black) var(--main-color);
+					scrollbar-width: thin;
 				}
 				
 			</style>
-			<div id="tabs">
-			</div>
-			<div id="add" order="999999">
-				<input type="text" id="scene-name"></input>
-				<button id="add-scene">+</button>
+			<div id="container">
+				<div id="tabs">
+				</div>
+			
+					<button id="add-scene"><span class="material-symbols-outlined">add</span></button>
+				
 			</div>
 			
 			
@@ -35,7 +62,9 @@ class SceneTabs extends HTMLElement {
 		`;
 
 		this.shadow.appendChild(listcontainer.content.cloneNode(true));
-
+		this.shadow.getElementById("add-scene").addEventListener("click", (event) => {
+			this.addScene(`new epic scene ${Math.floor(Math.random() * 1000)}`)
+		})
 
 	}
 	
@@ -79,11 +108,7 @@ class SceneTabs extends HTMLElement {
 
 	// fires after the element has been attached to the DOM
 	connectedCallback() {
-		let btn = this.shadow.getElementById("add-scene")
-		btn.addEventListener("click", (event) => {
-			this.addScene(this.shadow.getElementById("scene-name").value)
-			this.shadow.getElementById("scene-name").value = ""
-		})
+		
 	}
 
 }

@@ -51,8 +51,8 @@ cue-list{
 }
 
 scene-tabs{
-	background-color: lightgrey;
 	grid-area: 1 / 11 / 2 / 13;
+	transform: translate(calc(var(--gap-size) * -1), 0);
 }
 
 answer-box{
