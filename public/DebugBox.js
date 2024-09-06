@@ -155,7 +155,7 @@ class DebugBox extends HTMLElement {
 			};
 
 			request.open('post', '/uploadproject');
-			request.timeout = 60000 * 10;
+			request.timeout = 0; //no timeout
 			request.send(formdata);
 		})
 		
