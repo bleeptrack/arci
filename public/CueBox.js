@@ -167,9 +167,15 @@ class CueBox extends HTMLElement {
 					margin: var(--gap-size)
 				}
 				
-				.cue-type-selector{
-					
+				.insertAbove{
+					box-shadow: 0 -1vh 0 var(--action-color);
 				}
+				
+				.insertBelow{
+					box-shadow: 0 1vh 0 var(--action-color);
+				}
+
+				
 			</style>
 			<div id="wrapper">
 				<div id="box-modal"></div>

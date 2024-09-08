@@ -670,6 +670,8 @@ export default class InteractionFakeChat extends HTMLElement {
 	static addFields(list){
 		
 		let row = document.createElement("li")
+		row.setAttribute("draggable", "true")
+		row.id = Math.random().toString(36).substring(2, 15)
 
 		CustomInput.textInput(row, "message", "EN:")
 		CustomInput.textInput(row, "message-de", "DE:")
@@ -686,6 +688,65 @@ export default class InteractionFakeChat extends HTMLElement {
 		
 		let btn = list.querySelector("#add")
 		btn.before(row)
+
+
+		row.addEventListener("drop", (event) => {
+			event.preventDefault();
+			event.stopPropagation()
+			
+			let id = event.dataTransfer.getData("data")
+			let moveRow = list.querySelector(`[id="${id}"]`)
+			let targetRow = event.target.closest("li")
+			//event.target.removeDisplayInsert()
+			
+			if(targetRow.classList.contains("insertAbove")){
+				targetRow.before(moveRow)
+			}else{
+				targetRow.after(moveRow)
+			}
+
+			targetRow.classList.remove("insertAbove")
+			targetRow.classList.remove("insertBelow")
+		})
+		
+		
+		row.addEventListener("dragover", (event) => {
+		// prevent default to allow drop
+			event.preventDefault();
+			
+			let targetRow = event.target.closest("li")
+
+			let targetCenter = targetRow.getBoundingClientRect().top + (targetRow.getBoundingClientRect().height / 2)
+			let pos = event.clientY
+			
+			
+			if(pos < targetCenter){
+				targetRow.classList.add("insertAbove")
+				targetRow.classList.remove("insertBelow")
+			}else{
+				targetRow.classList.remove("insertAbove")
+				targetRow.classList.add("insertBelow")
+			}
+			
+			//console.log(pos < targetCenter, pos, targetCenter)
+		});
+		
+		row.addEventListener("dragleave", (event) => {
+		// prevent default to allow drop
+			event.preventDefault()
+			
+			let targetRow = event.target.closest("li")
+			targetRow.classList.remove("insertAbove")
+			targetRow.classList.remove("insertBelow")
+		});
+		
+		row.addEventListener('dragstart', (event) => {
+			console.log("drag start", row.id)
+			event.dataTransfer.setData("data", row.id);
+			event.dataTransfer.dropEffect = "move";
+		})
+
+
 	}
 
 }
