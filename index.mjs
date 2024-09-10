@@ -67,6 +67,7 @@ let player = []
 let sessionToken = ""
 let secondServer = config['other-side'] || ""
 let arciSessionStorage = { }
+let arciSeenPlayers = []
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
@@ -142,6 +143,7 @@ io.of("/control").on('connection', (socket) => {
         sessionToken = ""
         db.data.sessionToken = sessionToken
         arciSessionStorage = {}
+        arciSeenPlayers = []
         db.write()
         sendSessionInfo()
         //ToDo cick users from session
@@ -378,9 +380,13 @@ function addPlayer(id, socketID){
     if(!id){
       id = getNextFreeID()
     }
+    id = Number(id)
     player[id] = {
         socketID: socketID,
         id: id
+    }
+    if(!arciSeenPlayers.includes(id)){
+      arciSeenPlayers.push(id)
     }
     console.log("player", socketID, "joined at", id)
     console.log(player)
@@ -404,8 +410,6 @@ function clearRecipientStatus(){
   player.forEach(p => {if(p){p.recipient = false}})
 }
 
-
-
 async function cueActivate(id, additionalInfo=null){
     clearRecipientStatus()
     let dbcue = db.chain.get("cues").find({id: Number(id) }).value()
@@ -414,6 +418,9 @@ async function cueActivate(id, additionalInfo=null){
     if(additionalInfo){
       cue["additionalInfo"] = additionalInfo
     }
+    //inject player id list
+    cue['availablePlayers'] = arciSeenPlayers
+
     switch(cue['player-ids']){
         case "all":
           for(let p of player){

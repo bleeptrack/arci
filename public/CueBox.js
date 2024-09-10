@@ -90,6 +90,18 @@ class CueBox extends HTMLElement {
 					position: absolute;
 					z-index: 10;
 					display: none;
+					width: 100%;
+					height: 100%;
+					padding: var(--gap-size);
+					box-sizing: border-box;
+					font-family: sans-serif;
+					overflow-y: scroll;
+					scrollbar-width: thin;
+					scrollbar-gutter: stable;
+				}
+
+				#box-modal label{
+					margin-right: var(--small-gap);
 				}
 
 				.filterbutton, #usageFilterButton{
@@ -175,7 +187,7 @@ class CueBox extends HTMLElement {
 					box-shadow: 0 1vh 0 var(--action-color);
 				}
 
-				
+
 			</style>
 			<div id="wrapper">
 				<div id="box-modal"></div>

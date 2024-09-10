@@ -14,6 +14,8 @@ export default class InteractionChat extends HTMLElement {
 		this.info = msg
 		this.typingindicator = "[✍️...]"
 		this.isTyping = false
+		this.playerLengthOwnSide = msg.availablePlayers.length
+		this.myRoomID = msg.availablePlayers.indexOf(msg.ownPlayerID)
 		
 
 		const container = document.createElement('template');
@@ -283,9 +285,11 @@ export default class InteractionChat extends HTMLElement {
 
 					.message.received:after {
 					border-width: 0px 10px 10px 0;
-					border-color: transparent #fff transparent transparent;
+					
 					top: 0;
 					left: -10px;
+					border-color: transparent;
+					border-right-color: inherit;
 					}
 
 					.message.sent {
@@ -487,7 +491,7 @@ export default class InteractionChat extends HTMLElement {
 			this.shadow.getElementById("input").value = this.shadow.getElementById("input").value.trim()
 			if(this.shadow.getElementById("input").value.length > 0){
 				this.addSpeechBubble(this.shadow.getElementById("input").value, true)
-				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.shadow.getElementById("input").value, info: this.info, toPlayer: this.info.ownPlayerID }}));
+				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.shadow.getElementById("input").value, info: this.info }}));
 				this.shadow.getElementById("input").value = ""
 			}
 		})
@@ -496,14 +500,14 @@ export default class InteractionChat extends HTMLElement {
 			
 				clearTimeout(this.typingTimer)
 				if(!this.isTyping){
-					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.typingindicator, info: this.info, toPlayer: this.info.ownPlayerID }}));
+					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.typingindicator, info: this.info }}));
 					this.isTyping = true
 				}
 				
 				
 				this.typingTimer = setTimeout(() => {
 					this.isTyping = false
-					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: "!"+this.typingindicator, info: this.info, toPlayer: this.info.ownPlayerID }}));
+					this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: "!"+this.typingindicator, info: this.info }}));
 					
 				}, 2000)
 			
@@ -512,16 +516,16 @@ export default class InteractionChat extends HTMLElement {
 		
 	}
 
-	addSpeechBubble(text, own){
+	addSpeechBubble(text, own, playerID){
 		let tickSVG = `<span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"/></svg></span>`
 		let type = own ? "sent" : 'received'
 		let ticks = own ? tickSVG : ""
 		let bubbleID = Math.round(Math.random()*999999)
+		let col = `hsl(${playerID*360/this.playerLengthOtherSide}, 100%, 80%)`;
 		let bubble = `
-			</div>
-			<div class="message ${type}">
+			<div class="message ${type}" style="background-color: ${col}; border-color: ${col};">
 			<span id=${bubbleID}>${text}</span>
-			<span class="metadata"><span class="time"></span>${ticks}</span>
+			<span class="metadata"><span class="time"></span>${ticks} ${playerID}</span>
 			</div>
 		`
 		this.shadow.getElementById("chat-content").innerHTML += bubble
@@ -607,13 +611,23 @@ export default class InteractionChat extends HTMLElement {
 	
 	updateInformation(data){
 		console.log("update info2", data)
-		if(data.toPlayer == this.info.ownPlayerID){
+
+		if(!this.playerLengthOtherSide){
+			this.playerLengthOtherSide = data.info.availablePlayers.length
+			console.log("playerLengthOtherSide", this.playerLengthOtherSide)
+			this.myRoomID = this.myRoomID % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide)
+			console.log("myRoomID", this.myRoomID)
+			this.chatPartners = data.info.availablePlayers.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
+			console.log("chat partners", this.chatPartners)
+		}
+
+		if(this.chatPartners.includes(data.playerID)){
 			if(data.answer == this.typingindicator){
 				this.shadow.getElementById("status").innerHTML = this.typingindicator
 			}else if(data.answer == "!"+this.typingindicator){
 				this.shadow.getElementById("status").innerHTML = "online"
 			}else{
-				this.addSpeechBubble(data.answer, false)
+				this.addSpeechBubble(data.answer, false, data.playerID)
 			}
 			
 		}
