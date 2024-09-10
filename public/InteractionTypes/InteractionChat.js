@@ -525,7 +525,7 @@ export default class InteractionChat extends HTMLElement {
 		let bubble = `
 			<div class="message ${type}" style="background-color: ${col}; border-color: ${col};">
 			<span id=${bubbleID}>${text}</span>
-			<span class="metadata"><span class="time"></span>${ticks} ${playerID}</span>
+			<span class="metadata"><span class="time"></span>${ticks}</span>
 			</div>
 		`
 		this.shadow.getElementById("chat-content").innerHTML += bubble
