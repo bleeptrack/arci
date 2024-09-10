@@ -16,6 +16,8 @@ const upload = multer({ dest: config['absolute-static-file-path']+'/uploads/' })
 import extract from 'extract-zip'
 import axios from 'axios';
 
+import path from 'path';
+
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 import lodash from 'lodash'
@@ -509,6 +511,33 @@ app.get('/seat/', (req, res) => {
 
 app.get('/seat/:userId', (req, res) => {
   res.redirect(`/?id=${req.params.userId}&sessionToken=${sessionToken}`)
+})
+
+app.post('/downloadPlayerImages', (req, res) =>  {
+  console.log("downloading", req.body)
+  let filenames = req.body.filenames
+  console.log("downloading", filenames)
+  
+  const exportFilename = 'exportImages-'+Math.round(Math.random()*100000)+'.zip'
+  const output = fs.createWriteStream(config['absolute-static-file-path'] + '/exports/' + exportFilename);
+  const archive = archiver('zip', {
+    zlib: { level: 9 } // Sets the compression level.
+  });
+
+  output.on('close', function() {
+    console.log(archive.pointer() + ' total bytes');
+    console.log('archiver has been finalized and the output file descriptor has closed.');
+    res.sendFile(config['absolute-static-file-path'] + '/exports/' + exportFilename)
+  });
+
+  archive.pipe(output)
+  filenames.forEach(file => {
+    file = file.replace("/media", "")
+    console.log("adding", config['absolute-static-file-path'] +file, path.basename(file))
+    archive.file(config['absolute-static-file-path'] + file, { name: path.basename(file) } );
+  })
+  archive.finalize();
+
 })
 
 app.get('/saveproject', (req, res) => {

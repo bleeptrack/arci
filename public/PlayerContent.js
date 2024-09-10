@@ -32,7 +32,7 @@ export class PlayerContent extends HTMLElement {
 					color: white;
 				}
 				#content{
-					height: 90%;
+					height: 90dvh;
 					width: 95%;
 					display: flex;
 					flex-direction: column;

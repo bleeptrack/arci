@@ -19,32 +19,29 @@ export default class InteractionImageShare extends HTMLElement {
 		container.innerHTML = `
 			<link href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
 			<style>
-				#content{
-					position: fixed;
-					top: 0;
-					left: 0;
-					height: 100vh;
-					width: 100vw;
-					background-size: cover;
-					background-position: center;
-					z-index: 10;
-				}
-				img{
-					max-width: 90%;
-					max-height: 50%;
-				}
 				
+				img{
+					max-width: 100%;
+					max-height: 100%;
+				}
+
+				#wrapper{
+					width: 100%;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
 				
 				button{
-					margin-bottom: 20%;
+					
 				}
 				button:disabled{
 					opacity: 0;
 				}
 			</style>
 			<div id="content">
-				<h1>${msg.text}</h1>
-				<input type="file" id="file" accept="image/png, image/jpeg"></input>
+				<h1 id="text">${msg.text}</h1>
+				<input type="file" id="file" accept="image/png, image/jpeg" capture="camera"></input>
 				<button id="sendBtn" disabled>send</button>
 			</div>
 		`;
@@ -63,9 +60,14 @@ export default class InteractionImageShare extends HTMLElement {
 				let image = new Image()
 				image.id = "userimg"
 				image.name = e.target.files[0].name
-				e.target.replaceWith(image)
+				
+				let wrapper = document.createElement("div")
+				wrapper.id = "wrapper"
+				wrapper.appendChild(image)
+				e.target.replaceWith(wrapper)
 				image.src = URL.createObjectURL( e.target.files[0] )
 				this.shadow.getElementById("sendBtn").disabled = false
+				this.shadow.getElementById("text").remove()
 			}
 			
 		})
@@ -170,6 +172,7 @@ export default class InteractionImageShare extends HTMLElement {
 			<button id="rnd-share">Share own random</button>
 			<button id="shuffle-share">Share own shuffled</button>
 			<button id="id-share">Share 1:1</button>
+			<button id="download-own">Download own Images</button>
 			<div id="ownImgs" class="img-collection"></div>
 			<div id="otherImgs" class="img-collection"></div>
 		`
@@ -220,6 +223,31 @@ export default class InteractionImageShare extends HTMLElement {
 			container.querySelector("#id-share").addEventListener("click", () => {
 				console.log()
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
+			})
+
+			container.querySelector("#download-own").addEventListener("click", () => {
+				let ownImgs = container.querySelector("#ownImgs")
+				let links = []
+				for(let img of ownImgs.childNodes){
+					links.push(img.name)
+				}
+				console.log("LINKS", links)
+
+				var req = new XMLHttpRequest();
+				req.open("POST", '/downloadPlayerImages', true);
+				req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				req.responseType = "blob";
+				req.onload = (event) => {
+					var blob = req.response;
+					var fileName = "export.zip" 
+					var link=document.createElement('a');
+					link.href=window.URL.createObjectURL(blob);
+					link.download=fileName;
+					link.click();
+				};
+
+				req.send(JSON.stringify({filenames: links}));
+
 			})
 		}else{
 			let imgDiv = document.createElement("div")
