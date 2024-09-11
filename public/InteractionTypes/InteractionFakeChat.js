@@ -594,13 +594,11 @@ export default class InteractionFakeChat extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
 			container.querySelector("#messagecount").innerHTML = 1
-			let msgText = `${msg.info.items[0]['message']}`
-			if(msg.info.items[0]['message-de']){
-				msgText += `</br>${msg.info.items[0]['message-de']}`
-			}
-			if(msg.info.items[0]['message-th']){
-				msgText += `</br>${msg.info.items[0]['message-th']}`
-			}
+			let msgText = `${msg.info.items[0]['message-th']}`
+			
+			msgText += msg.info.items[0]['message'] ? `</br>${msg.info.items[0]['message']}` : ""
+			msgText += msg.info.items[0]['message-de'] ? `</br>${msg.info.items[0]['message-de']}` : ""
+			
 			container.querySelector("#message").innerHTML = msgText
 			container.querySelector("#message").setAttribute("owner", msg.info.items[0]["own-message"])
 			container.querySelector("#sendbtn").addEventListener("click", () => {
@@ -609,13 +607,9 @@ export default class InteractionFakeChat extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {text:text, own:own}}))
 				let currentid = Number( container.querySelector("#messagecount").innerHTML )
 				if(msg.info.items[currentid]){
-					msgText = `${msg.info.items[currentid]['message']}`
-					if(msg.info.items[0]['message-de']){
-						msgText += `</br>${msg.info.items[0]['message-de']}`
-					}
-					if(msg.info.items[0]['message-th']){
-						msgText += `</br>${msg.info.items[0]['message-th']}`
-					}
+					msgText = `${msg.info.items[currentid]['message-th']}`
+					msgText += msg.info.items[currentid]['message'] ? `</br>${msg.info.items[currentid]['message']}` : ""
+					msgText += msg.info.items[currentid]['message-de'] ? `</br>${msg.info.items[currentid]['message-de']}` : ""
 					container.querySelector("#message").innerHTML = msgText
 					container.querySelector("#message").setAttribute("owner", msg.info.items[currentid]["own-message"])
 					container.querySelector("#messagecount").innerHTML = currentid + 1
