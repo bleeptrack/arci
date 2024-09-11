@@ -172,6 +172,7 @@ export default class InteractionImageShare extends HTMLElement {
 			<button id="rnd-share">Share own random</button>
 			<button id="shuffle-share">Share own shuffled</button>
 			<button id="id-share">Share 1:1</button>
+			<button id="other-shuffle">Share OTHER</button>
 			<button id="download-own">Download own Images</button>
 			<div id="ownImgs" class="img-collection"></div>
 			<div id="otherImgs" class="img-collection"></div>
@@ -221,8 +222,15 @@ export default class InteractionImageShare extends HTMLElement {
 			})
 			
 			container.querySelector("#id-share").addEventListener("click", () => {
-				console.log()
+				console.log("other-id")
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
+
+			})
+
+			container.querySelector("#other-shuffle").addEventListener("click", () => {
+				console.log("other-shuffle")
+				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-shuffle"} }));
+
 			})
 
 			container.querySelector("#download-own").addEventListener("click", () => {
@@ -339,6 +347,11 @@ export default class InteractionImageShare extends HTMLElement {
 				break;
 			case "other-id":
 				newMsg.filename = this.info.additionalInfo.paths[ this.info.ownPlayerID ]
+				break;
+			case "other-shuffle":
+				let pathArr = Object.values(this.info.additionalInfo.paths)
+				console.log("other-shuffle", this.info.ownPlayerID,  pathArr.length)
+				newMsg.filename = pathArr[ this.info.ownPlayerID % pathArr.length ]
 				break;
 		}
 		
