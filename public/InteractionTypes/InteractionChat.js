@@ -15,6 +15,7 @@ export default class InteractionChat extends HTMLElement {
 		this.typingindicator = "[✍️...]"
 		this.isTyping = false
 		this.playerLengthOwnSide = msg.availablePlayers.length
+		this.availablePlayersOwnSide = msg.availablePlayers
 		this.myRoomID = msg.availablePlayers.indexOf(msg.ownPlayerID)
 		
 
@@ -300,9 +301,10 @@ export default class InteractionChat extends HTMLElement {
 
 					.message.sent:after {
 					border-width: 0px 0 10px 10px;
-					border-color: transparent transparent transparent #e1ffc7;
 					top: 0;
 					right: -10px;
+					border-color: transparent;
+					border-left-color: inherit;
 					}
 
 					/* Compose */
@@ -491,7 +493,7 @@ export default class InteractionChat extends HTMLElement {
 			this.shadow.getElementById("input").value = this.shadow.getElementById("input").value.trim()
 			if(this.shadow.getElementById("input").value.length > 0){
 				this.addSpeechBubble(this.shadow.getElementById("input").value, true)
-				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.shadow.getElementById("input").value, info: this.info }}));
+				this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: this.shadow.getElementById("input").value, info: this.info, broadcast: true }}));
 				this.shadow.getElementById("input").value = ""
 			}
 		})
@@ -521,6 +523,8 @@ export default class InteractionChat extends HTMLElement {
 		let type = own ? "sent" : 'received'
 		let ticks = own ? tickSVG : ""
 		let bubbleID = Math.round(Math.random()*999999)
+		playerID = own ? playerID+5 : playerID
+		console.log("playerID", playerID, own)
 		let col = `hsl(${playerID*360/this.playerLengthOtherSide}, 100%, 80%)`;
 		let bubble = `
 			<div class="message ${type}" style="background-color: ${col}; border-color: ${col};">
@@ -617,20 +621,31 @@ export default class InteractionChat extends HTMLElement {
 			console.log("playerLengthOtherSide", this.playerLengthOtherSide)
 			this.myRoomID = this.myRoomID % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide)
 			console.log("myRoomID", this.myRoomID)
-			this.chatPartners = data.info.availablePlayers.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
-			console.log("chat partners", this.chatPartners)
+			this.chatPartnersOtherSide = data.info.availablePlayers.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
+			this.chatPartnersOwnSide = this.availablePlayersOwnSide.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
+			console.log("chat partners other/own", this.chatPartnersOtherSide, this.chatPartnersOwnSide)
 		}
 
-		if(this.chatPartners.includes(data.playerID)){
-			if(data.answer == this.typingindicator){
-				this.shadow.getElementById("status").innerHTML = this.typingindicator
-			}else if(data.answer == "!"+this.typingindicator){
-				this.shadow.getElementById("status").innerHTML = "online"
-			}else{
-				this.addSpeechBubble(data.answer, false, data.playerID)
+		if(data.otherSide){
+			if(this.chatPartnersOtherSide.includes(data.playerID)){
+				if(data.answer == this.typingindicator){
+					this.shadow.getElementById("status").innerHTML = this.typingindicator
+				}else if(data.answer == "!"+this.typingindicator){
+					this.shadow.getElementById("status").innerHTML = "online"
+				}else{
+					this.addSpeechBubble(data.answer, false, data.playerID)
+				}
+				return
 			}
-			
 		}
+		
+		if(data.broadcast){
+			if(this.chatPartnersOwnSide.includes(data.info.ownPlayerID)){
+				this.addSpeechBubble(data.answer, true, data.info.ownPlayerID)
+				return
+			}
+		}
+
 		if(data.translation){
 			console.log(data.translation)
 			this.shadow.getElementById(data.bubbleID).innerHTML = `<span class="translation">${data.translation[0].text}</span></br><span class="translation">${data.translation[1].text}</span></br><span class="translation">${data.translation[2].text}</span>`

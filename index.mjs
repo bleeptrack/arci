@@ -253,6 +253,10 @@ io.on('connection', (socket) => {
         let foundPlayer = player.find( x => x?.socketID == socket.id)
         console.log("player sent to other side", msg, foundPlayer)
         if(foundPlayer){
+          if(msg.broadcast){
+            io.emit("player:cue-update", msg)
+            delete msg.broadcast;
+          }
           msg.playerID = foundPlayer.id
           msg.otherSide = true
           io.of("/control").emit("interaction:answer", msg)

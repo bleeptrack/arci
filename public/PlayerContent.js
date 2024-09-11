@@ -190,7 +190,9 @@ export class PlayerContent extends HTMLElement {
 				console.log("importing", "./InteractionTypes/"+type)
 				import("./InteractionTypes/"+type).then( cls => {
 					this.interactionTypes[cls.default.name.toLowerCase()] = cls.default
-				})
+				}).catch(error => {
+					console.error(`Failed to import interaction type ${type}:`, error);
+				});
 			}
 		})
 		
