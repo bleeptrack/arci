@@ -89,6 +89,7 @@ export default class InteractionChat extends HTMLElement {
 					font-size: 24px;
 					position: relative;
 					z-index: 1;
+					display: none;
 					}
 
 					.user-bar:after {
@@ -162,7 +163,9 @@ export default class InteractionChat extends HTMLElement {
 					.conversation {
 					height: calc(100% - 12px);
 					position: relative;
+					/*
 					background: #efe7dd url("https://cloud.githubusercontent.com/assets/398893/15136779/4e765036-1639-11e6-9201-67e728e86f39.jpg") repeat;
+					*/
 					z-index: 0;
 					}
 
@@ -200,8 +203,8 @@ export default class InteractionChat extends HTMLElement {
 					.message {
 					color: #000;
 					clear: both;
-					line-height: 18px;
-					font-size: 15px;
+					line-height: 1.2em;
+					font-size: 1.2em;
 					padding: 8px;
 					position: relative;
 					margin: 8px 0;
@@ -523,7 +526,8 @@ export default class InteractionChat extends HTMLElement {
 	addSpeechBubble(text, own, playerID){
 		let tickSVG = `<span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"/></svg></span>`
 		let type = own ? "sent" : 'received'
-		let ticks = own ? tickSVG : ""
+		//let ticks = own ? tickSVG : ""
+		let ticks = ""
 		let bubbleID = Math.round(Math.random()*999999)
 		playerID = own ? playerID+5 : playerID
 		console.log("playerID", playerID, own)
