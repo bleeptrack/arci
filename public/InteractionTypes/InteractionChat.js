@@ -295,6 +295,7 @@ export default class InteractionChat extends HTMLElement {
 
 					.message.sent {
 					background: #e1ffc7;
+					border-color: #e1ffc7;
 					border-radius: 5px 0px 5px 5px;
 					float: right;
 					}
@@ -488,6 +489,7 @@ export default class InteractionChat extends HTMLElement {
 
 		this.shadow.appendChild(container.content.cloneNode(true));
 		callback({status: "ok"})
+		this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { answer: "[joining]", info: this.info}}));
 		
 		this.shadow.getElementById("send").addEventListener("click", () => {
 			this.shadow.getElementById("input").value = this.shadow.getElementById("input").value.trim()
