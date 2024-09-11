@@ -616,7 +616,7 @@ export default class InteractionChat extends HTMLElement {
 	updateInformation(data){
 		console.log("update info2", data)
 
-		if(!this.playerLengthOtherSide){
+		if(!this.playerLengthOtherSide && !data.broadcast){
 			this.playerLengthOtherSide = data.info.availablePlayers.length
 			console.log("playerLengthOtherSide", this.playerLengthOtherSide)
 			this.myRoomID = this.myRoomID % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide)
