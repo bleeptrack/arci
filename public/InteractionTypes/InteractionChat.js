@@ -142,10 +142,10 @@ export default class InteractionChat extends HTMLElement {
 					.user-bar .name {
 					font-size: 17px;
 					font-weight: 600;
-					text-overflow: ellipsis;
-					letter-spacing: 0.3px;
+					
+					
 					margin: 0 0 0 8px;
-					overflow: hidden;
+					
 					white-space: nowrap;
 					width: 110px;
 					}
@@ -451,7 +451,7 @@ export default class InteractionChat extends HTMLElement {
 							</div>
 							
 							<div class="name">
-								<span>Another Person</span>
+								<span id="room-name">Another Person</span>
 								<span class="status" id="status">online</span>
 							</div>
 							<div class="actions more">
@@ -620,6 +620,7 @@ export default class InteractionChat extends HTMLElement {
 			this.playerLengthOtherSide = data.info.availablePlayers.length
 			console.log("playerLengthOtherSide", this.playerLengthOtherSide)
 			this.myRoomID = this.myRoomID % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide)
+			this.shadow.getElementById("room-name").innerHTML = this.myRoomID
 			console.log("myRoomID", this.myRoomID)
 			//this.chatPartnersOtherSide = data.info.availablePlayers.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
 			//this.chatPartnersOwnSide = this.availablePlayersOwnSide.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
