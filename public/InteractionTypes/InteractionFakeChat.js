@@ -158,7 +158,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					/* Conversation */
 
 					.conversation {
-					height: calc(100% - 12px);
+					height: 100%;
 					position: relative;
 					/*
 					background: #efe7dd url("https://cloud.githubusercontent.com/assets/398893/15136779/4e765036-1639-11e6-9201-67e728e86f39.jpg") repeat;
@@ -182,7 +182,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					}
 
 					.conversation .conversation-container {
-					height: calc(100% - 68px);
+					height: 100%;
 					box-shadow: inset 0 10px 10px -10px #000000;
 					overflow-x: hidden;
 					padding: 0 16px;
@@ -208,6 +208,27 @@ export default class InteractionFakeChat extends HTMLElement {
 					max-width: 85%;
 					word-wrap: break-word;
 					z-index: -1;
+					
+					}
+
+					.message:last-child{
+						
+						transform: scale(0);
+						animation-fill-mode: forwards;
+						animation-name: expand-bounce;
+						animation-duration: 0.3s;
+					}
+
+					@keyframes expand-bounce {
+						0% {
+							transform: scale(0);
+						}
+						50% {
+							transform: scale(1.1);
+						}
+						100% {
+							transform: scale(1);
+						}
 					}
 
 					.message:after {
@@ -275,6 +296,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					}
 
 					.message.received {
+					transform-origin: 0% 0%;
 					background: #fff;
 					border-radius: 0px 5px 5px 5px;
 					float: left;
@@ -292,6 +314,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					}
 
 					.message.sent {
+					transform-origin: 100% 0%;
 					background: #e1ffc7;
 					border-radius: 5px 0px 5px 5px;
 					float: right;
@@ -426,10 +449,10 @@ export default class InteractionFakeChat extends HTMLElement {
 						}
 
 						.conversation {
-							height: calc(100svh - 55px);
+							height: 100%;
 						}
 						.conversation .conversation-container {
-							height: calc(100svh - 120px);
+							
 						}
 					}	
 			</style>
@@ -467,14 +490,7 @@ export default class InteractionFakeChat extends HTMLElement {
 							<div class="conversation-container" id="chat-content">
 								
 							</div>
-							<div class="conversation-compose">
-								
-								<input class="input-msg" id="input" name="input" placeholder="Type a message" autocomplete="off" autofocus></input>
-								
-								<button class="send" id="send">
-									<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/></svg>
-								</button>
-							</div>
+							
 							</div>
 						</div>
 						</div>
@@ -489,24 +505,6 @@ export default class InteractionFakeChat extends HTMLElement {
 		this.shadow.appendChild(container.content.cloneNode(true));
 		callback({status: "ok"})
 		
-		this.shadow.getElementById("send").addEventListener("click", () => {
-			this.addSpeechBubble(this.shadow.getElementById("input").value, true)
-			this.shadow.getElementById("input").value = ""
-		})
-		
-		/*
-		 * <h1>${msg.text}</h1>
-				<div id="chat"></div>
-				*/
-		
-		
-		//</div>
-		//<div class="message received">
-		//You were drunk.
-		//<span class="metadata"><span class="time"></span></span>
-		//</div>
-		
-		//<span class="tick"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="15" id="msg-dblcheck-ack" x="2063" y="2076"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z" fill="#4fc3f7"/></svg></span>
 		
 		
 	}
@@ -585,9 +583,10 @@ export default class InteractionFakeChat extends HTMLElement {
 					transition: background-color 0.5s linear;
 				}
 			</style>
+			<button id="sendbtn">SEND</button>
 			<div id="messagecount"></div>
 			<div id="message"></div>
-			<button id="sendbtn">SEND</button>
+			
 		`
 		
 		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
