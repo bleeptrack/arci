@@ -72,6 +72,29 @@ export default class InteractionQuestion extends HTMLElement {
 				let div = document.createElement("div")
 				div.innerHTML = `${msg.playerID}: ${msg.answer}`
 				container.appendChild(div)
+				let btn = document.createElement("button")
+				btn.innerHTML = "download texts"
+				btn.addEventListener("click", () => {
+					// Create a Blob containing the text data
+					const blob = new Blob([container.innerText], { type: 'text/plain' });
+					
+					// Create a temporary URL for the Blob
+					const url = URL.createObjectURL(blob);
+					
+					// Create a temporary anchor element
+					const a = document.createElement('a');
+					a.href = url;
+					a.download = 'answers.txt';
+					
+					// Trigger the download
+					document.body.appendChild(a);
+					a.click();
+					
+					// Clean up
+					document.body.removeChild(a);
+					URL.revokeObjectURL(url);
+				})
+				container.appendChild(btn)
 			}
 		}
 	}
