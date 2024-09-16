@@ -3,9 +3,14 @@ import { NoSleep } from './NoSleep.js';
 import { PlayerConnector } from './player-socket.js';
 import howler from 'https://cdn.jsdelivr.net/npm/howler@2.2.4/+esm'
 
+
 export class PlayerContent extends HTMLElement {
 	constructor() {
 		super();
+
+		
+
+
 		this.shadow = this.attachShadow({ mode: 'open' });
 		this.allowSwitch = false
 		
@@ -44,6 +49,7 @@ export class PlayerContent extends HTMLElement {
 					height: 100%;
 				}
 			</style>
+
 			<div id="playerID"></div>
 			<div id="content">
 				<button id="joinbutton">JOIN!</button>
@@ -93,18 +99,26 @@ export class PlayerContent extends HTMLElement {
 		
 		//ToDo keep audio open
 		setInterval(this.backgroundSound, 3000) //15000
-		this.backgroundSound()
+		
 	}
 	
 	backgroundSound(){
-            let sound = new howler.Howl({
-                    src: [window.location.origin +'/static/login.mp3'],
-                    autoplay: true,
-					//html5: true,
-					//onplay: () => {alert("playing")},
-            });
-            console.log("BG Sound")
-            //setTimeout(this.backgroundSound, 1000) //15000
+		if(!this.sound){
+			this.sound = new howler.Howl({
+				src: [window.location.origin +'/static/login.mp3'],
+				autoplay: true,
+				autoUnlock: true,
+				autoSuspend: false,
+				//loop: true
+				//html5: true,
+				//onplay: () => {alert("playing")},
+			});
+		}else{
+			this.sound.play()
+			//alert("reactivate howler")
+		}
+        console.log("BG Sound activated")
+        //setTimeout(this.backgroundSound, 1000) //15000
 	}
 	
 	uploadFile(fileinfo) {
@@ -190,9 +204,8 @@ export class PlayerContent extends HTMLElement {
 				console.log("importing", "./InteractionTypes/"+type)
 				import("./InteractionTypes/"+type).then( cls => {
 					this.interactionTypes[cls.default.name.toLowerCase()] = cls.default
-				}).catch(error => {
-					console.error(`Failed to import interaction type ${type}:`, error);
-				});
+					//console.log(cls)
+				})
 			}
 		})
 		
@@ -207,6 +220,7 @@ export class PlayerContent extends HTMLElement {
 		
 		this.playerConnector.socket.on("player:stopsound", (data) => {
 			Howler.stop()
+			this.backgroundSound()
 		})
 		
 		this.playerConnector.socket.on("player:preload", (cues) => {
