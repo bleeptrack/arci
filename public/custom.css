@@ -12,10 +12,14 @@
   --header-font-color: var(--secondary);
   
   /* buttons */ 
+
   --button-color: color-mix(in srgb, var(--secondary) 30%, transparent);
   --button-color-active: var(--secondary);
   --button-font-size: 10vw;
-  --button-border-style: 1vw solid color-mix(in srgb, var(--accent) 30%, transparent);
+  --button-border-style: 1vw solid var(--main-color);
+  @supports (background: color-mix(in srgb, var(--accent) 30%, transparent)) {
+    --button-border-style: 1vw solid color-mix(in srgb, var(--accent) 30%, transparent); 
+  }
   --button-border-style-active: 1vw solid var(--accent);
   --button-border-radius: 2vw;
   --button-font-color: var(--font-color);
