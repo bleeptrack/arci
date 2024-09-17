@@ -18,6 +18,7 @@ export default class InteractionImageShare extends HTMLElement {
 		// creating the inner HTML of the editable list element
 		container.innerHTML = `
 			<link href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
+			<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 			<style>
 				
 				img{
@@ -32,23 +33,43 @@ export default class InteractionImageShare extends HTMLElement {
 					align-items: center;
 				}
 				
-				button{
-					
-				}
+				
 				button:disabled{
 					opacity: 0;
+				}
+
+				#photo{
+					width: 100%;
+					margin-bottom: 20vh;
+				}
+
+				#photo span{
+					font-size: 20vh !important;
+					margin: 3vh;
+				}
+
+				h1 span{
+					font-size: 20vh !important;
 				}
 			</style>
 			<div id="content">
 				<h1 id="text">${msg.text}</h1>
-				<input type="file" id="file" accept="image/png, image/jpeg" capture="camera"></input>
-				<button id="sendBtn" disabled>send</button>
+				
+				<button id="photo"><span class="material-symbols-outlined">add_a_photo</span></button>
+				
+				<input type="file" id="file" accept="image/png, image/jpeg" capture="camera" style="display: none;"></input>
+				
 			</div>
 		`;
 
 		//background-image: url("${this.mediaPath}");
 		this.shadow.appendChild(container.content.cloneNode(true));
 		callback({status: "ok"})
+
+		this.shadow.getElementById("photo").addEventListener("click", (e) => {
+			e.preventDefault();
+			this.shadow.getElementById("file").click();
+		});
 		
 		this.shadow.getElementById("file").addEventListener("click", () => {
 			console.log("dispatch allow switch")
@@ -57,59 +78,42 @@ export default class InteractionImageShare extends HTMLElement {
 		
 		this.shadow.getElementById("file").addEventListener("change", (e) => {
 			if(e.target.files[0]){
-				let image = new Image()
-				image.id = "userimg"
-				image.name = e.target.files[0].name
+				let img = new Image()
+				img.id = "userimg"
+				img.name = e.target.files[0].name
+
+				img.addEventListener("load", () => {
+					let maxSize = 800
+					let filename = encodeURIComponent(img.name)
+					let maxscale = Math.max(img.naturalWidth, img.naturalHeight) > maxSize ? maxSize / Math.max(img.naturalWidth, img.naturalHeight) : 1
+					let canvas = document.createElement("canvas")
+					canvas.width = img.naturalWidth * maxscale
+					canvas.height = img.naturalHeight * maxscale
+					console.log("scaling to", canvas.width, canvas.height, maxscale)
+					let ctx = canvas.getContext("2d")
+					ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+					
+					canvas.toBlob((blob) => {
+						let file = new File([blob], filename, { type: "image/jpeg" })
+						//actionCallback({answer: answer})
+						let name = Math.round(Math.random()*999999999999) + "-imageshare.jpg"
+						this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: name, info: msg }}));
+						this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:msg.id , playerid:msg.ownPlayerID, data: name }}));
+						this.shadow.getElementById("file").remove()
+						this.shadow.getElementById("photo").remove()
+						this.shadow.getElementById("text").innerHTML = `<span class="material-symbols-outlined">check</span>`
+						console.log("dispatch reenter fullscreen")
+						this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
+						//this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { name: filename, info: this.info, toPlayer: this.info.ownPlayerID }}));
+						
+					}, 'image/jpeg');
+				})
+				img.src = URL.createObjectURL( e.target.files[0] )
 				
-				let wrapper = document.createElement("div")
-				wrapper.id = "wrapper"
-				wrapper.appendChild(image)
-				e.target.replaceWith(wrapper)
-				image.src = URL.createObjectURL( e.target.files[0] )
-				this.shadow.getElementById("sendBtn").disabled = false
-				this.shadow.getElementById("text").remove()
+
+
 			}
 			
-		})
-		
-		this.shadow.getElementById("sendBtn").addEventListener("click", () => {
-			
-			let maxSize = 800
-			let img = this.shadow.getElementById("userimg")
-			let filename = encodeURIComponent(img.name)
-			let maxscale = Math.max(img.naturalWidth, img.naturalHeight) > maxSize ? maxSize / Math.max(img.naturalWidth, img.naturalHeight) : 1
-			let canvas = document.createElement("canvas")
-			canvas.width = img.naturalWidth * maxscale
-			canvas.height = img.naturalHeight * maxscale
-			console.log("scaling to", canvas.width, canvas.height, maxscale)
-			let ctx = canvas.getContext("2d")
-			ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-			
-			var dataurl = canvas.toDataURL("image/jpeg", 0.2);
-			img.src = dataurl;
-			
-			canvas.toBlob((blob) => {
-				let file = new File([blob], filename, { type: "image/jpeg" })
-				//actionCallback({answer: answer})
-				let name = Math.round(Math.random()*999999999999) + "-imageshare.jpg"
-				this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: name, info: msg }}));
-				this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:msg.id , playerid:msg.ownPlayerID, data: name }}));
-				this.shadow.getElementById("content").innerHTML = ""
-				console.log("dispatch reenter fullscreen")
-				this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
-				//this.dispatchEvent(new CustomEvent("interaction:answer:otherside", {detail: { name: filename, info: this.info, toPlayer: this.info.ownPlayerID }}));
-				
-			}, 'image/jpeg');
-			
-			/*
-			let file = dataurl //this.shadow.getElementById("file").files[0]
-			let filename = file.name
-			//actionCallback({answer: answer})
-			this.dispatchEvent(new CustomEvent("interaction:fileupload", {detail: { file: file, name: filename, info: msg }}));
-			this.shadow.getElementById("content").innerHTML = ""
-			console.log("dispatch reenter fullscreen")
-			this.dispatchEvent(new CustomEvent("reenter-fullscreen"))
-			*/
 		})
 		
 	}
