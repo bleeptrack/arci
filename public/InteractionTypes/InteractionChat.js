@@ -436,7 +436,7 @@ export default class InteractionChat extends HTMLElement {
 							height: calc(100svh - 55px);
 						}
 						.conversation .conversation-container {
-							height: calc(100svh - 120px);
+							
 						}
 					}	
 			</style>
@@ -502,6 +502,21 @@ export default class InteractionChat extends HTMLElement {
 				this.shadow.getElementById("input").value = ""
 			}
 		})
+
+		this.shadow.getElementById("input").addEventListener("keypress", (event) => {
+			if (event.key === "Enter") {
+				event.preventDefault();
+				this.shadow.getElementById("send").click();
+			}
+		});
+
+		window.visualViewport.addEventListener('resize', event => {
+			console.log("resize", event)
+			if (/Android/i.test(navigator.userAgent)) {
+				this.shadow.getElementById("chat-content").style.height = `${window.visualViewport.height-160}px`
+			}
+		});
+
 		
 		this.shadow.getElementById("input").addEventListener("keyup", event => {
 			
@@ -519,6 +534,11 @@ export default class InteractionChat extends HTMLElement {
 				}, 2000)
 			
 		});
+
+		// Focus input after a small timeout
+		setTimeout(() => {
+			this.shadow.getElementById("input").focus();
+		}, 300);
 		
 		
 	}
