@@ -147,7 +147,11 @@ io.of("/control").on('connection', (socket) => {
         arciSessionStorage = {}
         arciSeenPlayers = []
         db.write()
+        player = []
+        io.emit("session:end")
+        sendPlayerInfo()
         sendSessionInfo()
+        
         //ToDo cick users from session
     })
     

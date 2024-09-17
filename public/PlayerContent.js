@@ -234,6 +234,13 @@ export class PlayerContent extends HTMLElement {
 				
 			}
 		})
+
+		this.playerConnector.socket.on("session:end", () => {
+			this.clearContent()
+			this.shadow.getElementById("playerID").innerHTML = ""
+			this.shadow.getElementById("content").innerHTML = `<h1>SESSION ENDED<br>Thank you for participating!</h1>`
+			this.playerConnector.socket.disconnect()
+		})
 		
 		this.shadow.getElementById("joinbutton").addEventListener("click", () => {
 			//navigator.vibrate(150);
