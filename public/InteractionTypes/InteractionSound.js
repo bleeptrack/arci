@@ -48,8 +48,8 @@ export default class InteractionSound extends HTMLElement {
 					preload: true,
                     //autoplay: true,
                     //html5: true,  //dieser fallback macht irgendwie zeug kaputt
-                    onplayerror: (err) => {document.getElementById("content").innerHTML += 'PLAY ERROR'+err+'</br>'},
-                    onloaderror: () => document.getElementById("content").innerHTML += 'LOAD ERROR</br>',
+                    onplayerror: (err) => {this.shadow.getElementById("content").innerHTML += `PLAY ERROR: ${err}</br>`},
+                    onloaderror: (err) => {this.shadow.getElementById("content").innerHTML += `LOAD ERROR: ${err}</br>`},
                     onload: () => {
                         //document.getElementById("content").innerHTML += 'loading Sound</br>'
 						callback({status: "ok"})
