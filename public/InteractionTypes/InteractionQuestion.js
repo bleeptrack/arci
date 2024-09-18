@@ -67,34 +67,36 @@ export default class InteractionQuestion extends HTMLElement {
 			container.innerHTML = ""
 			header.innerHTML = `${msg.info.text}`
 			header.setAttribute("cueID", msg.info.id)
+			this.answerString = ""
+			let btn = document.createElement("button")
+			btn.innerHTML = "download texts"
+			btn.addEventListener("click", () => {
+				// Create a Blob containing the text data
+				const blob = new Blob([this.answerString], { type: 'text/plain' });
+				
+				// Create a temporary URL for the Blob
+				const url = URL.createObjectURL(blob);
+				
+				// Create a temporary anchor element
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'answers.txt';
+				
+				// Trigger the download
+				document.body.appendChild(a);
+				a.click();
+				
+				// Clean up
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			})
+			container.after(btn)
 		}else{
-			if(msg.playerID){
+			if(msg.playerID && msg.answer){
 				let div = document.createElement("div")
 				div.innerHTML = `${msg.playerID}: ${msg.answer}`
+				this.answerString += `${msg.answer}\n`
 				container.appendChild(div)
-				let btn = document.createElement("button")
-				btn.innerHTML = "download texts"
-				btn.addEventListener("click", () => {
-					// Create a Blob containing the text data
-					const blob = new Blob([container.innerText], { type: 'text/plain' });
-					
-					// Create a temporary URL for the Blob
-					const url = URL.createObjectURL(blob);
-					
-					// Create a temporary anchor element
-					const a = document.createElement('a');
-					a.href = url;
-					a.download = 'answers.txt';
-					
-					// Trigger the download
-					document.body.appendChild(a);
-					a.click();
-					
-					// Clean up
-					document.body.removeChild(a);
-					URL.revokeObjectURL(url);
-				})
-				container.appendChild(btn)
 			}
 		}
 	}
