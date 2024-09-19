@@ -48,8 +48,8 @@ export default class InteractionSound extends HTMLElement {
 					preload: true,
                     //autoplay: true,
                     //html5: true,  //dieser fallback macht irgendwie zeug kaputt
-                    onplayerror: (err) => {this.shadow.getElementById("content").innerHTML += `PLAY ERROR: ${err}</br>`},
-                    onloaderror: (err) => {this.shadow.getElementById("content").innerHTML += `LOAD ERROR: ${err}</br>`},
+                    //onplayerror: (err) => {this.shadow.getElementById("content").innerHTML += `PLAY ERROR: ${err}</br>`},
+                    //onloaderror: (err) => {this.shadow.getElementById("content").innerHTML += `LOAD ERROR: ${err}</br>`},
                     onload: () => {
                         //document.getElementById("content").innerHTML += 'loading Sound</br>'
 						callback({status: "ok"})
@@ -57,8 +57,8 @@ export default class InteractionSound extends HTMLElement {
 						//this.shadow.getElementById("content").innerHTML += 'Sound loaded</br>',
 						
                     },
-                    onplay: () => {this.shadow.getElementById("content").innerHTML += 'Playing Sound</br>'},
-                    onunlock: () => {this.shadow.getElementById("content").innerHTML += 'Sound unlocked</br>'},
+                    //onplay: () => {this.shadow.getElementById("content").innerHTML += 'Playing Sound</br>'},
+                    //onunlock: () => {this.shadow.getElementById("content").innerHTML += 'Sound unlocked</br>'},
                     format: [form],
 
                 });

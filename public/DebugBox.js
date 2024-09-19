@@ -34,9 +34,6 @@ class DebugBox extends HTMLElement {
 			</style>
 			<div id="box-content">
 				<fieldset>
-					<button id="start">Start Session</button>
-				</fieldset>
-				<fieldset>
 					<button id="stopsound">STOP Sounds</button>
 				</fieldset>
 				<fieldset>
@@ -51,6 +48,9 @@ class DebugBox extends HTMLElement {
 							<span id="export"></span>
 						</div>
 					</form>
+				</fieldset>
+				<fieldset>
+					<button id="start">Start Session</button>
 				</fieldset>
 			</div>
 		
@@ -90,7 +90,9 @@ class DebugBox extends HTMLElement {
 		
 		this.shadow.getElementById("start").addEventListener("click", () => {
 			if(this.session){
-				socket.emit("session:end")
+				if(confirm("Are you sure you want to end the session?")){
+					socket.emit("session:end")
+				}
 			}else{
 				socket.emit("session:start")
 			}
