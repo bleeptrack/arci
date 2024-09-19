@@ -185,11 +185,13 @@ export default class InteractionChat extends HTMLElement {
 					}
 
 					.conversation .conversation-container {
-					height: calc(100% - 68px);
+					height: calc(100dvh - 68px);
 					box-shadow: inset 0 10px 10px -10px #000000;
 					overflow-x: hidden;
 					padding: 0 16px;
 					margin-bottom: 5px;
+					display: flex;
+					flex-direction: column-reverse;
 					}
 
 					.conversation .conversation-container:after {
@@ -281,6 +283,7 @@ export default class InteractionChat extends HTMLElement {
 					background: #fff;
 					border-radius: 0px 5px 5px 5px;
 					float: left;
+					align-self: flex-start;
 					}
 
 					.message.received .metadata {
@@ -301,6 +304,7 @@ export default class InteractionChat extends HTMLElement {
 					border-color: #e1ffc7;
 					border-radius: 5px 0px 5px 5px;
 					float: right;
+					align-self: flex-end;
 					}
 
 					.message.sent:after {
@@ -510,6 +514,16 @@ export default class InteractionChat extends HTMLElement {
 			}
 		});
 
+		this.shadow.getElementById("input").addEventListener("focus", () => {
+			setTimeout(() => {
+				this.shadow.getElementById("chat-content").scrollTo({
+					top: this.shadow.getElementById("chat-content").scrollHeight,
+					behavior: 'smooth'
+				});
+			}, 300);
+			
+		})
+
 		window.visualViewport.addEventListener('resize', event => {
 			console.log("resize", event)
 			if (/Android/i.test(navigator.userAgent)) {
@@ -558,7 +572,7 @@ export default class InteractionChat extends HTMLElement {
 			<span class="metadata"><span class="time"></span>${ticks}</span>
 			</div>
 		`
-		this.shadow.getElementById("chat-content").innerHTML += bubble
+		this.shadow.getElementById("chat-content").innerHTML = bubble + this.shadow.getElementById("chat-content").innerHTML
 		this.shadow.getElementById("chat-content").scrollTop = this.shadow.getElementById("chat-content").scrollHeight;
 		if(!own){
 			this.dispatchEvent(new CustomEvent("translate", {detail: { text: text, langTo: 'en,de,th', bubbleID: bubbleID  }}));
