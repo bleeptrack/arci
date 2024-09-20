@@ -27,7 +27,7 @@ body{
 
 cue-box{
 	background-color: rgba(255,255,255,0.65);
-	grid-area: 1 / 1 / 2 / 8;
+	grid-area: 1 / 1 / 2 / 6;
 	position: relative;
 	border-radius: var(--radius);
 }
@@ -47,7 +47,7 @@ debug-box{
 cue-list{
 	background-color: rgba(255,255,255,0.65);
 	border-radius: var(--radius);
-	grid-area: 1 / 8 / 2 / 11;
+	grid-area: 1 / 6 / 2 / 11;
 }
 
 scene-tabs{

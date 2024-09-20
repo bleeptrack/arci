@@ -79,7 +79,6 @@ class CueBox extends HTMLElement {
 				
 				#search-filter{
 					display: flex;
-					height: 3vh;
 					width: calc(100% - var(--small-gap)* 2);
 					gap: var(--gap-size);
 					padding: var(--small-gap);
@@ -115,6 +114,7 @@ class CueBox extends HTMLElement {
 					height: 100%;
 					border: 2px solid black;
 					border-radius: var(--radius);
+					height: 3vh;
 				}
 
 				.filterbutton span, #usageFilterButton span, #addCueButton span{
