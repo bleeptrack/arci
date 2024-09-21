@@ -1,10 +1,11 @@
-@import url("variables.css");
+@import "variables.css";
 
 :root {
+  --main-color: teal;
   --primary: var(--main-color);
   --secondary: black;
-  --accent: color-mix(in hsl longer hue, var(--main-color) 20%, white);
-  --font: sans-serif;
+  --accent: white; 
+  --font: sans-serif; 
   --font-color: white;
   --main-background: linear-gradient(0deg, var(--secondary) 0%, var(--primary) 100%);
   --correct: #49f2a0;
@@ -15,13 +16,15 @@
   
   /* buttons */ 
 
-  --button-color: color-mix(in srgb, var(--secondary) 30%, transparent);
+  /* --button-color: var(--secondary); */
+  --button-color: var(--main-color); 
   --button-color-active: var(--secondary);
   --button-font-size: 10vw;
-  --button-border-style: 1vw solid var(--main-color);
-  @supports (background: color-mix(in srgb, var(--accent) 30%, transparent)) {
-    --button-border-style: 1vw solid color-mix(in srgb, var(--accent) 30%, transparent); 
-  }
+  /* --button-border-style: 1vw solid var(--main-color); */
+  
+  
+  --button-border-style: 1vw solid var(--accent);
+  
   --button-border-style-active: 1vw solid var(--accent);
   --button-border-radius: 2vw;
   --button-font-color: var(--font-color);
