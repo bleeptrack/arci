@@ -1,7 +1,7 @@
 @import "variables.css";
 
 :root {
-  --main-color: teal;
+  
   --primary: var(--main-color);
   --secondary: black;
   --accent: white; 
