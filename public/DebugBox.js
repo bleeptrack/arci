@@ -152,8 +152,13 @@ class DebugBox extends HTMLElement {
 				if (request.status >= 200 && request.status < 300) {
 					this.shadow.getElementById("export").innerHTML = "Upload finished. Unpacking files. New Cues will show up in a moment :)";
 				} else {
-					this.shadow.getElementById("export").innerHTML = `Upload failed: ${request.statusText}`;
+					console.log(request)
+					this.shadow.getElementById("export").innerHTML = `Upload failed: ${request.status} ${request.statusText} ${request.responseText} ${request}`;
 				}
+			};
+
+			request.ontimeout = () => {
+				this.shadow.getElementById("export").innerHTML = "Upload timed out";
 			};
 
 			request.open('post', '/uploadproject');
