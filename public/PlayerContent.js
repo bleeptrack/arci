@@ -220,6 +220,7 @@ export class PlayerContent extends HTMLElement {
 		
 		this.playerConnector.socket.on("player:stopsound", (data) => {
 			Howler.stop()
+			console.log("stop sound")
 			this.backgroundSound()
 		})
 		

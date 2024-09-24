@@ -97,15 +97,17 @@ class DebugBox extends HTMLElement {
 			sessionStorage.setItem("secondServer", data);
 		});
 		
-		this.shadow.getElementById("start").addEventListener("click", () => {
-			if(this.session){
+		if(this.shadow.getElementById("start")){
+			this.shadow.getElementById("start").addEventListener("click", () => {
+				if(this.session){
 				if(confirm("Are you sure you want to end the session?")){
 					socket.emit("session:end")
 				}
 			}else{
 				socket.emit("session:start")
-			}
-		})
+				}
+			})
+		}
 		
 		this.shadow.getElementById("secondserverconnect").addEventListener("click", () => {
 			console.log("click connect")
