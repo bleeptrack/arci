@@ -64,16 +64,23 @@ class DebugBox extends HTMLElement {
 		// appending the container to the shadow DOM
 		this.shadow.appendChild(boxcontainer.content.cloneNode(true));
 		
+	if (window.location.hostname === "bangkok.arci.show/control") {
+		this.shadow.getElementById("start").remove()
+	}
 		
 	}
 
 
 	updateSessionGUI(){
 		if(this.session){
-			this.shadow.getElementById("start").innerHTML = "STOP Session"
+			if(this.shadow.getElementById("start")){
+				this.shadow.getElementById("start").innerHTML = "STOP Session"
+			}
 			this.shadow.getElementById("box-content").classList.add("sessionrunning")
 		}else{
-			this.shadow.getElementById("start").innerHTML = "START Session"
+			if(this.shadow.getElementById("start")){
+				this.shadow.getElementById("start").innerHTML = "START Session"
+			}
 			this.shadow.getElementById("box-content").classList.remove("sessionrunning")
 		}
 	}
