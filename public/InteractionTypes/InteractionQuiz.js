@@ -237,6 +237,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				}
 				for(let i = 1; i<=4; i++){
 					if(msg.info[i] && msg.info[i].length > 0){
+						
 						result["answers"][`${msg.info[i]}`] = Number(container.querySelector(`#answer-${i}`).getAttribute("count"))
 						if(container.querySelector(`#answer-${i}`).hasAttribute("other-count")){
 							result["answers"][`${msg.info[i]}`] += Number(container.querySelector(`#answer-${i}`).getAttribute("other-count"))

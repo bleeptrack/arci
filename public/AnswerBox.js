@@ -45,9 +45,11 @@ class AnswerBox extends HTMLElement {
 		
 		socket.on("cue:active", (msg, idx, seq) => {
 			console.log("answerbox cue active", msg)
+			
 			if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
 				this.cueTypes[msg.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})
 				this.activeCue = this.cueTypes[msg.type]
+				this.shadow.getElementById("wrap").style.background = `${this.cueTypes[msg.type].color}`
 			}
 		})
 
@@ -61,17 +63,23 @@ class AnswerBox extends HTMLElement {
 			
 				#question{
 					width: 100%;
-					
+					color: white;
+					text-align: center;
 				}
 				#answers{
-					height: 50%;
 					width: 100%;
 					
 				}
 				#wrap{
 					height: 100%;
-					overflow: scroll;
+					overflow-y: scroll;
 					position: relative;
+					display: flex;
+					flex-direction: column;
+					color: white;
+					font-family: sans-serif;
+					overflow-x: hidden;
+					scrollbar-width: thin;
 				}
 				#openanswers{
 					position: absolute;

@@ -602,7 +602,7 @@ export default class InteractionFakeChat extends HTMLElement {
 		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			console.log(msg.info)
 			console.log("CLEAR4")
-			header.innerHTML = `${msg.info.text}`
+			header.innerHTML = `${msg.info['cue-name']}`
 			container.innerHTML = ""
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
