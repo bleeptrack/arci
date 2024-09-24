@@ -61,7 +61,6 @@ class AnswerBox extends HTMLElement {
 			
 				#question{
 					width: 100%;
-					height: 2em;
 					
 				}
 				#answers{
