@@ -18,6 +18,7 @@ body{
 }
 
 player-content{
+  height: 100%; /* fallback for browsers that don't support dvh */
   height: 100dvh;
   width: 100%;
   display: flex;

@@ -131,7 +131,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 		
 			let content = this.shadow.getElementById("content")
 			for(let i = 1; i<5; i++){
-				if(this.info[i]  && this.info[i]?.length > 0){
+				if(this.info[i]  && this.info[i].length > 0){
 					let btn = document.createElement("button")
 					btn.id = i
 					btn.classList.add("answerbutton")
@@ -236,7 +236,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					id: msg.info.id
 				}
 				for(let i = 1; i<=4; i++){
-					if(msg.info[i]  && msg.info[i]?.length > 0){
+					if(msg.info[i] && msg.info[i].length > 0){
 						result["answers"][`${msg.info[i]}`] = Number(container.querySelector(`#answer-${i}`).getAttribute("count"))
 						if(container.querySelector(`#answer-${i}`).hasAttribute("other-count")){
 							result["answers"][`${msg.info[i]}`] += Number(container.querySelector(`#answer-${i}`).getAttribute("other-count"))
