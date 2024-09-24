@@ -550,9 +550,15 @@ export default class InteractionChat extends HTMLElement {
 		});
 
 		// Focus input after a small timeout
-		setTimeout(() => {
-			this.shadow.getElementById("input").focus();
-		}, 300);
+		//setTimeout(() => {
+		//	this.shadow.getElementById("input").focus();
+		//}, 300);
+
+		visualViewport.addEventListener('resize', (event) => {
+			if (/Android/i.test(navigator.userAgent)) {
+				this.shadow.getElementById("chat-content").style.height = `${window.visualViewport.height-160}px`;
+			}			
+		});
 		
 		
 	}
