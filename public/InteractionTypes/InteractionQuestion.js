@@ -70,6 +70,7 @@ export default class InteractionQuestion extends HTMLElement {
 			this.answerString = ""
 			let btn = document.createElement("button")
 			btn.innerHTML = "download texts"
+			btn.id = "downloadBtn"
 			btn.addEventListener("click", () => {
 				// Create a Blob containing the text data
 				const blob = new Blob([this.answerString], { type: 'text/plain' });
@@ -90,13 +91,13 @@ export default class InteractionQuestion extends HTMLElement {
 				document.body.removeChild(a);
 				URL.revokeObjectURL(url);
 			})
-			container.after(btn)
+			container.appendChild(btn)
 		}else{
 			if(msg.playerID && msg.answer){
 				let div = document.createElement("div")
 				div.innerHTML = `${msg.playerID}: ${msg.answer}`
 				this.answerString += `${msg.answer}\n`
-				container.appendChild(div)
+				container.querySelector("#downloadBtn").before(div)
 			}
 		}
 	}
