@@ -338,12 +338,13 @@ export default class InteractionImageShare extends HTMLElement {
 		let newMsg = {
 			type: "image"
 		}
+		
 		switch(this.info.additionalInfo.mode){
 			case "own-random":
-				
+			case "other-shuffle":
 				let keys = Object.keys(this.info.additionalInfo.paths)
 				let rndKeyID = Math.floor(Math.random() * keys.length)
-				console.log("OWN-RND", rndKeyID)
+				console.log("OWN-RND/OTHER-SHUFFLE", rndKeyID)
 				newMsg.filename = this.info.additionalInfo.paths[ keys[rndKeyID]  ]
 				break;
 			case "own-shuffle":
@@ -352,11 +353,13 @@ export default class InteractionImageShare extends HTMLElement {
 			case "other-id":
 				newMsg.filename = this.info.additionalInfo.paths[ this.info.ownPlayerID ]
 				break;
-			case "other-shuffle":
+			
+				/*
 				let pathArr = Object.values(this.info.additionalInfo.paths)
 				console.log("other-shuffle", this.info.ownPlayerID,  pathArr.length)
-				newMsg.filename = pathArr[ this.info.ownPlayerID % pathArr.length ]
-				break;
+				newMsg.filename = pathArr[ ( this.info.ownPlayerID + this.callCount ) % pathArr.length ]
+				*/
+				
 		}
 		
 		this.dispatchEvent(new CustomEvent("interaction:forward", {detail: newMsg}))
