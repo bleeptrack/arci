@@ -32,7 +32,7 @@ export default class InteractionQuestion extends HTMLElement {
 				}
 			</style>
 			<div id="content">
-				<h1>${this.text}</h1>
+				<h1 id="question">${this.text}</h1>
 				<textarea id="answer"></textarea>
 				<button id="sendBtn">send</button>
 			</div>
@@ -50,6 +50,14 @@ export default class InteractionQuestion extends HTMLElement {
 			//actionCallback({answer: answer})
 			this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: answer, info: msg }}));
 			this.shadow.getElementById("content").innerHTML = ""
+		})
+
+		this.shadow.getElementById("answer").addEventListener("focus", (e) => {
+			this.shadow.getElementById("question").style.display = "none"
+		})
+
+		this.shadow.getElementById("answer").addEventListener("blur", (e) => {
+			this.shadow.getElementById("question").style.display = "block"
 		})
 	}
 	
