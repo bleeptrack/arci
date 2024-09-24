@@ -64,11 +64,11 @@ class DebugBox extends HTMLElement {
 		// appending the container to the shadow DOM
 		this.shadow.appendChild(boxcontainer.content.cloneNode(true));
 
-		console.log(window.location.hostname, window.location.pathname)
 		
-	if (window.location.hostname === "bangkok.arci.show" && window.location.pathname === "/control") {
-		this.shadow.getElementById("start").remove()
-	}
+		
+		if (window.location.hostname === "bangkok.arci.show" && window.location.pathname === "/control") {
+			this.shadow.getElementById("start").remove()
+		}
 		
 	}
 

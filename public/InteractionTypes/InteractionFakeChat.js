@@ -206,7 +206,6 @@ export default class InteractionFakeChat extends HTMLElement {
 					position: relative;
 					margin: 8px 0;
 					max-width: 85%;
-					word-wrap: break-word;
 					z-index: -1;
 					
 					}
@@ -413,6 +412,15 @@ export default class InteractionFakeChat extends HTMLElement {
 					
 					}
 
+					.message-span:not(:first-child){
+						border-top: 2px solid lightgrey;
+						display: inline-block;
+					}
+					
+					.message-span{
+						padding: 10px 0px;
+						display: inline-block;
+					}
 					
 
 					/* Small Screens */
@@ -545,7 +553,7 @@ export default class InteractionFakeChat extends HTMLElement {
 			</div>
 			<div class="message ${type}">
 			${text}
-			<span class="metadata"><span class="time"></span>${ticks}</span>
+			
 			</div>
 		`
 		this.shadow.getElementById("chat-content").innerHTML += bubble
@@ -582,6 +590,8 @@ export default class InteractionFakeChat extends HTMLElement {
 					background-color: var(--main-color);
 					transition: background-color 0.5s linear;
 				}
+
+	
 			</style>
 			<button id="sendbtn">SEND</button>
 			<div id="messagecount"></div>
@@ -597,10 +607,10 @@ export default class InteractionFakeChat extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
 			container.querySelector("#messagecount").innerHTML = 1
-			let msgText = `${msg.info.items[0]['message-th']}`
+			let msgText = `<span class="message-span">${msg.info.items[0]['message-th']}</span>`
 			
-			msgText += msg.info.items[0]['message'] ? `</br>${msg.info.items[0]['message']}` : ""
-			msgText += msg.info.items[0]['message-de'] ? `</br>${msg.info.items[0]['message-de']}` : ""
+			msgText += msg.info.items[0]['message'] ? `</br><span class="message-span">${msg.info.items[0]['message']}</span>` : ""
+			msgText += msg.info.items[0]['message-de'] ? `</br><span class="message-span">${msg.info.items[0]['message-de']}</span>` : ""
 			
 			container.querySelector("#message").innerHTML = msgText
 			container.querySelector("#message").setAttribute("owner", msg.info.items[0]["own-message"])
@@ -610,9 +620,9 @@ export default class InteractionFakeChat extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {text:text, own:own}}))
 				let currentid = Number( container.querySelector("#messagecount").innerHTML )
 				if(msg.info.items[currentid]){
-					msgText = `${msg.info.items[currentid]['message-th']}`
-					msgText += msg.info.items[currentid]['message'] ? `</br>${msg.info.items[currentid]['message']}` : ""
-					msgText += msg.info.items[currentid]['message-de'] ? `</br>${msg.info.items[currentid]['message-de']}` : ""
+					msgText = `<span class="message-span">${msg.info.items[currentid]['message-th']}</span>`
+					msgText += msg.info.items[currentid]['message'] ? `</br><span class="message-span">${msg.info.items[currentid]['message']}</span>` : ""
+					msgText += msg.info.items[currentid]['message-de'] ? `</br><span class="message-span">${msg.info.items[currentid]['message-de']}</span>` : ""
 					container.querySelector("#message").innerHTML = msgText
 					container.querySelector("#message").setAttribute("owner", msg.info.items[currentid]["own-message"])
 					container.querySelector("#messagecount").innerHTML = currentid + 1
