@@ -412,7 +412,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					
 					}
 
-					.message-span:not(:first-child){
+					.message-span:not(span:first-of-type){
 						border-top: 2px solid lightgrey;
 						display: inline-block;
 					}
@@ -607,10 +607,11 @@ export default class InteractionFakeChat extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
 			container.querySelector("#messagecount").innerHTML = 1
-			let msgText = `<span class="message-span">${msg.info.items[0]['message-th']}</span>`
+
 			
-			msgText += msg.info.items[0]['message'] ? `</br><span class="message-span">${msg.info.items[0]['message']}</span>` : ""
-			msgText += msg.info.items[0]['message-de'] ? `</br><span class="message-span">${msg.info.items[0]['message-de']}</span>` : ""
+			let msgText = msg.info.items[0]['message-th'] ? `<span class="message-span">${msg.info.items[0]['message-th'].trim()}</span>` : ""
+			msgText += msg.info.items[0]['message'] ? `<span class="message-span">${msg.info.items[0]['message'].trim()}</span>` : ""
+			msgText += msg.info.items[0]['message-de'] ? `<span class="message-span">${msg.info.items[0]['message-de'].trim()}</span>` : ""
 			
 			container.querySelector("#message").innerHTML = msgText
 			container.querySelector("#message").setAttribute("owner", msg.info.items[0]["own-message"])
@@ -620,9 +621,9 @@ export default class InteractionFakeChat extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-update", {detail: {text:text, own:own}}))
 				let currentid = Number( container.querySelector("#messagecount").innerHTML )
 				if(msg.info.items[currentid]){
-					msgText = `<span class="message-span">${msg.info.items[currentid]['message-th']}</span>`
-					msgText += msg.info.items[currentid]['message'] ? `</br><span class="message-span">${msg.info.items[currentid]['message']}</span>` : ""
-					msgText += msg.info.items[currentid]['message-de'] ? `</br><span class="message-span">${msg.info.items[currentid]['message-de']}</span>` : ""
+					msgText = msg.info.items[currentid]['message-th'] ? `<span class="message-span">${msg.info.items[currentid]['message-th'].trim()}</span>` : ""
+					msgText += msg.info.items[currentid]['message'] ? `<span class="message-span">${msg.info.items[currentid]['message'].trim()}</span>` : ""
+					msgText += msg.info.items[currentid]['message-de'] ? `<span class="message-span">${msg.info.items[currentid]['message-de'].trim()}</span>` : ""
 					container.querySelector("#message").innerHTML = msgText
 					container.querySelector("#message").setAttribute("owner", msg.info.items[currentid]["own-message"])
 					container.querySelector("#messagecount").innerHTML = currentid + 1

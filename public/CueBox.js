@@ -361,8 +361,7 @@ class CueBox extends HTMLElement {
 				}else if(input.getAttribute("type") == "checkbox"){
 					input.checked = info[name]
 				}else{
-					console.log(input, name)
-					input.value = info[name]
+					input.value = info[name].trim()
 				}
 			}
 		}
