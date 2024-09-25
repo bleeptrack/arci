@@ -420,6 +420,7 @@ export default class InteractionFakeChat extends HTMLElement {
 					.message-span{
 						padding: 10px 0px;
 						display: inline-block;
+						width: 100%;
 					}
 					
 
@@ -589,6 +590,12 @@ export default class InteractionFakeChat extends HTMLElement {
 				.animate{
 					background-color: var(--main-color);
 					transition: background-color 0.5s linear;
+				}
+
+				.message-span{
+					padding: 10px 0px;
+					display: inline-block;
+					width: 100%;
 				}
 
 	
