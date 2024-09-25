@@ -420,6 +420,10 @@ function clearRecipientStatus(){
   player.forEach(p => {if(p){p.recipient = false}})
 }
 
+function getActivePalyerIDs(){
+  return player.filter(p => p).map(p => p.id)
+}
+
 async function cueActivate(id, additionalInfo=null){
     clearRecipientStatus()
     let dbcue = db.chain.get("cues").find({id: Number(id) }).value()
@@ -429,7 +433,7 @@ async function cueActivate(id, additionalInfo=null){
       cue["additionalInfo"] = additionalInfo
     }
     //inject player id list
-    cue['availablePlayers'] = arciSeenPlayers
+    cue['availablePlayers'] = getActivePalyerIDs()
 
     switch(cue['player-ids']){
         case "all":

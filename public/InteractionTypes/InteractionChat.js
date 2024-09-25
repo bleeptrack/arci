@@ -531,7 +531,7 @@ export default class InteractionChat extends HTMLElement {
 			}
 		});
 
-		
+		/*
 		this.shadow.getElementById("input").addEventListener("keyup", event => {
 			
 				clearTimeout(this.typingTimer)
@@ -548,6 +548,7 @@ export default class InteractionChat extends HTMLElement {
 				}, 2000)
 			
 		});
+		*/
 
 		// Focus input after a small timeout
 		//setTimeout(() => {
@@ -626,28 +627,40 @@ export default class InteractionChat extends HTMLElement {
 			container.appendChild(controlContent.content.cloneNode(true));
 			header.setAttribute("cueID", msg.info.id)
 		}else{
-		
-			if(msg.playerID){
+			console.log("msg.toRoom", msg.toRoom)
+			if(msg.hasOwnProperty("toRoom")){
 				let boxcontainer = container.querySelector("#boxes")
-				let box = boxcontainer.querySelector(`#player-${msg.playerID}`)
+				let box = boxcontainer.querySelector(`#room-${msg.toRoom}`)
 				if(!box){
 					box = document.createElement(`div`)
-					box.innerHTML = msg.playerID
-					box.id = `player-${msg.playerID}`
+					box.innerHTML = msg.toRoom
+					box.id = `room-${msg.toRoom}`
 					box.classList.add("messagebox")
+					box.setAttribute("ownSide", "[]")
+					box.setAttribute("otherSide", "[]")
 					boxcontainer.appendChild(box)
 				}
 				
-				boxcontainer.querySelector(`#player-${msg.playerID}`).classList.remove("animate")
-				boxcontainer.querySelector(`#player-${msg.playerID}`).offsetWidth;
-				boxcontainer.querySelector(`#player-${msg.playerID}`).classList.add("animate")
+				boxcontainer.querySelector(`#room-${msg.toRoom}`).classList.remove("animate")
+				boxcontainer.querySelector(`#room-${msg.toRoom}`).offsetWidth;
+				boxcontainer.querySelector(`#room-${msg.toRoom}`).classList.add("animate")
 				
 				if(msg.receivedFromOtherSide){
 					console.log("other side received")
+					let other = JSON.parse(box.getAttribute("otherSide"))
+					if(!other.includes(msg.info.ownPlayerID)){
+						other.push(msg.info.ownPlayerID)
+						box.setAttribute("otherSide", JSON.stringify(other))
+					}
 				}else{
 					console.log("updating other side")
-					
+					let own = JSON.parse(box.getAttribute("ownSide"))
+					if(!own.includes(msg.playerID)){
+						own.push(msg.playerID)
+						box.setAttribute("ownSide", JSON.stringify(own))
+					}
 				}
+				box.title = `${box.getAttribute("otherSide")} / ${box.getAttribute("ownSide")}`
 			}
 			
 		}
@@ -668,6 +681,7 @@ export default class InteractionChat extends HTMLElement {
 			this.myRoomID = this.myRoomID % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide)
 			this.shadow.getElementById("room-name").innerHTML = this.myRoomID
 			console.log("myRoomID", this.myRoomID)
+			this.addSpeechBubble("[You are in chat room " + this.myRoomID + "]", true, this.info.ownPlayerID)
 			//this.chatPartnersOtherSide = data.info.availablePlayers.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
 			//this.chatPartnersOwnSide = this.availablePlayersOwnSide.filter( p => p % Math.min(this.playerLengthOtherSide, this.playerLengthOwnSide) == this.myRoomID)
 			//console.log("chat partners other/own", this.chatPartnersOtherSide, this.chatPartnersOwnSide)
