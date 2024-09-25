@@ -173,15 +173,14 @@ export default class InteractionImageShare extends HTMLElement {
 				}
 			</style>
 			<button id="fetch">fetch img from other side</button>
-			<button id="rnd-share">Share own random</button>
-			<button id="shuffle-share">Share own shuffled</button>
-			<button id="id-share">Share 1:1</button>
 			<button id="other-shuffle">Share OTHER</button>
 			<button id="download-own">Download own Images</button>
 			<div id="ownImgs" class="img-collection"></div>
 			<div id="otherImgs" class="img-collection"></div>
 		`
-		
+		//<button id="rnd-share">Share own random</button>
+		//<button id="shuffle-share">Share own shuffled</button>
+		//<button id="id-share">Share 1:1</button>
 		
 		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
 			console.log("CLEAR4")
@@ -210,6 +209,7 @@ export default class InteractionImageShare extends HTMLElement {
 				})
 			})
 			
+			/*
 			container.querySelector("#rnd-share").addEventListener("click", () => {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
 			})
@@ -230,6 +230,7 @@ export default class InteractionImageShare extends HTMLElement {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#otherImgs")), id: msg.info.id, mode:"other-id"} }));
 
 			})
+			*/
 
 			container.querySelector("#other-shuffle").addEventListener("click", () => {
 				console.log("other-shuffle")
