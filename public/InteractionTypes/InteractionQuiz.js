@@ -80,6 +80,32 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 
 		//background-image: url("${this.mediaPath}");
 		this.shadow.appendChild(container.content.cloneNode(true));
+
+		let content = this.shadow.getElementById("content")
+		for(let i = 1; i<5; i++){
+			if(this.info[i]  && this.info[i].length > 0){
+				let btn = document.createElement("button")
+				btn.id = i
+				btn.classList.add("answerbutton")
+				if(this.info[`filename-${i}`]){
+					let name = `filename-${i}`
+					btn.style.backgroundImage = `url("/media/${this.info[name]}")`
+					btn.classList.add("img-btn")
+				}
+				btn.innerHTML += this.info[i]
+				content.appendChild(btn)
+			}
+		}
+		
+		this.shadow.querySelectorAll(".answerbutton").forEach( e => {
+			e.addEventListener("click", () => {
+				//this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: e.id, info: this.info }}));
+				this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:this.info.id , playerid:this.info.ownPlayerID, data: e.id }}));
+				this.shadow.getElementById("content").innerHTML = ""
+				
+				
+			})
+		})
 		
 		callback({status: "ok"})
 		console.log("OK")
@@ -127,41 +153,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 	connectedCallback() {
 		if(this.info.additionalInfo){
 			this.handleAdditionalInfo()
-		}else{
-		
-			let content = this.shadow.getElementById("content")
-			for(let i = 1; i<5; i++){
-				if(this.info[i]  && this.info[i].length > 0){
-					let btn = document.createElement("button")
-					btn.id = i
-					btn.classList.add("answerbutton")
-					if(this.info[`filename-${i}`]){
-						let name = `filename-${i}`
-						btn.style.backgroundImage = `url("/media/${this.info[name]}")`
-						btn.classList.add("img-btn")
-					}
-					btn.innerHTML += this.info[i]
-					content.appendChild(btn)
-				}
-			}
-			
-			this.shadow.querySelectorAll(".answerbutton").forEach( e => {
-				e.addEventListener("click", () => {
-					//this.dispatchEvent(new CustomEvent("interaction:answer", {detail: { answer: e.id, info: this.info }}));
-					this.dispatchEvent(new CustomEvent("interaction:session-storage", {detail: { cueid:this.info.id , playerid:this.info.ownPlayerID, data: e.id }}));
-					
-					
-					//navigator.vibrate(150)
-					setTimeout(() => {
-						this.shadow.getElementById("content").innerHTML = ""
-					}, 150)
-					
-				})
-			})
-		
 		}
-		
-		
 	}
 	
 	static updateFromSessionStorage(header, container, msg){
