@@ -45,6 +45,13 @@ export class PlayerContent extends HTMLElement {
 					justify-content: space-around;
 					align-items: center;
 				}
+				#away-msg{
+					color: white;
+					font-family: sans-serif;
+					height: 100%;
+					align-content: center;
+					text-align: center;
+				}
 				#content > * {
 					width: 100%;
 					height: 100%;
@@ -66,7 +73,7 @@ export class PlayerContent extends HTMLElement {
 			// Modify behavior…
 			
 			if(document.hidden && !this.allowSwitch){
-				this.content.innerHTML = "you went away...please reload to join again."
+				this.content.innerHTML = "<div id='away-msg'>you went away...please reload to join again.</div>"
 				this.playerConnector.pauseUser()
 			}
 			
