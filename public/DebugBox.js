@@ -66,9 +66,9 @@ class DebugBox extends HTMLElement {
 
 		
 		
-		//if (window.location.hostname === "bangkok.arci.show" && window.location.pathname === "/control") {
-		this.shadow.getElementById("start").remove()
-		//}
+		if (window.location.pathname === "/control") {
+			this.shadow.getElementById("start").remove()
+		}
 		
 	}
 
