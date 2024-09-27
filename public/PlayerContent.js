@@ -35,6 +35,7 @@ export class PlayerContent extends HTMLElement {
 					height: 20px;
 					font-size: 1em;
 					color: white;
+					display: none;
 				}
 				#content{
 					height: 90dvh;
