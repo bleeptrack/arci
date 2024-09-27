@@ -249,8 +249,10 @@ io.on('connection', (socket) => {
       
       let foundPlayer = player.find( x => x?.socketID == socket.id)
       console.log("player answered", msg, foundPlayer)
-      msg.playerID = foundPlayer.id
-      io.of("/control").emit("interaction:answer", msg)
+      if(foundPlayer){  
+        msg.playerID = foundPlayer.id
+        io.of("/control").emit("interaction:answer", msg)
+      }
     })
     
     socket.on("interaction:answer:otherside", (msg) => {
