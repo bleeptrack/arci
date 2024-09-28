@@ -298,11 +298,13 @@ io.on('connection', (socket) => {
         callback({ message: err ? "failure" : "success" });
         if(!err){
           let foundPlayer = player.find( x => x?.socketID == socket.id)
-          delete data.file
-          data.name = "playeruploads/" + data.name
-          console.log("player answered", data, foundPlayer)
-          data.playerID = foundPlayer.id
-          //io.of("/control").emit("interaction:answer", data)
+          if(foundPlayer){
+            delete data.file
+            data.name = "playeruploads/" + data.name
+            console.log("player answered", data, foundPlayer)
+            data.playerID = foundPlayer.id
+            //io.of("/control").emit("interaction:answer", data)
+          }
         }
       });
     });
