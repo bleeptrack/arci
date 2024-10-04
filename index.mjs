@@ -513,10 +513,12 @@ function sendCueInfo(){
 function sendSequenceInfo(){
   let seq = db.data.sequences 
   let data = []
-  for(let s of seq){
+  if(seq){
+    for(let s of seq){
       let scene = { ...s }
       scene["completeCues"] = scene.sequence.map( c => db.chain.get("cues").find({id: Number(c) }).value() )
       data.push(scene)
+    }
   }
   io.of("/control").emit("load sequence", data)
 }
