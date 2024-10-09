@@ -172,6 +172,7 @@ export default class InteractionImageShare extends HTMLElement {
 					opacity: 0.5;
 				}
 			</style>
+			<button id="rnd-share">Share own random</button>
 			<button id="fetch">fetch img from other side</button>
 			<button id="other-shuffle">Share OTHER</button>
 			<button id="download-own">Download own Images</button>
@@ -209,11 +210,12 @@ export default class InteractionImageShare extends HTMLElement {
 				})
 			})
 			
-			/*
+			
 			container.querySelector("#rnd-share").addEventListener("click", () => {
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: {paths: getPaths(container.querySelector("#ownImgs")), id: msg.info.id, mode:"own-random"} }));
 			})
 			
+			/*
 			container.querySelector("#shuffle-share").addEventListener("click", () => {
 				let info = getPaths(container.querySelector("#ownImgs"))
 				console.log(info)
