@@ -70,6 +70,7 @@ let sessionToken = ""
 let secondServer = config['other-side'] || ""
 let arciSessionStorage = { }
 let arciSeenPlayers = []
+let monitorText = ""
 
 // Read data from JSON file, this will set db.data content
 // If JSON file doesn't exist, defaultData is used instead
@@ -111,6 +112,11 @@ io.of("/control").on('connection', (socket) => {
         db.data.sequences = msg 
         db.write()
         sendSequenceInfo()
+    })
+
+    socket.on("interaction:monitor", (msg) => {
+      monitorText = msg.text
+      console.log("monitor text updated", monitorText)
     })
     
     socket.on("interaction:show-answer", (msg) => {
@@ -682,7 +688,7 @@ app.get('/answers', (req, res) => {
 });
 
 app.get('/monitor', (req, res) => {
-  res.sendFile(join(__dirname, 'public', 'monitor.html'))
+  res.send(monitorText)
 });
 
 app.get('/secret-session', (req, res) => {
