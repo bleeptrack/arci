@@ -67,6 +67,23 @@ export default class InteractionQuestion extends HTMLElement {
 	connectedCallback() {
 		
 	}
+
+	static handleAnswerForMonitor(header, container, msg){
+		console.log("id compare", header.getAttribute("cueID"), msg.info.id)
+		console.log("msg", msg)
+		if(msg.startup && header.getAttribute("cueID") != msg.info.id){
+			header.innerHTML = ""
+			container.innerHTML = ""
+			header.innerHTML = `${msg.info.text}`
+			header.setAttribute("cueID", msg.info.id)
+		}else{
+			if(msg.playerID && msg.answer){
+				let div = document.createElement("div")
+				div.innerHTML = `${msg.answer}`
+				container.appendChild(div)
+			}
+		}
+	}
 	
 	static handleAnswer(header, container, msg){
 		console.log("id compare", header.getAttribute("cueID"), msg.info.id)

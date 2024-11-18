@@ -681,6 +681,10 @@ app.get('/answers', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'answers.html'))
 });
 
+app.get('/monitor', (req, res) => {
+  res.sendFile(join(__dirname, 'public', 'monitor.html'))
+});
+
 app.get('/secret-session', (req, res) => {
   res.sendFile(join(__dirname, 'public', 'secretsession.html'))
 });

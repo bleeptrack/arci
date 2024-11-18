@@ -29,10 +29,14 @@ class AnswerBox extends HTMLElement {
 		socket.on("interaction:answer", msg => {
 			console.log(msg.type, msg)
 			console.log(this.cueTypes[msg.info.type])
-			if (typeof this.cueTypes[msg.info.type].handleAnswer === "function") { 
+			if (typeof this.cueTypes[msg.info.type].handleAnswerForMonitor === "function" && window.location.pathname === "/monitor") { 
+				this.cueTypes[msg.info.type].handleAnswerForMonitor(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
+				this.activeCue = this.cueTypes[msg.type]
+			}else if (typeof this.cueTypes[msg.info.type].handleAnswer === "function") { 
 				this.cueTypes[msg.info.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), msg)
 				this.activeCue = this.cueTypes[msg.type]
 			}
+			
 		})
 		
 		socket.on("session:storage-update", msg => {
@@ -46,7 +50,10 @@ class AnswerBox extends HTMLElement {
 		socket.on("cue:active", (msg, idx, seq) => {
 			console.log("answerbox cue active", msg)
 			
-			if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
+			if (window.location.pathname === "/monitor") { 
+				console.log("active cue for monitor")
+				this.cueTypes[msg.type].handleAnswerForMonitor(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})
+			}else if (typeof this.cueTypes[msg.type].handleAnswer === "function") { 
 				this.cueTypes[msg.type].handleAnswer(this.shadow.getElementById("question"), this.shadow.getElementById("answers"), {info:msg, startup:true})
 				this.activeCue = this.cueTypes[msg.type]
 				this.shadow.getElementById("wrap").style.background = `${this.cueTypes[msg.type].color}`
@@ -129,7 +136,21 @@ class AnswerBox extends HTMLElement {
 	
 
 	connectedCallback() {
+		if(window.location.pathname === "/monitor"){
+			this.shadow.getElementById("openanswers").style.display = "none"
+			this.shadow.getElementById("wrap").style.background = "black"
+			this.shadow.getElementById("wrap").style.color = "white"
+			this.shadow.getElementById("wrap").style.fontFamily = "monospace"
+			this.shadow.getElementById("wrap").style.fontSize = "1.5rem"
+			this.shadow.getElementById("wrap").style.padding = "1rem"
+			this.shadow.getElementById("wrap").style.overflow = "hidden"
+			this.shadow.getElementById("wrap").style.borderRadius = "1rem"
+			this.shadow.getElementById("wrap").style.border = "1px solid white"
+			this.shadow.getElementById("wrap").style.boxSizing = "border-box"
+			this.shadow.getElementById("wrap").style.lineHeight = "3rem"
 		
+			document.body.style.background = "black"
+		}
 		
 	}
 
