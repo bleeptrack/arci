@@ -2,6 +2,7 @@
 import { Cue } from './Cue.js';
 import { FloatingActionButton } from './FloatingActionButton.js';
 import { socket } from './socket.js';
+import {WebMidi, Note} from 'https://cdn.jsdelivr.net/npm/webmidi@3.1.9/+esm'
 
 class CueList extends HTMLElement {
 	constructor() {
@@ -131,7 +132,41 @@ class CueList extends HTMLElement {
 			//console.log(event.target)
 		});
 		
+		WebMidi
+		.enable()
+		.then(() => {
+			console.log("MIDI enabled. Devices:")
+			if (WebMidi.inputs.length < 1) {
+			// Display available MIDI input devices
+			console.log("No device detected.");
+			} else {
+				console.log("MIDI outputs:")
+				WebMidi.outputs.forEach((device, index) => {
+					console.log(`${index}: ${device.name} <br>`)
+				});
+
+				console.log("MIDI inputs:")
+				WebMidi.inputs.forEach((device, index) => {
+					console.log(`${index}: ${device.name} <br>`)
+				});
+				
+			}
+
+		})
+		.catch(err => alert(err));
 		
+	}
+
+	sendMidiNext(){
+		WebMidi.outputs.forEach((device, index) => {
+			device.sendControlChange(1, 1)
+		});
+	}
+
+	sendMidiPrev(){
+		WebMidi.outputs.forEach((device, index) => {
+			device.sendControlChange(1, 2)
+		});
 	}
 	
 	findCurrentActiveScene(){
@@ -316,6 +351,9 @@ class CueList extends HTMLElement {
 			if(instance){
 				instance.click()
 			}
+			if(WebMidi.inputs.length > 0){
+				this.sendMidiPrev()
+			}
 		}))
 		
 		this.shadow.getElementById("next").addEventListener("click", (event => {
@@ -331,7 +369,9 @@ class CueList extends HTMLElement {
 					instance.click()
 				}
 			}
-			
+			if(WebMidi.inputs.length > 0){
+				this.sendMidiNext()
+			}
 		}))
 		
 	}
