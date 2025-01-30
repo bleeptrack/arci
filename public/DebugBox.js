@@ -130,7 +130,7 @@ class DebugBox extends HTMLElement {
 		})
 		
 		this.shadow.getElementById("Stop Sounds").addEventListener("click", () => {
-			socket.emit("session:Stop Sounds")
+			socket.emit("session:stopsound")
 		})
 		CustomInput.makeButtonDragable(this.shadow.getElementById("Stop Sounds"))
 		

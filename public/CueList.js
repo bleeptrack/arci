@@ -34,8 +34,8 @@ class CueList extends HTMLElement {
 			}
 		});
 		
-		socket.on("cue:active", (cue, idx, seq) => {
-			console.log("cue got activated", cue, idx, seq)
+		socket.on("cue:active", (cue, idx, seq, specialCue) => {
+			console.log("cue got activated", cue, idx, seq, specialCue)
 			this.visualActiveCue(idx, seq)
 		})
 

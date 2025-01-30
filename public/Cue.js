@@ -4,7 +4,6 @@ import { socket } from './socket.js';
 export class Cue extends HTMLElement {
 	constructor(data) {
 		super();
-		console.log(data)
 		
 		this.id = data.id
 		this.specialCue = data.specialCue || false
@@ -299,7 +298,6 @@ export class Cue extends HTMLElement {
 
 	// fires after the element has been attached to the DOM
 	connectedCallback() {
-		console.log(this.parentNode.id)
 		if(this.parentNode.id == "box-content"){
 			this.shadow.appendChild(this.boxStyle);
 		}else{
@@ -336,9 +334,10 @@ export class Cue extends HTMLElement {
 		if(this.specialCue){
 			document.querySelector("debug-box").searchAndActivateSpecialCue(this.id)
 			document.querySelector("answer-box").searchAndActivateSpecialCue(this.id)
-		}else{
-			socket.emit("cue activate", this.id, idx, sequenceName)
 		}
+		console.log("click info", this.id, idx, sequenceName, this.specialCue)
+		socket.emit("cue activate", this.id, idx, sequenceName, this.specialCue)
+		
 		
 	}
 	
