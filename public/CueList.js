@@ -148,6 +148,10 @@ class CueList extends HTMLElement {
 				console.log("MIDI inputs:")
 				WebMidi.inputs.forEach((device, index) => {
 					console.log(`${index}: ${device.name} <br>`)
+					const listener = device.addListener("midimessage", e => {
+						console.log(e);
+						console.log("MIDI MESSAGE received")
+					});
 				});
 				
 			}
@@ -157,17 +161,7 @@ class CueList extends HTMLElement {
 		
 	}
 
-	sendMidiNext(){
-		WebMidi.outputs.forEach((device, index) => {
-			device.sendControlChange(1, 1)
-		});
-	}
-
-	sendMidiPrev(){
-		WebMidi.outputs.forEach((device, index) => {
-			device.sendControlChange(1, 2)
-		});
-	}
+	
 	
 	findCurrentActiveScene(){
 		console.log(this.shadow.querySelectorAll(".list-content"))
@@ -351,9 +345,7 @@ class CueList extends HTMLElement {
 			if(instance){
 				instance.click()
 			}
-			if(WebMidi.inputs.length > 0){
-				this.sendMidiPrev()
-			}
+			
 		}))
 		
 		this.shadow.getElementById("next").addEventListener("click", (event => {
@@ -369,9 +361,7 @@ class CueList extends HTMLElement {
 					instance.click()
 				}
 			}
-			if(WebMidi.inputs.length > 0){
-				this.sendMidiNext()
-			}
+			
 		}))
 		
 	}
