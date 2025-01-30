@@ -300,14 +300,16 @@ export class Cue extends HTMLElement {
 	}
 	
 	removeCue(){
-		if(this.parentNode.id == "box-content"){
-			if (confirm("Are you sure you want to delete?")) {
-				this.remove()
-				socket.emit("cue:delete", this.id)
+		if (confirm("Are you sure you want to delete?")) {
+			if(this.parentNode.id == "box-content"){
+				
+					this.remove()
+					socket.emit("cue:delete", this.id)
+			
+			}else{
+				let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
+				socket.emit("cue:deleteListIdx", this.parentNode.id, idx)
 			}
-		}else{
-			let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
-			socket.emit("cue:deleteListIdx", this.parentNode.id, idx)
 		}
 	}
 	
