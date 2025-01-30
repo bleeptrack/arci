@@ -208,7 +208,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 			<fieldset id="answer-4" count="0" votes="[]">
 				<legend>${msg.info[4]}</legend>
 			</fieldset>
-			<button id="send">Send Answers</button>
+			<button id="Poll Results" draggable="true">Send Answers</button>
 			<button id="fetch">Fetch Answers from other Side</button>
 		`
 		
@@ -221,7 +221,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 			header.innerHTML = `${msg.info.question}`
 			header.setAttribute("cueID", msg.info.id)
 			
-			container.querySelector("#send").addEventListener("click", () => {
+			container.querySelector('[id="Poll Results"]').addEventListener("click", () => {
 				let result = {
 					answers: {},
 					correct: [],
@@ -242,7 +242,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				console.log("dispatch show answer event", result)
 				container.dispatchEvent(new CustomEvent("interaction:show-answer", {detail: result }));
 			})
-			
+			CustomInput.makeButtonDragable(container.querySelector('[id="Poll Results"]'))
 			container.querySelector("#fetch").addEventListener("click", () => {
 				fetch(`https://${sessionStorage.getItem("secondServer")}/sessionStorage?cuename=${encodeURIComponent( msg.info['cue-name'] )}`, { 
 					method: 'GET'

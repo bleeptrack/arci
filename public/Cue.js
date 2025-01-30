@@ -7,11 +7,16 @@ export class Cue extends HTMLElement {
 		console.log(data)
 		
 		this.id = data.id
+		this.specialCue = data.specialCue || false
+		
+
 		this.icon = data.icon ?? ""
 		this.instanceID = Math.floor(Math.random()*10000)
-		this.name = data['cue-name']
+		this.name = data['cue-name'] || `Action: ${this.id}`
 		this.data = data
-		this.playerIcon = "123"
+		this.playerIcon = this.specialCue ? "star" : "123"
+		
+
 		if(this.data["player-ids"] == "all"){
 			this.playerIcon = "groups"
 		}
@@ -219,6 +224,12 @@ export class Cue extends HTMLElement {
 			event.stopPropagation()
 			
 			let data = JSON.parse(event.dataTransfer.getData("data"))
+			let specialCue = event.dataTransfer.getData("special-cue") || false
+			data.specialCue = specialCue
+			if(specialCue){
+				console.log("special cue", data)
+			}
+
 			event.target.removeDisplayInsert()
 			
 			if(event.target.dropDir){
@@ -322,7 +333,13 @@ export class Cue extends HTMLElement {
 		console.log("click")
 		let idx = Array.prototype.indexOf.call(this.parentNode.children, this)
 		let sequenceName = this.parentNode.id
-		socket.emit("cue activate", this.id, idx, sequenceName)
+		if(this.specialCue){
+			document.querySelector("debug-box").searchAndActivateSpecialCue(this.id)
+			document.querySelector("answer-box").searchAndActivateSpecialCue(this.id)
+		}else{
+			socket.emit("cue activate", this.id, idx, sequenceName)
+		}
+		
 	}
 	
 	visuallyActivate(){

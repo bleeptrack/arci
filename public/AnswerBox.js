@@ -132,6 +132,16 @@ class AnswerBox extends HTMLElement {
 		
 		
 	}
+
+	searchAndActivateSpecialCue(id){
+		let el = this.shadow.getElementById(id)
+		if(el){
+			console.log("SPECIAL CUE CLICKED in ANSWER BOX", this.id)
+			el.click()
+			return true
+		}
+		return false
+	}
 	
 
 	connectedCallback() {

@@ -1,5 +1,6 @@
 'use strict';
 import { socket } from './socket.js';
+import CustomInput from './CustomInput.js';
 
 class DebugBox extends HTMLElement {
 	constructor() {
@@ -34,7 +35,7 @@ class DebugBox extends HTMLElement {
 			</style>
 			<div id="box-content">
 				<fieldset>
-					<button id="stopsound">STOP Sounds</button>
+					<button id="Stop Sounds" draggable="true">STOP Sounds</button>
 				</fieldset>
 				<fieldset>
 					<input type="text" placeholder="second server adress" id="secondserver"></input><button id="secondserverconnect">connect</button>
@@ -87,6 +88,16 @@ class DebugBox extends HTMLElement {
 		}
 	}
 
+	searchAndActivateSpecialCue(id){
+		let el = this.shadow.getElementById(id)
+		if(el){
+			console.log("SPECIAL CUE CLICKED in DEBUG BOX", this.id)
+			el.click()
+			return true
+		}
+		return false
+	}
+
 	// fires after the element has been attached to the DOM
 	connectedCallback() {
 		
@@ -118,10 +129,10 @@ class DebugBox extends HTMLElement {
 			socket.emit("secondserver:info", {adress: addr})
 		})
 		
-		this.shadow.getElementById("stopsound").addEventListener("click", () => {
-			socket.emit("session:stopsound")
-			
+		this.shadow.getElementById("Stop Sounds").addEventListener("click", () => {
+			socket.emit("session:Stop Sounds")
 		})
+		CustomInput.makeButtonDragable(this.shadow.getElementById("Stop Sounds"))
 		
 		this.shadow.getElementById("save").addEventListener("click", () => {
 			console.log("saving...")

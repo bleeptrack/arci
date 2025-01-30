@@ -522,7 +522,16 @@ function sendSequenceInfo(){
   if(seq){
     for(let s of seq){
       let scene = { ...s }
-      scene["completeCues"] = scene.sequence.map( c => db.chain.get("cues").find({id: Number(c) }).value() )
+      scene["completeCues"] = scene.sequence.map( c => {
+        let cue = db.chain.get("cues").find({id: Number(c) }).value() 
+        if(!cue){
+          cue = {
+            id: c,
+            specialCue: true
+          }
+        }
+        return cue
+      })
       data.push(scene)
     }
   }

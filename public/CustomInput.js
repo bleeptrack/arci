@@ -44,4 +44,17 @@ export default class CustomInput{
 		parentNode.appendChild(pickerLabelImage)
 		parentNode.appendChild(filepickerImage)
 	}
+
+	static makeButtonDragable(button){
+
+		button.addEventListener('dragstart', (event) => {
+			console.log("drag start button", button.id)
+			
+			event.dataTransfer.setData("data", JSON.stringify({'id': button.id}))
+			event.dataTransfer.setData("special-cue", true)
+			event.dataTransfer.dropEffect = "move";
+		})
+
+
+	}
 }
