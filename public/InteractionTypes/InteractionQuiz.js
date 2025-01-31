@@ -72,6 +72,9 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				#content{
 					gap: 2vh;
 				}
+				.desktop{
+					display: none;
+				}
 			</style>
 			<div id="content">
 				<h1>${this.info.question}</h1>
@@ -122,8 +125,12 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 
 	
 	handleAdditionalInfo(){
+		// Check if browser is not mobile
+		const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+		let deviceClass = isMobile ? "mobile" : "desktop"
+
 		let cummulative = Object.values(this.info.additionalInfo.answers).reduce( (a,b) => Number(a)+Number(b), 0)
-		this.shadow.getElementById("content").innerHTML = `<h2>${this.info.question}</h2><div id="chart"></div><h3>${cummulative} total votes</h3>`
+		this.shadow.getElementById("content").innerHTML = `<h2 class="${deviceClass}">${this.info.question}</h2><div id="chart"></div><h3>${cummulative} total votes</h3>`
 		let chart = this.shadow.getElementById("chart")
 		
 		for(let [name, value] of Object.entries(this.info.additionalInfo.answers)){
