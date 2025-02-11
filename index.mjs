@@ -24,6 +24,7 @@ import lodash from 'lodash'
 import { v4 as uuidv4 } from 'uuid';
 
 import { Server } from 'socket.io';
+import { SocketAddress } from 'node:net';
 const server = createServer(app);
 const io = new Server(server,{
   maxHttpBufferSize: 1e8
@@ -254,6 +255,10 @@ io.on('connection', (socket) => {
     }
     
     socket.emit("player:interactionTypes", interactionTypes)
+
+    socket.on("player:loadtest", (msg, callback) => {
+      callback({ message: "success", info: msg })
+    })
     
     socket.on("interaction:answer", (msg) => {
       
