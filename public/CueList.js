@@ -151,6 +151,8 @@ class CueList extends HTMLElement {
 					const listener = device.addListener("midimessage", e => {
 						console.log(e);
 						console.log("MIDI MESSAGE received")
+						console.log("triggering next button")
+						this.shadow.getElementById("next").click()
 					});
 				});
 				
