@@ -3,11 +3,12 @@
 :root {
   
   --primary: var(--main-color);
+  --gradient: var(--gradient-color);
   --secondary: black;
   --accent: white; 
   --font: sans-serif; 
   --font-color: white;
-  --main-background: linear-gradient(0deg, var(--secondary) 0%, var(--primary) 100%);
+  --main-background: linear-gradient(0deg, var(--gradient) 0%, var(--primary) 100%);
   --correct: #49f2a0;
   
   /* headers (texts, questions, etc) */

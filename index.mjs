@@ -49,6 +49,7 @@ if (!fs.existsSync(config['absolute-static-file-path']+"/exports/")) {
   let cssContent = `
     :root {
         --main-color: ${config['main-color']};
+        --gradient-color: ${config['gradient-color']};
     }
   ` 
   console.log("writing to:", join(__dirname, 'public', "variables.css"))
@@ -217,7 +218,7 @@ io.of("/control").on('connection', (socket) => {
             db.data.cues[cueIdx] = msg
             
         }else{
-            msg.id = Math.floor(Math.random() * 10000)
+            msg.id = Math.floor(Math.random() * 100000000)
             db.data.cues.push(msg)
             
         }
