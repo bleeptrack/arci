@@ -32,6 +32,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				}
 				#chart{
 					width: 100%;
+					height: 80%;
 					flex-grow: 1;
 					display: flex;
 					justify-content: space-between;
@@ -64,6 +65,11 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					background-position: center;
 					background-size: cover;
 					font-size: 6vw;
+				}
+				@media screen and (orientation: landscape) {
+					.answerbutton{
+						width: 45% !important;
+					}
 				}
 				.answerbutton:active, .answerbutton:focus, .answerbutton:hover{
 					border: var(--button-border-style) !important;

@@ -12,7 +12,7 @@
   --correct: #49f2a0;
   
   /* headers (texts, questions, etc) */
-  --header-font-size: 10vw;
+  --header-font-size: min(10vh, 10vw);
   --header-font-color: var(--secondary);
   
   /* buttons */ 
@@ -20,7 +20,7 @@
   /* --button-color: var(--secondary); */
   --button-color: var(--main-color); 
   --button-color-active: var(--secondary);
-  --button-font-size: 10vw;
+  --button-font-size: min(10vh, 10vw);
   /* --button-border-style: 1vw solid var(--main-color); */
   
   

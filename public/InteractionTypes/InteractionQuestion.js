@@ -30,6 +30,14 @@ export default class InteractionQuestion extends HTMLElement {
 					height: 40%;
 					font-size: 2em;
 				}
+				@media screen and (orientation: landscape) {
+					textarea{
+						display: none;
+					}
+					button{
+						display: none;
+					}
+				}
 			</style>
 			<div id="content">
 				<h1 id="question">${this.text}</h1>

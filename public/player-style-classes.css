@@ -10,6 +10,15 @@
 	align-items: center;
 }
 
+@media screen and (orientation: landscape) {
+    #content {
+        flex-wrap: wrap;
+		flex-direction: unset;
+		font-size: 2vw !important;
+    }
+}
+
+
 button{
 	font-size: var(--button-font-size);
 	width: 100%;
