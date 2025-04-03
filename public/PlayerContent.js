@@ -68,17 +68,14 @@ export class PlayerContent extends HTMLElement {
 		this.shadow.appendChild(container.content.cloneNode(true));
 		this.content = this.shadow.getElementById("content")
 		
-		document.addEventListener("visibilitychange", () => {
-			
-			// Modify behavior…
-			
-			if(document.hidden && !this.allowSwitch){
-				this.content.innerHTML = "<div id='away-msg'>you went away...please reload to join again.</div>"
-				this.playerConnector.pauseUser()
-			}
-			
-			
-		});
+		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			document.addEventListener("visibilitychange", () => {
+				if(document.hidden && !this.allowSwitch){
+					this.content.innerHTML = "<div id='away-msg'>you went away...please reload to join again.</div>"
+					this.playerConnector.pauseUser()
+				}
+			});
+		}
 		
 	}
 	
