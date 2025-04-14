@@ -264,7 +264,8 @@ export class PlayerContent extends HTMLElement {
 
 		if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 			setTimeout(() => {
-				this.shadow.getElementById("joinbutton").click();
+				let joinbutton = this.shadow.getElementById("joinbutton");
+				joinbutton.click();
 			}, 5000);
 		}
 	}
