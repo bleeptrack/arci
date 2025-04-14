@@ -27,6 +27,9 @@ class PlayerBox extends HTMLElement {
 					column-gap: var(--gap-size);
 					row-gap: var(--gap-size);
 					height: 100%;
+					overflow-y: scroll;
+    				scrollbar-width: thin;
+    				scrollbar-gutter: stable;
 				}
 				.recipient{
 					border: 1px solid black;
