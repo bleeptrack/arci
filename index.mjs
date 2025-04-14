@@ -50,6 +50,8 @@ if (!fs.existsSync(config['absolute-static-file-path']+"/exports/")) {
     :root {
         --main-color: ${config['main-color']};
         --gradient-color: ${config['gradient-color']};
+        --accent-color: ${config['accent-color']};
+        --secondary-color: ${config['secondary-color']};
     }
   ` 
   console.log("writing to:", join(__dirname, 'public', "variables.css"))

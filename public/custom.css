@@ -4,10 +4,10 @@
   
   --primary: var(--main-color);
   --gradient: var(--gradient-color);
-  --secondary: black;
-  --accent: white; 
+  --secondary: var(--secondary-color);
+  --accent: var(--accent-color); 
   --font: sans-serif; 
-  --font-color: white;
+  --font-color: var(--accent-color);
   --main-background: linear-gradient(0deg, var(--gradient) 0%, var(--primary) 100%);
   --correct: #49f2a0;
   
