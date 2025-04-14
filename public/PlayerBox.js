@@ -23,7 +23,7 @@ class PlayerBox extends HTMLElement {
 				#box-content{
 					display: grid;
 					grid-template-columns: repeat(10, minmax(0, 1fr));
-					grid-auto-rows: minmax(0, 1fr);
+					
 					column-gap: var(--gap-size);
 					row-gap: var(--gap-size);
 					height: 100%;

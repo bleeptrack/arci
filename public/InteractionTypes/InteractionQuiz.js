@@ -20,7 +20,13 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 		container.innerHTML = `
 			<link href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
 			<style>
-				
+				 h1 {
+					max-height: 33vh;
+					overflow: hidden;
+					font-size: clamp(1rem, 8vw, 2.5rem) !important;
+					line-height: 1.2;
+					text-overflow: ellipsis;
+				}
 				.correct{
 					opacity: 1 !important;
 				}
@@ -64,11 +70,12 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					flex-grow: 1;
 					background-position: center;
 					background-size: cover;
-					font-size: 6vw;
+					font-size: clamp(1rem, 6vw, 2.5rem) !important;
 				}
 				@media screen and (orientation: landscape) {
 					.answerbutton{
-						width: 45% !important;
+						max-width: 45% !important;
+						align-self: normal !important;
 					}
 				}
 				.answerbutton:active, .answerbutton:focus, .answerbutton:hover{
