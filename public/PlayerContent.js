@@ -261,6 +261,12 @@ export class PlayerContent extends HTMLElement {
 			this.playerConnector.registerUser(urlParams.get('id'), urlParams.get('sessionToken'))
 			this.content.innerHTML = '<h3 id="welcome">Welcome!</h3><h3>You are all set now :)</h3>'
 		})
+
+		if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+			setTimeout(() => {
+				this.shadow.getElementById("joinbutton").click();
+			}, 5000);
+		}
 	}
 	
 	debugClearStorage(){
