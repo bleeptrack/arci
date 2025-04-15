@@ -9,7 +9,7 @@
   --font: sans-serif; 
   --font-color: var(--accent-color);
   --main-background: linear-gradient(0deg, var(--gradient) 0%, var(--primary) 100%);
-  --correct: #49f2a0;
+  --correct: var(--correct-color);
   
   /* headers (texts, questions, etc) */
   --header-font-size: min(10vh, 10vw);

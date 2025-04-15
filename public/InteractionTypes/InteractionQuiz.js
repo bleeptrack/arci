@@ -23,9 +23,10 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 				 h1 {
 					max-height: 33vh;
 					overflow: hidden;
-					font-size: clamp(1rem, 8vw, 2.5rem) !important;
+					font-size: clamp(1rem, 8vw, 6.5rem) !important;
 					line-height: 1.2;
 					text-overflow: ellipsis;
+					width: 100%;
 				}
 				.correct{
 					opacity: 1 !important;
@@ -50,7 +51,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					opacity: 0.5
 				}
 				.bar{
-					background-color: white;
+					background-color: var(--font-color);
 					width: 20vw;
 					height: 1px;
     
@@ -156,7 +157,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 			let nametext = document.createElement("span")
 			nametext.innerHTML = `${name}`
 			div.appendChild(nametext)
-			if(this.info.additionalInfo.correct.includes(name)){
+			if(this.info.additionalInfo.correct.includes(name) || this.info.additionalInfo.correct.length == 0){
 				div.classList.add("correct")
 			}
 			this.shadow.getElementById("chart").appendChild(div)
