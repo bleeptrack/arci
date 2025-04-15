@@ -331,7 +331,7 @@ io.on('connection', (socket) => {
     socket.on("player:register", (preferredID, sToken, callback) => {
       if(sToken == sessionToken && sToken.length > 0){
         let foundPlayer = addPlayer(preferredID, socket.id)
-        callback({ message: "welcome player", info: foundPlayer, success: true });
+        callback({ message: config['welcome-message'], info: foundPlayer, success: true });
         sendPlayerInfo()
       }else{
         if(sessionToken.length == 0){
