@@ -66,7 +66,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					color: var(--font-color);
 					text-align: center;
 					font-family: var(--font);
-					font-size: clamp(1rem, 3vw, 3rem) !important;
+					font-size: clamp(1rem, 4vw, 4rem) !important;
     				height: 20vh;
     				align-content: end;
 				}
