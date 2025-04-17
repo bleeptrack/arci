@@ -74,7 +74,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 					flex-grow: 1;
 					background-position: center;
 					background-size: cover;
-					font-size: clamp(1rem, 6vw, 2.5rem) !important;
+					font-size: clamp(1rem, 6vw, 4.5rem) !important;
 				}
 				@media screen and (orientation: landscape) {
 					.answerbutton{
