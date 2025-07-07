@@ -1,0 +1,66 @@
+@import url("custom.css");
+
+#content{
+	height: 100%;
+	width: 100%;
+	background-size: cover;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+}
+
+@media screen and (orientation: landscape) {
+    #content {
+        flex-wrap: wrap;
+		flex-direction: unset;
+		font-size: 2vw !important;
+    }
+}
+
+
+button{
+	font-size: var(--button-font-size);
+	width: 100%;
+	border: var(--button-border-style);
+	border-radius: var(--button-border-radius);
+	background-color: var(--button-color);
+	color: var(--button-font-color);
+}
+
+button:active, button:focus, button:hover{
+	border: var(--button-border-style-active);
+	background-color: var(--button-color-active);
+}
+h1{
+	font-size: var(--header-font-size) !important;
+	font-family: var(--font);
+	color: var(--font-color);
+	font-weight: bold;
+	text-align: center;
+}
+h2{
+	font-size: calc(var(--header-font-size)*0.75) !important;
+	font-family: var(--font);
+	color: var(--font-color);
+	font-weight: bold;
+	text-align: center;
+}
+h3{
+	font-size: calc(var(--header-font-size)*0.5) !important;
+	font-family: var(--font);
+	color: var(--font-color);
+	font-weight: bold;
+	text-align: center;
+}
+
+/* effects */
+.fadeOut{
+  opacity: 0 !important;
+  transition: opacity 0.05s linear;
+}
+
+.fadeIn{
+  opacity: 1 !important;
+  transition: opacity 0.05s linear;
+}

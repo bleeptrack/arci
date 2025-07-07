@@ -1,0 +1,32 @@
+@import "variables.css";
+
+:root {
+  
+  --primary: var(--main-color);
+  --gradient: var(--gradient-color);
+  --secondary: var(--secondary-color);
+  --accent: var(--accent-color); 
+  --font: sans-serif; 
+  --font-color: var(--accent-color);
+  --main-background: linear-gradient(0deg, var(--gradient) 0%, var(--primary) 100%);
+  --correct: var(--correct-color);
+  
+  /* headers (texts, questions, etc) */
+  --header-font-size: min(10vh, 10vw);
+  --header-font-color: var(--secondary);
+  
+  /* buttons */ 
+
+  /* --button-color: var(--secondary); */
+  --button-color: var(--main-color); 
+  --button-color-active: var(--secondary);
+  --button-font-size: min(10vh, 10vw);
+  /* --button-border-style: 1vw solid var(--main-color); */
+  
+  
+  --button-border-style: 1vw solid var(--accent);
+  
+  --button-border-style-active: 1vw solid var(--accent);
+  --button-border-radius: 2vw;
+  --button-font-color: var(--font-color);
+}

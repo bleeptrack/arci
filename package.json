@@ -1,0 +1,28 @@
+{
+  "name": "bodua",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node load-test/text.mjs",
+    "dev": "node index.mjs",
+    "start": "node index.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "axios": "^1.7.2",
+    "createjs": "^1.0.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.2",
+    "extract-zip": "^2.0.1",
+    "lodash": "^4.17.21",
+    "lowdb": "^6.0.1",
+    "multer": "^1.4.5-lts.1",
+    "nosleep.js": "^0.12.0",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.8.1",
+    "uuid": "^10.0.0"
+  }
+}
