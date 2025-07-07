@@ -1,0 +1,16 @@
+{
+	"absolute-static-file-path": "",
+	"port": 1234,
+	"test-url": "",
+	"welcome-message": "Welcome!",
+	"main-color": "teal",
+	"gradient-color": "MediumAquamarine",
+	"accent-color": "black",
+	"secondary-color": "white",
+	"correct-color": "green",
+	"other-side": "",
+	"translator-key": "",
+	"translator-region": "",
+	"translator-order": "",
+	"sentry-dsn": ""
+} 
