@@ -18,7 +18,7 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 
 		// creating the inner HTML of the editable list element
 		container.innerHTML = `
-			<link href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
+			<link id="player-style-classes" href="${window.location.origin}/static/player-style-classes.css" rel="stylesheet" />
 			<style>
 				 h1 {
 					max-height: 33vh;
@@ -148,18 +148,21 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 		let deviceClass = isMobile ? "mobile" : "desktop"
 
 		let cummulative = Object.values(this.info.additionalInfo.answers).reduce( (a,b) => Number(a)+Number(b), 0)
-		this.shadow.getElementById("content").innerHTML = `<h2 class="${deviceClass}">${this.info.question}</h2><div id="chart"></div><h3>${cummulative} total votes</h3>`
+		this.shadow.getElementById("content").innerHTML = `<h2 class="${deviceClass}" style="opacity:0;">${this.info.question}</h2><div id="chart"></div><h3 style="opacity:0;">${cummulative} total votes</h3>`
 		let chart = this.shadow.getElementById("chart")
 		
 		for(let [name, value] of Object.entries(this.info.additionalInfo.answers)){
 			let div = document.createElement("div")
 			div.classList.add("chart-element")
+			div.style.opacity = "0";
 			let bar = document.createElement("div")
 			bar.classList.add("bar")
 			bar.style.maxHeight = `${Math.round(Number(value)/cummulative * 100)}%`
+			bar.style.opacity = "0";
 			div.appendChild(bar)
 			let nametext = document.createElement("span")
 			nametext.innerHTML = `${name}`
+			nametext.style.opacity = "0";
 			div.appendChild(nametext)
 			if(this.info.additionalInfo.correct.includes(name) || this.info.additionalInfo.correct.length == 0){
 				div.classList.add("correct")
@@ -168,10 +171,20 @@ export default class InteractionQuizTrueFalse extends HTMLElement {
 			
 		}
 		
-		setTimeout( () => {
-			this.shadow.querySelectorAll(".bar").forEach( bar => bar.classList.add("animation"))
-		},1000)
-		
+		this.shadow.getElementById("player-style-classes").onload = () => {
+			console.log("player-style-classes loaded")
+			// Set all bars, text, and chart elements to visible
+			this.shadow.querySelectorAll(".chart-element").forEach(div => { div.style.opacity = ""; });
+			this.shadow.querySelectorAll(".bar").forEach(bar => { bar.style.opacity = ""; });
+			this.shadow.querySelectorAll(".chart-element span").forEach(span => { span.style.opacity = ""; });
+			const h2 = this.shadow.querySelector("h2");
+			if(h2) h2.style.opacity = "";
+			const h3 = this.shadow.querySelector("h3");
+			if(h3) h3.style.opacity = "";
+			setTimeout(() => {
+				this.shadow.querySelectorAll(".bar").forEach(bar => bar.classList.add("animation"));
+			}, 1000);
+		}
 	}
 
 	// fires after the element has been attached to the DOM
