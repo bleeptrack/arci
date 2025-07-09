@@ -1,4 +1,4 @@
-import config from './arci-config.json' assert { type: 'json' }
+import config from './arci-config.json' with { type: "json" };
 console.log(config)
 
 import express from 'express';
