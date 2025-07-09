@@ -14,6 +14,12 @@ class DebugBox extends HTMLElement {
 			this.updateSessionGUI()
 		});
 
+		socket.on("control:settings", (data) => { 
+			console.log("control settings", data) 
+			this.controlSettings = data
+			this.updateSessionGUI()
+		});
+
 		socket.on("save-project:file", (data) => {
 			console.log(data)
 			let exportSpan = this.shadow.getElementById("export")
@@ -67,14 +73,19 @@ class DebugBox extends HTMLElement {
 
 		
 		
-		if (window.location.pathname === "/control") {
-			this.shadow.getElementById("start").remove()
-		}
-		
 	}
 
 
 	updateSessionGUI(){
+		if(this.controlSettings){
+			if(this.controlSettings.hideSessionStart){
+				this.shadow.getElementById("start").remove()
+			}
+			if(!this.controlSettings.enableSecondSide){
+				console.log("second side disabled")
+				this.shadow.getElementById("secondserver").parentElement.remove()
+			}
+		}
 		if(this.session){
 			if(this.shadow.getElementById("start")){
 				this.shadow.getElementById("start").innerHTML = "STOP Session"

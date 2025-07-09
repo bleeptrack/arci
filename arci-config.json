@@ -12,5 +12,9 @@
 	"translator-key": "",
 	"translator-region": "",
 	"translator-order": "",
-	"sentry-dsn": ""
+	"sentry-dsn": "",
+	"control-settings": {
+		"enableSecondSide": false,
+		"hideSessionStart": false
+	}
 } 

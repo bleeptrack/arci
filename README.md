@@ -49,7 +49,7 @@ You can create your own Interaction Types by adding a file to the ```public/Inte
 
 arci uses the [Blue Oak Model 1.0 License](https://blueoakcouncil.org/license/1.0.0)
 
-We also kindly ask you to mention archi(bleeptrack, Henrike Iglesias) in your performance credits :)
+We also kindly ask you to mention arci(bleeptrack, Henrike Iglesias) in your performance credits :)
 
 # Thank you!
 

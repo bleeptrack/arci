@@ -105,6 +105,7 @@ io.of("/control").on('connection', (socket) => {
     sendPlayerInfo()
     sendSessionInfo()
     sendSecondServerInfo()
+    sendControlSettings()
     
     socket.on("secondserver:info", (msg) => {
         console.log("attempt to connect to second server:", msg)
@@ -437,6 +438,10 @@ function sendPlayerInfo(){
 
 function sendSecondServerInfo(){
    io.of("/control").emit("secondserver:info", secondServer);
+}
+
+function sendControlSettings(){
+  io.of("/control").emit("control:settings", JSON.parse(JSON.stringify(config['control-settings'])))
 }
 
 function clearRecipientStatus(){
