@@ -1,5 +1,5 @@
 {
-	"absolute-static-file-path": "",
+	"absolute-static-file-path": "./uploads",
 	"port": 1234,
 	"test-url": "",
 	"welcome-message": "Welcome!",

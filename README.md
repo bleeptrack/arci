@@ -1,9 +1,12 @@
+<p align="center">
+  <img src="public/logo.png" alt="arci logo" width="200"/>
+</p>
 # arci
 interactive stage performances via smartphone
 
 arci is in active developement and is _not_ yet recommended for productive use. Feel free to experiment with it though :)
 
-Developement by [bleeptrack](https://www.bleeptrack.de) and [Henrike Iglesias](https://www.instagram.com/henrikeiglesiasinsta).
+Developement by [bleeptrack](https://www.bleeptrack.de) and [Henrike Iglesias](https://henrikeiglesias.com/).
 
 # Requirements
 
