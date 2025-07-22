@@ -1,6 +1,7 @@
 <p align="center">
   <img src="public/logo.png" alt="arci logo" width="200"/>
 </p>
+
 # arci
 interactive stage performances via smartphone
 
