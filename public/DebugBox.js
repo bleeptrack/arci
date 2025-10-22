@@ -87,7 +87,10 @@ class DebugBox extends HTMLElement {
 			}
 			if(!this.controlSettings.enableSecondSide){
 				console.log("second side disabled")
-				this.shadow.getElementById("secondserver").parentElement.remove()
+				if(this.shadow.getElementById("secondserver")){
+					this.shadow.getElementById("secondserver").parentElement.remove()
+				}
+				
 			}
 		}
 		if(this.session){
